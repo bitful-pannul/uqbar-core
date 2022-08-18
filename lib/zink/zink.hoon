@@ -4,7 +4,6 @@
     +$  good      (unit *)
     +$  fail      (list [@ta *])
     +$  body      (each good fail)
-    +$  cache     (map * phash)
     +$  appendix  [cax=cache hit=hints bud=@]
     +$  book      (pair body appendix)
     --
@@ -18,16 +17,16 @@
   ==
 ::
 ++  hash
-  |=  [n=* cax=(map * phash)]
+  |=  [n=* cax=cache]
   ^-  phash
   ?@  n
     ?:  (lte n 12)
       =/  ch  (~(get by cax) n)
-      ?^  ch  u.ch
+      ?^  ch  p.u.ch
       (hash:pedersen n 0)
     (hash:pedersen n 0)
   ?^  ch=(~(get by cax) n)
-    u.ch
+    p.u.ch
   =/  hh  $(n -.n)
   =/  ht  $(n +.n)
   (hash:pedersen hh ht)
@@ -537,28 +536,31 @@
   ::
   ++  hash
     |=  n=*
-    ^-  [(unit phash) appendix]
+    |^  ^-  [(unit phash) appendix]
     ::  test mode disables hashing, so it won't generate valid hints.
     ::  however, computation is *much* faster since hashing is the
     ::  most expensive aspect of the process.
     ?:  test-mode  [`0x1 app]
+    =-  ?~(-< [~ ->] [`p.u.-< ->])
+    |-  ^-  [(unit (pair phash @ud)) appendix]
+    ?:  =(bud 0)  [~ app]
     =/  mh  (~(get by cax) n)
     ?^  mh
-      ?:  =(bud 0)  [~ app]
-      [mh app(bud (dec bud))]
+      ?:  (lth bud q.u.mh)  [~ app]
+      [mh app(bud (sub bud q.u.mh))]
     ?@  n
-      ?:  =(bud 0)  [~ app]
-      =/  h  (hash:pedersen n 0)
+      =/  h  [(hash:pedersen n 0) 1]
       :-  `h
       app(cax (~(put by cax) n h), bud (dec bud))
-    =^  hh=(unit phash)  app  $(n -.n)
+    =^  hh=(unit (pair phash @ud))  app  $(n -.n)
     ?~  hh  [~ app]
-    =^  ht=(unit phash)  app  $(n +.n)
+    =^  ht=(unit (pair phash @ud))  app  $(n +.n)
     ?~  ht  [~ app]
-    =/  h  (hash:pedersen u.hh u.ht)
+    =/  h  [(hash:pedersen p.u.hh p.u.ht) +((add q.u.hh q.u.ht))]
     ?:  =(bud 0)  [~ app]
     :-  `h
     app(cax (~(put by cax) n h), bud (dec bud))
+    --
   ::
   ++  merk-sibs
     |=  [s=* axis=@]

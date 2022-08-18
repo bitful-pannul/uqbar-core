@@ -1,6 +1,6 @@
 /-  *mill
 /+  *zink-zink, smart=zig-sys-smart, ethereum, merk
-|_  [library=vase zink-cax=(map * @) test-mode=?]
+|_  [library=vase zink-cax=cache test-mode=?]
 ::
 ++  verify-sig
   |=  =egg:smart

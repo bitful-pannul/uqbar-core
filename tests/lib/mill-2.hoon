@@ -36,7 +36,7 @@
 ++  mil
   %~  mill  mill
   :+    ;;(vase (cue q.q.smart-lib-noun))
-    ;;((map * @) (cue q.q.zink-cax-noun))
+    ;;(cache:zink (cue q.q.zink-cax-noun))
   %.y
 ::
 +$  mill-result

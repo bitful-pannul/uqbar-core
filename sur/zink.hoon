@@ -3,6 +3,7 @@
   $-  ^
   (unit [path=(list phash) product=*])
 ::
++$  cache  (map * (pair phash @ud))
 +$  child  *
 +$  parent  *
 +$  phash  @                     ::  Pedersen hash

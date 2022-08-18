@@ -5,18 +5,18 @@
 ::
 ++  hash
   |=  [n=* cax=cache]
-  ^-  phash
+  ^-  (pair phash @ud)
   ?@  n
     ?:  (lte n 12)
       =/  ch  (~(get by cax) n)
       ?^  ch  u.ch
-      (hash:pedersen n 0)
-    (hash:pedersen n 0)
+      [(hash:pedersen n 0) 1]
+    [(hash:pedersen n 0) 1]
   ?^  ch=(~(get by cax) n)
     u.ch
   =/  hh  $(n -.n)
   =/  ht  $(n +.n)
-  (hash:pedersen hh ht)
+  [(hash:pedersen p.hh p.ht) +((add q.hh q.ht))]
 ::
 ++  compile-path
   |=  pax=path
@@ -61,13 +61,13 @@
 ::
 ++  conq
   |=  [hoonlib-txt=@t smartlib-txt=@t cax=cache bud=@ud]
-  ^-  (map * phash)
+  ^-  cache
   |^
   =.  cax
     %-  ~(gas by cax)
     %+  turn  (gulf 0 12)
     |=  n=@
-    ^-  [* phash]
+    ^-  [* (pair phash @ud)]
     [n (hash n ~)]
   ~&  >>  %compiling
   =/  built-contract  (compile-trivial hoonlib-txt smartlib-txt)
@@ -149,8 +149,8 @@
     $(layers t.layers, cax (hash-arms cor cax))
   ::
   ++  hash-arms
-    |=  [vax=vase cax=(map * phash)]
-    ^-  (map * phash)
+    |=  [vax=vase cax=cache]
+    ^-  cache
     =/  lis  (sloe p.vax)
     =/  len  (lent lis)
     =/  i  1

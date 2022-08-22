@@ -42,14 +42,55 @@
       formula+s+(num:enjs hf)
   ==
 ::
+++  order-hints
+  |=  hit=hints
+  =.  hit  (flop hit)
+  =/  layers=(list hints)  ~[~]
+  =/  depth  1
+  |^  ^-  hints
+  ?~  hit  (zing (flop layers))
+  ?>  ?=(^ layers)
+  %_  $
+      hit    t.hit
+      depth  depth.i.hit
+      layers
+    ^-  (list hints)
+    ?:  =(depth.i.hit depth)
+      [[i.hit i.layers] t.layers]
+    ?:  =(+(depth.i.hit) depth)
+      ?>  ?=(^ t.layers)
+      [[i.hit (welp i.layers i.t.layers)] t.t.layers]
+    (push-deeper-hint i.hit)
+  ==
+  ::
+  ++  push-deeper-hint
+    |=  hit=cairo-hint
+    |-  ^-  (list hints)
+    ?:  =(depth (dec depth.hit))
+      [~[hit] layers]
+    $(depth +(depth), layers [~ layers])
+  ::
+  ++  trim
+    |=  [a=@ b=(list hints)]
+    ^+  [p=b q=b]
+    ?:  =(0 a)
+      [~ b]
+    ?>  ?=(^ b)
+    =+  c=$(a (dec a), b t.b)
+    [[i.b p.c] q.c]
+  --
 ++  zink
   =|  appendix
   =*  app  -
   =|  trace=fail
+  =|  depth=@ud
   |=  [s=* f=* scry=granary-scry test-mode=?]
   ^-  book
+  =-  -(hit.q (order-hints hit.q.-))
   |^
-  |-
+  =.  depth  +(depth)
+  ~&  depth
+  ~&  f
   ?+    f
     ~&  f
     [%|^trace app]
@@ -68,7 +109,7 @@
     =^  htal=(unit phash)  app  (hash +.f)
     ?~  htal  [%&^~ app]
     :-  [%& ~ u.p.hed^u.p.tal]
-    app(hit [%cons u.hhed u.htal]^hit)
+    app(hit [%cons depth u.hhed u.htal]^hit)
   ::
       [%0 axis=@]
     =^  part  bud
@@ -80,13 +121,13 @@
     =^  hsibs=(unit (list phash))  app  (merk-sibs s axis.f)
     ?~  hsibs  [%&^~ app]
     :-  [%& ~ u.u.part]
-    app(hit [%0 axis.f u.hpart u.hsibs]^hit)
+    app(hit [%0 depth axis.f u.hpart u.hsibs]^hit)
   ::
       [%1 const=*]
     =^  hres=(unit phash)  app  (hash const.f)
     ?~  hres  [%&^~ app]
     :-  [%& ~ const.f]
-    app(hit [%1 u.hres]^hit)
+    app(hit [%1 depth u.hres]^hit)
   ::
       [%2 sub=* for=*]
     =^  hsub=(unit phash)  app  (hash sub.f)
@@ -104,7 +145,7 @@
     %_  $
       s    u.p.subject
       f    u.p.formula
-      hit  [%2 u.hsub u.hfor]^hit
+      hit  [%2 depth u.hsub u.hfor]^hit
     ==
   ::
       [%3 arg=*]
@@ -116,13 +157,13 @@
     ?~  harg  [%&^~ app]
     ?@  u.p.argument
       :-  [%& ~ %.n]
-      app(hit [%3 u.harg %atom u.p.argument]^hit)
+      app(hit [%3 depth u.harg %atom u.p.argument]^hit)
     =^  hhash=(unit phash)  app  (hash -.u.p.argument)
     ?~  hhash  [%&^~ app]
     =^  thash=(unit phash)  app  (hash +.u.p.argument)
     ?~  thash  [%&^~ app]
     :-  [%& ~ %.y]
-    app(hit [%3 u.harg %cell u.hhash u.thash]^hit)
+    app(hit [%3 depth u.harg %cell u.hhash u.thash]^hit)
   ::
       [%4 arg=*]
     =^  argument=body  app
@@ -133,7 +174,7 @@
     ?~  p.argument  [%&^~ app]
     ?^  u.p.argument  ~&  135  [%|^trace app]
     :-  [%& ~ .+(u.p.argument)]
-    app(hit [%4 u.harg u.p.argument]^hit)
+    app(hit [%4 depth u.harg u.p.argument]^hit)
   ::
       [%5 a=* b=*]
     =^  ha=(unit phash)  app  (hash a.f)
@@ -149,7 +190,7 @@
     ?:  ?=(%| -.b)  ~&  150  [%|^trace app]
     ?~  p.b  [%&^~ app]
     :-  [%& ~ =(u.p.a u.p.b)]
-    app(hit [%5 u.ha u.hb]^hit)
+    app(hit [%5 depth u.ha u.hb]^hit)
   ::
       [%6 test=* yes=* no=*]
     =^  htest=(unit phash)  app  (hash test.f)
@@ -162,7 +203,7 @@
       $(f test.f)
     ?:  ?=(%| -.result)  ~&  164  [%|^trace app]
     ?~  p.result  [%&^~ app]
-    =.  hit  [%6 u.htest u.hyes u.hno]^hit
+    =.  hit  [%6 depth u.htest u.hyes u.hno]^hit
     ?+  u.p.result  ~&  167  [%|^trace app]
       %&  $(f yes.f)
       %|  $(f no.f)
@@ -180,7 +221,7 @@
     %_  $
       s    u.p.subject
       f    next.f
-      hit  [%7 u.hsubj u.hnext]^hit
+      hit  [%7 depth u.hsubj u.hnext]^hit
     ==
   ::
       [%8 head=* next=*]
@@ -195,7 +236,7 @@
     %_  $
       s    [u.p.head s]
       f    next.f
-      hit  [%8 u.hhead u.hnext]^hit
+      hit  [%8 depth u.hhead u.hnext]^hit
     ==
   ::
       [%9 axis=@ core=*]
@@ -216,7 +257,7 @@
     %_  $
       s    u.p.core
       f    u.u.arm
-      hit  [%9 axis.f u.hcore u.harm u.hsibs]^hit
+      hit  [%9 depth axis.f u.hcore u.harm u.hsibs]^hit
     ==
   ::
       [%10 [axis=@ value=*] target=*]
@@ -225,14 +266,14 @@
     =^  htar=(unit phash)  app  (hash target.f)
     ?~  htar  [%&^~ app]
     ?:  =(0 axis.f)  ~&  232  [%|^trace app]
-    =^  target=body  app
-      $(f target.f)
-    ?:  ?=(%| -.target)  ~&  235  [%|^trace app]
-    ?~  p.target  [%&^~ app]
     =^  value=body  app
       $(f value.f)
     ?:  ?=(%| -.value)  ~&  239  [%|^trace app]
     ?~  p.value  [%&^~ app]
+    =^  target=body  app
+      $(f target.f)
+    ?:  ?=(%| -.target)  ~&  235  [%|^trace app]
+    ?~  p.target  [%&^~ app]
     =^  mutant=(unit (unit *))  bud
       (edit axis.f u.p.target u.p.value bud)
     ?~  mutant  [%&^~ app]
@@ -246,7 +287,7 @@
     =^  hsibs=(unit (list phash))  app  (merk-sibs u.p.target axis.f)
     ?~  hsibs  [%&^~ app]
     :-  [%& ~ u.u.mutant]
-    app(hit [%10 axis.f u.hval u.htar u.holdleaf u.hsibs]^hit)
+    app(hit [%10 depth axis.f u.hval u.htar u.holdleaf u.hsibs]^hit)
   ::
        [%11 tag=@ next=*]
     =^  next=body  app

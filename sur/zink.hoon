@@ -6,37 +6,57 @@
 +$  cache  (map * (pair phash @ud))
 +$  child  *
 +$  parent  *
-+$  phash  @                     ::  Pedersen hash
++$  pfhash  @                     ::  Pedersen hash
 +$  hash-req
   $%  [%cell head=phash tail=phash]
       [%atom val=@]
   ==
 ::
++$  phash-tree
+  $:  p=phash
+      $=  q
+      $%  %cache
+          [%cell head=phash-tree tail=phash-tree]
+          [%atom val=@]
+      ==
+  ==
++$  subf-tree
+  =<  [=hash p=body]
+  |%
+  ++  body
+    $%  [%cache h=phash]
+        [%cell head=subf-tree tail=subf-tree]
+        [%atom val=@]
+    ==
+  --
++$  subfh  [op=?(%cons %0 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 [%unknown p=@]) h=phash]
++$  subf  [p=subfh hit=(list cairo-hint)]
+::
 +$  cairo-hint
-  $%  [%0 depth=@ud axis=@ leaf=phash path=(list phash)]
-      [%1 depth=@ud res=phash]
-      [%2 depth=@ud subf1=phash subf2=phash]
+  $%  [%0 axis=@ leaf=(each phash atom) path=(list phash)]
+      [%1 res=phash]
+      [%2 subf1=subf subf2=subf]
       ::  encodes to
       ::   [3 subf-hash atom 0] if atom
       ::   [3 subf-hash 0 cell-hash cell-hash] if cell
       ::
       $:  %3
-          depth=@ud
-          subf=phash
+          =subf
           $=  subf-res
+          %-  unit
           $%  [%atom @]
               [%cell head=phash tail=phash]
           ==
       ==
-      [%4 depth=@ud subf=phash atom=@]
-      [%5 depth=@ud subf1=phash subf2=phash]
-      [%6 depth=@ud subf1=phash subf2=phash subf3=phash]
-      [%7 depth=@ud subf1=phash subf2=phash]
-      [%8 depth=@ud subf1=phash subf2=phash]
-      [%9 depth=@ud axis=@ subf1=phash leaf=phash path=(list phash)]
-      [%10 depth=@ud axis=@ subf1=phash subf2=phash oldleaf=phash path=(list phash)]
-      [%12 depth=@ud grain-id=@ leaf=phash path=(list phash)]  ::  leaf should be hash of grain-id, path is through granary
-      [%cons depth=@ud subf1=phash subf2=phash]
+      [%4 subf=subf atom=(each atom (pair phash phash))]
+      [%5 subf1=subf subf2=subf]
+      [%6 subf1=subf subf2=subfh subf3=subfh]
+      [%7 subf1=subf subf2=subfh]
+      [%8 subf1=subf subf2=subf]
+      [%9 axis=@ subf1=subf leaf=(each phash atom) path=(list phash)]
+      [%10 axis=@ subf1=subf subf2=subf oldleaf=(each phash atom) path=(list phash)]
+      [%12 grain-id=@ leaf=phash path=(list phash)]  ::  leaf should be hash of grain-id, path is through granary
+      [%cons subf1=subf subf2=subf]
       ::[%jet core=phash sample=* jet=@t]
   ==
 :: subject -> formula -> hint

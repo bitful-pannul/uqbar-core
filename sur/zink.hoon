@@ -6,62 +6,47 @@
 +$  cache  (map * (pair phash @ud))
 +$  child  *
 +$  parent  *
-+$  pfhash  @                     ::  Pedersen hash
++$  phash  @                     ::  Pedersen hash
 +$  hash-req
   $%  [%cell head=phash tail=phash]
       [%atom val=@]
   ==
 ::
-+$  phash-tree
-  $:  p=phash
-      $=  q
-      $%  %cache
-          [%cell head=phash-tree tail=phash-tree]
-          [%atom val=@]
-      ==
-  ==
-+$  subf-tree
-  =<  [=hash p=body]
-  |%
-  ++  body
-    $%  [%cache h=phash]
-        [%cell head=subf-tree tail=subf-tree]
-        [%atom val=@]
-    ==
-  --
-+$  subfh  [op=?(%cons %0 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 [%unknown p=@]) h=phash]
-+$  subf  [p=subfh hit=(list cairo-hint)]
-::
++$  subf  [h=phash hit=hints]
 +$  cairo-hint
-  $%  [%0 axis=@ leaf=(each phash atom) path=(list phash)]
-      [%1 res=phash]
-      [%2 subf1=subf subf2=subf]
+  $%  
+      [%0 (each [axis=@ leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
+      [%1 phash]
+      [%2 (each [sf1=subf sf2=subf] phash)]
       ::  encodes to
-      ::   [3 subf-hash atom 0] if atom
-      ::   [3 subf-hash 0 cell-hash cell-hash] if cell
+      ::   [3 sf-hash atom 0] if atom
+      ::   [3 sf-hash 0 cell-hash cell-hash] if cell
       ::
-      $:  %3
-          =subf
-          $=  subf-res
-          %-  unit
-          $%  [%atom @]
-              [%cell head=phash tail=phash]
-          ==
+      [%3 (each [sf=subf sf-res=(unit hash-req)] phash)]
+      [%4 (each [sf=subf sf-res=(unit hash-req)] phash)]
+      [%5 (each [sf1=subf sf2=subf] phash)]
+      [%6 (each [sf1=subf sf2=phash sf3=phash] phash)]
+      [%7 (each [sf1=subf sf2=phash] phash)]
+      [%8 (each [sf1=subf sf2=phash] phash)]
+      [%9 (each [axis=@ sf1=subf leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
+      $:  %10
+          %+  each
+            $:  axis=@
+                sf1=subf
+                sf2=subf
+                old-leaf-or-atom=(each phash [=atom crash-axis=@])
+                path=(list phash)
+            ==
+          phash
       ==
-      [%4 subf=subf atom=(each atom (pair phash phash))]
-      [%5 subf1=subf subf2=subf]
-      [%6 subf1=subf subf2=subfh subf3=subfh]
-      [%7 subf1=subf subf2=subfh]
-      [%8 subf1=subf subf2=subf]
-      [%9 axis=@ subf1=subf leaf=(each phash atom) path=(list phash)]
-      [%10 axis=@ subf1=subf subf2=subf oldleaf=(each phash atom) path=(list phash)]
-      [%12 grain-id=@ leaf=phash path=(list phash)]  ::  leaf should be hash of grain-id, path is through granary
-      [%cons subf1=subf subf2=subf]
-      ::[%jet core=phash sample=* jet=@t]
+      [%11 (each [(each [tag=@ clue=subf] @) next=phash] phash)]
+      [%12 (each [grain-id=@ leaf=phash path=(list phash)] phash)]  ::  leaf should be hash of grain-id, path is through granary
+      [%cons sf1=subf sf2=subf]
+      [%invalid (each @ [@ phash])]
   ==
 :: subject -> formula -> hint
 ::+$  hints  (mip phash phash cairo-hint)
-+$  hints  (list cairo-hint)
++$  hints  $@(~ [i=cairo-hint t=(list cairo-hint)])
 ::  map of a noun's merkle children. root -> [left right]
 +$  merk-tree  (map phash [phash phash])
 ::  map from jet tag to gas cost

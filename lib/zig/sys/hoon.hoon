@@ -23,7 +23,7 @@
   ::  a: augend
   ::  b: addend
   |=  [a=@ b=@]
-  ~>  %add.+<
+  ~>  %zfast.[%add +<]
   ::  sum
   ^-  @
   ?:  =(0 a)  b
@@ -32,7 +32,7 @@
 ++  dec
   ::  unsigned decrement by one.
   |=  a=@
-  ~>  %dec.+<
+  ~>  %zfast.[%dec +<]
   ~_  leaf+"decrement-underflow"
   ?<  =(0 a)
   =+  b=0
@@ -47,7 +47,7 @@
   ::  a: dividend
   ::  b: divisor
   |:  [a=`@`1 b=`@`1]
-  ~>  %div.+<
+  ~>  %zfast.[%div +<]
   ::  quotient
   ^-  @
   ~_  leaf+"divide-by-zero"
@@ -63,7 +63,7 @@
   ::  a: dividend
   ::  b: divisor
   |=  [a=@ b=@]
-  ~>  %dvr.+<
+  ~>  %zfast.[%dvr +<]
   ::  p: quotient
   ::  q: remainder
   ^-  [p=@ q=@]
@@ -77,7 +77,7 @@
   ::  a: left hand operand (todo: name)
   ::  b: right hand operand
   |=  [a=@ b=@]
-  ~>  %gte.+<
+  ~>  %zfast.[%gte +<]
   ::  greater than or equal to?
   ^-  ?
   !(lth a b)
@@ -90,7 +90,7 @@
   ::  a: left hand operand (todo: name)
   ::  b: right hand operand
   |=  [a=@ b=@]
-  ~>  %gth.+<
+  ~>  %zfast.[%gth +<]
   ::  greater than?
   ^-  ?
   !(lte a b)
@@ -103,7 +103,7 @@
   ::  a: left hand operand (todo: name)
   ::  b: right hand operand
   |=  [a=@ b=@]
-  ~>  %lte.+<
+  ~>  %zfast.[%lte +<]
   ::  less than or equal to?
   |(=(a b) (lth a b))
 ::
@@ -113,7 +113,7 @@
   ::  a: left hand operand (todo: name)
   ::  b: right hand operand
   |=  [a=@ b=@]
-  ~>  %lth.+<
+  ~>  %zfast.[%lth +<]
   ::  less than?
   ^-  ?
   ?&  !=(a b)
@@ -126,7 +126,7 @@
 ++  max
   ::  unsigned maximum
   |=  [a=@ b=@]
-  ~>  %max.+<
+  ~>  %zfast.[%max +<]
   ::  the maximum
   ^-  @
   ?:  (gth a b)  a
@@ -135,7 +135,7 @@
 ++  min
   ::  unsigned minimum
   |=  [a=@ b=@]
-  ~>  %min.+<
+  ~>  %zfast.[%min +<]
   ::  the minimum
   ^-  @
   ?:  (lth a b)  a
@@ -147,7 +147,7 @@
   ::  a: dividend
   ::  b: divisor
   |:  [a=`@`1 b=`@`1]
-  ~>  %mod.+<
+  ~>  %zfast.[%mod +<]
   ::  the remainder
   ^-  @
   ?<  =(0 b)
@@ -159,7 +159,7 @@
   ::  a: multiplicand
   ::  b: multiplier
   |:  [a=`@`1 b=`@`1]
-  ~>  %mul.+<
+  ~>  %zfast.[%mul +<]
   ::  product
   ^-  @
   =+  c=0
@@ -173,7 +173,7 @@
   ::  a: minuend
   ::  b: subtrahend
   |=  [a=@ b=@]
-  ~>  %sub.+<
+  ~>  %zfast.[%sub +<]
   ~_  leaf+"subtract-underflow"
   ::  difference
   ^-  @
@@ -512,7 +512,7 @@
 ::
 ++  need                                                ::  demand
   |*  a=(unit)
-  ~>  %need.+<
+  ~>  %zfast.[%need +<]
   ?~  a  ~>(%mean.'need' !!)
   u.a
 ::
@@ -781,7 +781,7 @@
 ::
 ++  turn
   |*  [a=(list) b=gate]
-  ~>  %turn.+<
+  ~>  %zfast.[%turn +<]
   =>  .(a (homo a))
   ^-  (list _?>(?=(^ a) (b i.a)))
   |-
@@ -833,37 +833,37 @@
   ::
 ++  bex                                                 ::  binary exponent
   |=  a=bloq
-  ~>  %bex.+<
+  ~>  %zfast.[%bex +<]
   ^-  @
   ?:  =(0 a)  1
   (mul 2 $(a (dec a)))
 ::
 ++  can                                                 ::  assemble
   |=  [a=bloq b=(list [p=step q=@])]
-  ~>  %can.+<
+  ~>  %zfast.[%can +<]
   ^-  @
   ?~  b  0
   (add (end [a p.i.b] q.i.b) (lsh [a p.i.b] $(b t.b)))
 ::
 ++  cat                                                 ::  concatenate
   |=  [a=bloq b=@ c=@]
-  ~>  %cat.+<
+  ~>  %zfast.[%cat +<]
   (add (lsh [a (met a b)] c) b)
 ::
 ++  cut                                                 ::  slice
   |=  [a=bloq [b=step c=step] d=@]
-  ~>  %cut.+<
+  ~>  %zfast.[%cut +<]
   (end [a c] (rsh [a b] d))
 ::
 ++  end                                                 ::  tail
   |=  [a=bite b=@]
-  ~>  %end.+<
+  ~>  %zfast.[%end +<]
   =/  [=bloq =step]  ?^(a a [a *step])
   (mod b (bex (mul (bex bloq) step)))
 ::
 ++  fil                                                 ::  fill bloqstream
   |=  [a=bloq b=step c=@]
-  ~>  %fil.+<
+  ~>  %zfast.[%fil +<]
   =|  n=@ud
   =.  c  (end a c)
   =/  d  c
@@ -874,13 +874,13 @@
 ::
 ++  lsh                                                 ::  left-shift
   |=  [a=bite b=@]
-  ~>  %lsh.+<
+  ~>  %zfast.[%lsh +<]
   =/  [=bloq =step]  ?^(a a [a *step])
   (mul b (bex (mul (bex bloq) step)))
 ::
 ++  met                                                 ::  measure
   |=  [a=bloq b=@]
-  ~>  %met.+<
+  ~>  %zfast.[%met +<]
   ^-  @
   =+  c=0
   |-
@@ -889,14 +889,14 @@
 ::
 ++  rap                                                 ::  assemble variable
   |=  [a=bloq b=(list @)]
-  ~>  %rap.+<
+  ~>  %zfast.[%rap +<]
   ^-  @
   ?~  b  0
   (cat a i.b $(b t.b))
 ::
 ++  rep                                                 ::  assemble fixed
   |=  [a=bite b=(list @)]
-  ~>  %rep.+<
+  ~>  %zfast.[%rep +<]
   =/  [=bloq =step]  ?^(a a [a *step])
   =|  i=@ud
   |-  ^-  @
@@ -911,7 +911,7 @@
   ::  len: size of dat, in boz
   ::  dat: data to flip
   |=  [boz=bloq len=@ud dat=@]
-  ~>  %rev.+<
+  ~>  %zfast.[%rev +<]
   ^-  @
   =.  dat  (end [boz len] dat)
   %+  lsh
@@ -920,30 +920,30 @@
 ::
 ++  rip                                                 ::  disassemble
   |=  [a=bite b=@]
-  ~>  %rip.+<
+  ~>  %zfast.[%rip +<]
   ^-  (list @)
   ?:  =(0 b)  ~
   [(end a b) $(b (rsh a b))]
 ::
 ++  rsh                                                 ::  right-shift
   |=  [a=bite b=@]
-  ~>  %rsh.+<
+  ~>  %zfast.[%rsh +<]
   =/  [=bloq =step]  ?^(a a [a *step])
   (div b (bex (mul (bex bloq) step)))
 ::
 ++  run                                                 ::  +turn into atom
   |=  [a=bite b=@ c=$-(@ @)]
-  ~>  %run.+<
+  ~>  %zfast.[%run +<]
   (rep a (turn (rip a b) c))
 ::
 ++  rut                                                 ::  +turn into list
   |*  [a=bite b=@ c=$-(@ *)]
-  ~>  %rut.+<
+  ~>  %zfast.[%rut +<]
   (turn (rip a b) c)
 ::
 ++  sew                                                 ::  stitch into
   |=  [a=bloq [b=step c=step d=@] e=@]
-  ~>  %sew.+<
+  ~>  %zfast.[%sew +<]
   ^-  @
   %+  add
     (can a b^e c^d ~)
@@ -952,12 +952,12 @@
 ::
 ++  swp                                                 ::  naive rev bloq order
   |=  [a=bloq b=@]
-  ~>  %swp.+<
+  ~>  %zfast.[%swp +<]
   (rep a (flop (rip a b)))
 ::
 ++  xeb                                                 ::  binary logarithm
   |=  a=@
-  ~>  %xeb.+<
+  ~>  %zfast.[%xeb +<]
   ^-  @
   (met 0 a)
 ::
@@ -3290,7 +3290,7 @@
 ::
 ++  sham                                                ::  128bit noun hash
   |=  yux=*
-  ~>  %sham.+<
+  ~>  %zfast.[%sham +<]
   ^-  @uvH  ^-  @
   ?@  yux
     (shaf %mash yux)
@@ -3303,13 +3303,13 @@
 ::
 ++  shax                                                ::  sha-256
   |=  ruz=@
-  ~>  %shax.+<
+  ~>  %zfast.[%shax +<]
   ^-  @
   (shay [(met 3 ruz) ruz])
 ::
 ++  shay                                                ::  sha-256 with length
   |=  [len=@u ruz=@]
-  ~>  %shay.+<
+  ~>  %zfast.[%shay +<]
   ^-  @
   =>  .(ruz (cut 3 [0 len] ruz))
   =+  [few==>(fe .(a 5)) wac=|=([a=@ b=@] (cut 5 [a 1] b))]
@@ -5909,7 +5909,7 @@
   ::
 ++  scot
   |=  mol=dime
-  ~>  %scot.+<
+  ~>  %zfast.[%scot +<]
   ~(rent co %$ mol)
 ++  scow
   ~/  %scow

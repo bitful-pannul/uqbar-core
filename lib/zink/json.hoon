@@ -10,79 +10,114 @@
   ++  en-hint
     |=  hin=cairo-hint
     ^-  json
+    =,  enjs:format
     :-  %a
     ^-  (list json)
-    ?-  -.hin
-        %0
-      :~  s+'0'
-          s+(num axis.hin)
-          s+(num leaf.hin)
-          a+(turn path.hin |=(p=phash s+(num p)))
+    :-  ?:(?=(?(%cons %invalid) -.hin) [%s -.hin] (num -.hin))
+    :_  ~
+    ?:  &(?!(?=(?(%1 %cons %invalid) -.hin)) ?=(%| +<.hin))
+        ?>  ?=(@ p.hin) :: compiler brings in an %invalid case here, wtf
+        (frond %broke (num p.hin))
+    ::  for some reason previous conditional doesn't assert %& case here
+    ::  it should mint-vain, but doesn't
+    ?+  hin  !!
+        [%0 %& *]
+      %-  pairs
+      :~  axis+(num axis.p.hin)
+          leaf-or-atom+(en-leaf-or-atom leaf-or-atom.p.hin)
+          path+(en-path path.p.hin)
       ==
     ::
-        %1
-      ~[s+'1' s+(num res.hin)]
-    ::
-        %2
-      ~[s+'2' s+(num subf1.hin) s+(num subf2.hin)]
-    ::
-        %3
-    ::  if atom, head and tail are 0
-    ::
-      :+  s+'3'
-        s+(num subf.hin)
-      ?-  -.subf-res.hin
-          %atom
-        ~[s+(num +.subf-res.hin) s+'0' s+'0']
-      ::
-          %cell
-        :~  s+'0'
-            s+(num head.subf-res.hin)
-            s+(num tail.subf-res.hin)
-        ==
+        [%1 *]  (num +.hin)
+        [?(%2 %5) %& *]   (pairs sf1+(en-subf sf1.p.hin) sf2+(en-subf sf2.p.hin) ~)
+        [?(%3 %4) %& *]
+      ?~  sf-res.p.hin  (frond %sf (en-subf sf.p.hin))
+      %-  pairs
+      :~  sf+(en-subf sf.p.hin)
+          sf-res+(en-hash-req u.sf-res.p.hin)
       ==
     ::
-        %4
-      ~[s+'4' s+(num subf.hin) s+(num atom.hin)]
-    ::
-        %5
-      ~[s+'5' s+(num subf1.hin) s+(num subf2.hin)]
-    ::
-        %6
-      ~[s+'6' s+(num subf1.hin) s+(num subf2.hin) s+(num subf3.hin)]
-    ::
-        %7
-      ~[s+'7' s+(num subf1.hin) s+(num subf2.hin)]
-    ::
-        %8
-      ~[s+'8' s+(num subf1.hin) s+(num subf2.hin)]
-    ::
-        %9
-      :~  s+'9'
-          s+(num axis.hin)
-          s+(num subf1.hin)
-          s+(num leaf.hin)
-          a+(turn path.hin |=(p=phash s+(num p)))
+        [%6 %& *]  (pairs sf1+(en-subf sf1.p.hin) sf2+(num sf2.p.hin) sf3+(num sf3.p.hin) ~)
+        [?(%7 %8) %& *]  (pairs sf1+(en-subf sf1.p.hin) sf2+(num sf2.p.hin) ~)
+        [%9 %& *]
+      %-  pairs
+      :~  axis+(num axis.p.hin)
+          sf1+(en-subf sf1.p.hin)
+          leaf-or-atom+(en-leaf-or-atom leaf-or-atom.p.hin)
+          path+(en-path path.p.hin)
       ==
     ::
-        %10
-      :~  s+'10'
-          s+(num axis.hin)
-          s+(num subf1.hin)
-          s+(num subf2.hin)
-          s+(num oldleaf.hin)
-          a+(turn path.hin |=(p=phash s+(num p)))
+        [%10 %& *]
+      %-  pairs
+      :~  axis+(num axis.p.hin)
+          sf1+(en-subf sf1.p.hin)
+          sf2+(en-subf sf2.p.hin)
+          old-leaf-or-atom+(en-leaf-or-atom old-leaf-or-atom.p.hin)
+          path+(en-path path.p.hin)
       ==
     ::
-        %12
-      !!
+        [%11 %& *]  (en-11 p.hin)
     ::
-        %cons
-      ~[s+'cons' s+(num subf1.hin) s+(num subf2.hin)]
+        [%12 %& *]
+      %-  pairs
+      :~  grain-id+(num grain-id.p.hin)
+          leaf+(num leaf.p.hin)
+          path+(en-path path.p.hin)
+      ==
+    ::
+        [%cons *]  (pairs sf1+(en-subf sf1.hin) sf2+(en-subf sf2.hin) ~)
+        [%invalid *]  (en-invalid +.hin)
     ==
+    ::
+  ++  en-11
+    |=  [a=(each [tag=@ clue=subf] @) next=phash]
+    ^-  json
+    =,  enjs:format
+    ?-  -.a
+      %&  (pairs tag+(num tag.p.a) sf+(en-subf clue.p.a) next+(num next) ~)
+      %|  (pairs tag+(num p.a) next+(num next) ~)
+    ==
+
+  ++  en-invalid
+    |=  hin=(each @ [@ phash])
+    ^-  json
+    =,  enjs:format
+    ?-  -.hin
+      %&  (pairs is-atom+b+%& head+(num p.hin) ~)
+      %|  (pairs is-atom+b+%| head+(num -.p.hin) tail+(num +.p.hin) ~)
+    ==
+  ++  en-subf
+    |=  subf
+    ^-  json
+    =,  enjs:format
+    (pairs hash+(num h) hints+(hints hit) ~)
+  ::
+  ++  en-hash-req
+    |=  hash-req
+    ^-  json
+    =,  enjs:format
+    ?-  +<-
+      %cell  (pairs head+(num head) tail+(num tail) ~)
+      %atom  (frond %atom (num val))
+    ==
+  ::
+  ++  en-leaf-or-atom
+    |=  hin=(each phash [=atom crash-axis=@])
+    ^-  json
+    =,  enjs:format
+    =,  p.hin
+    ?-  -.hin
+      %&  (frond %leaf (num p.hin))
+      %|  (pairs atom+(num atom) crash-axis+(num crash-axis) ~)
+    ==
+  ::
+  ++  en-path
+    |=  path=(list phash)
+    a+(turn path num)
   ::
   ++  num
     |=  n=@ud
-    `cord`(rsh [3 2] (scot %ui n))
+    ^-  json
+    [%s `cord`(rsh [3 2] (scot %ui n))]
   --
 --

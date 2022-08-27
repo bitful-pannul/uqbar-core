@@ -41,6 +41,7 @@
       ==
       [%11 (each [(each [tag=@ clue=subf] @) next=phash] phash)]
       [%12 (each [grain-id=@ leaf=phash path=(list phash)] phash)]  ::  leaf should be hash of grain-id, path is through granary
+      [%jet data=*] :: not every jet will return the whole sample as a noun
       [%cons sf1=subf sf2=subf]
       [%invalid (each @ [@ phash])]
   ==

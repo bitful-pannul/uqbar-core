@@ -381,7 +381,7 @@
       [%|^trace hit]
     ?~  p.next-res  [%&^~ hit]
     :_  hit
-    ?:  =(%fast tag.f)  [%&^p.next-res hit]^app
+    ?:  =(%fast tag.f)  [%&^p.next-res hit^next-hints]^app
     :+  %&  ~
     .*  s
     [11 [tag.f 1 u.p.clue-res] 1 u.p.next-res]

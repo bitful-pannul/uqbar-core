@@ -13,9 +13,9 @@
     =,  enjs:format
     :-  %a
     ^-  (list json)
-    :-  ?:(?=(?(%cons %invalid) -.hin) [%s -.hin] (num -.hin))
+    :-  ?:(?=(?(%cons %invalid %jet) -.hin) [%s -.hin] (num -.hin))
     :_  ~
-    ?:  &(?!(?=(?(%1 %cons %invalid) -.hin)) ?=(%| +<.hin))
+    ?:  &(?!(?=(?(%1 %cons %invalid %jet) -.hin)) ?=(%| +<.hin))
         ?>  ?=(@ p.hin) :: compiler brings in an %invalid case here, wtf
         (frond %broke (num p.hin))
     ::  for some reason previous conditional doesn't assert %& case here
@@ -65,10 +65,17 @@
           path+(en-path path.p.hin)
       ==
     ::
+      [%jet *]  (en-noun +.hin)
+    ::
         [%cons *]  (pairs sf1+(en-subf sf1.hin) sf2+(en-subf sf2.hin) ~)
         [%invalid *]  (en-invalid +.hin)
     ==
     ::
+  ++  en-noun
+    |=  n=*
+    |-  ^-  json
+    ?@  n  (num n)
+    a+[$(n -.n) $(n +.n) ~]
   ++  en-11
     |=  [a=(each [tag=@ clue=subf] @) next=phash]
     ^-  json

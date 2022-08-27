@@ -435,6 +435,9 @@
     ?:  ?=(%zock tag)
       ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  [%|^trace ~]^app
       |^
+      =^  shash  app  (hash s.sam)
+      =^  fhash  app  (hash f.sam)
+      =^  scryhash  app  (hash scry.sam)
       =/  new-book
         %_    zink-loop
             s     s.sam
@@ -446,7 +449,7 @@
           ?:  (lth u.bud u.bud.sam)  bud
           bud.sam
         ==
-      :-  p.new-book
+      :-  p.new-book(q [%jet tag [bud shash fhash scryhash]])
       %_    app
           :: todo: how can we make sure new-scry shares the same cache, instead of our higher level?
           cax  cax.q.new-book

@@ -48,8 +48,10 @@
   =|  appendix
   =*  app  -
   =|  trace=fail
-  |=  [s=* f=* scry=granary-scry test-mode=?]
+  =|  scrys=(list *)
+  |=  [s=* f=* scry=(unit granary-scry) test-mode=?]
   ^-  book
+  =.  scrys  ?~(scry ~ [`*`scry]~)
   =-  -(q.p (flop q.p.-))
   |^  ^-  book
   ?+    f
@@ -360,7 +362,7 @@
       $(f clue.f)
     ?:  ?=(%| -.clue-res)
       ~&  269
-      [%|^trace [%11 %& %&^[tag.f [hclue clue-hints]] hnext]~]^app
+      [%|^trace [%11 %& %&^[tag.f [hclue (flop clue-hints)]] hnext]~]^app
     ?~  p.clue-res  [%&^~ ~]^app
     ::  if jet exists for this tag, and sample is good,
     ::  replace execution with jet
@@ -371,7 +373,7 @@
           ?=(?(%hunk %hand %lose %mean %spot) tag.f)
         [[tag.f u.p.clue-res] trace]
       $(f next.f)
-    =/  hit  [%11 %& %&^[tag.f [hclue clue-hints]] hnext]^next-hints
+    =/  hit  [%11 %& %&^[tag.f [hclue (flop clue-hints)]] hnext]^next-hints
     ?:  ?=(%| -.next-res)
       ~&  190
       [%|^trace hit]^app
@@ -381,29 +383,34 @@
       [%|^trace hit]
     ?~  p.next-res  [%&^~ hit]
     :_  hit
-    ?:  =(%fast tag.f)  [%&^p.next-res hit^next-hints]^app
+    ?:  =(%fast tag.f)  [%&^p.next-res hit]^app
     :+  %&  ~
     .*  s
     [11 [tag.f 1 u.p.clue-res] 1 u.p.next-res]
   ::
       [%12 ref=* path=*]
-    ::  TODO hash ref, path and grain id parsed as last item in path
-    ::       hash product and path through granary merkle tree
-    ::       (similar process in nock 0)
-    !!
-    :: =^  href  app  (hash target.f)
-    :: ?:  =(bud 0)  [%&^~ [%10 %& axis.f [hval ~] [htar ~] %|^0 ~]~]^app
-    :: =^  ref=bodyt  app
-    ::   $(f ref.f)
-    :: ?:  ?=(%| -.ref)     ~&  289  [%|^trace app]
-    :: ?~  p.ref            [%&^~ [%0 ]]^app
-    :: =^  path=bodyt  app
-    ::   $(f path.f)
-    :: ?:  ?=(%| -.path)    ~&  293  [%|^trace app]
-    :: ?~  p.path           [%&^~ [%0 ]]^app
-    :: ?~  result=(scry p.ref p.path)
-    ::   [%&^~^~ app]
-    :: [%&^[~ `product.u.result] app]
+    ?~  scrys  [%|^trace [%12 %|^fh]~]^app
+    ::  todo: see notes for bud12 in zere
+    =^  oob  app  (take-bud 5)
+    ?:  oob
+      =^  fh  app  (hash +.f)
+        [%&^~ [%12 %|^fh]~]^app
+    =^  href  app  (hash ref.f)
+    =^  hpath  app  (hash path.f)
+    =^  [=ref=res =ref=hints]  app
+      $(f ref.f)
+    ?:  ?=(%| -.ref)
+      ~&  289  [%|^trace [%12 %& [href (flop ref-hints)] [hpath ~]]~]^app
+    ?~  p.ref            [%&^~ [%12 %& [href (flop ref-hints)] [hpath ~]]~]^app
+    =^  [=path=res =path=hints]  app
+      $(f path.f)
+    =/  hit  [%12 %& [href (flop ref-hints)] [hpath (flop path-hints)]]
+    ?:  ?=(%| -.path)
+      ~&  293  [%|^trace hit~]^app
+    ?~  p.path
+      [%&^~ hit~]^app
+    =-  -(q.p hit^q.p.-)
+    $(s i.scrys, f [9 2 10 [6 1 [p.ref p.path]] 0 1], scrys t.scry)
   ==
   ::
   ++  zink-loop  $
@@ -434,39 +441,31 @@
     ^-  book
     ?:  ?=(%zock tag)
       ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  [%|^trace ~]^app
-      |^
       =^  shash  app  (hash s.sam)
       =^  fhash  app  (hash f.sam)
-      =^  scryhash  app  (hash scry.sam)
+      =^  hscry  app  (hash scry.sam)
+      =/  inner-bud=(unit @ud)
+        ?~  bud  bud.sam
+        ?~  bud.sam  bud
+        ?:  (lth u.bud u.bud.sam)  bud
+        bud.sam
       =/  new-book
         %_    zink-loop
-            s     s.sam
-            f     f.sam
-            scry  new-scry
-            bud
-          ?~  bud  bud.sam
-          ?~  bud.sam  bud
-          ?:  (lth u.bud u.bud.sam)  bud
-          bud.sam
+            s      s.sam
+            f      f.sam
+            scrys  scry.sam^scrys
+            bud    inner-bud
         ==
-      :-  p.new-book(q [%jet tag [bud shash fhash scryhash]])
+      :-  p.new-book(q [%jet %zock [bud shash fhash hscry]]^q)
       %_    app
-          :: todo: how can we make sure new-scry shares the same cache, instead of our higher level?
           cax  cax.q.new-book
           bud
         ?~  bud  bud
         ?>  ?=(^ bud.q.new-book)
         ?~  bud.sam  bud.q.new-book
-        =/  diff  (sub u.bud.sam u.bud.q.new-book)
+        =/  diff  (sub inner-bud u.bud.q.new-book)
         `(sub u.bud diff)
       ==
-      ++  new-scry
-        |=  a=^
-        ^-  (unit [path=(list phash) product=*])
-        :: think we might have to change a bit how scry works
-        :: zink-loop(s scry.sam, f [9 2 10 [6 1 a] 0 2])
-        !!
-      --
     =-  [- ~]^app
     ::  TODO: probably unsustainable to need to include assertions to
     ::  make all jets crash safe.

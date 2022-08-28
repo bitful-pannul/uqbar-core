@@ -1,7 +1,7 @@
 |%
 +$  granary-scry
   $-  ^
-  (unit [path=(list phash) product=*])
+  (unit (unit *))
 ::
 +$  cache  (map * (pair phash @ud))
 +$  child  *
@@ -18,17 +18,13 @@
       [%0 (each [axis=@ leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
       [%1 phash]
       [%2 (each [sf1=subf sf2=subf] phash)]
-      ::  encodes to
-      ::   [3 sf-hash atom 0] if atom
-      ::   [3 sf-hash 0 cell-hash cell-hash] if cell
-      ::
       [%3 (each [sf=subf sf-res=(unit hash-req)] phash)]
       [%4 (each [sf=subf sf-res=(unit hash-req)] phash)]
       [%5 (each [sf1=subf sf2=subf] phash)]
       [%6 (each [sf1=subf sf2=phash sf3=phash] phash)]
       [%7 (each [sf1=subf sf2=phash] phash)]
       [%8 (each [sf1=subf sf2=phash] phash)]
-      [%9 (each [axis=@ sf1=subf leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
+      [%9 (each [axis=@ sf=subf leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
       $:  %10
           %+  each
             $:  axis=@
@@ -39,8 +35,8 @@
             ==
           phash
       ==
-      [%11 (each [(each [tag=@ clue=subf] @) next=phash] phash)]
-      [%12 (each [grain-id=@ leaf=phash path=(list phash)] phash)]  ::  leaf should be hash of grain-id, path is through granary
+      [%11 (each [(each [tag=@ clue=subf] @) sf=phash] phash)]
+      [%12 (each [sf1=subf sf2=subf] phash)]
       [%jet jet=@t data=*] :: not every jet will return the whole sample as a noun
       [%cons sf1=subf sf2=subf]
       [%invalid (each @ [@ phash])]

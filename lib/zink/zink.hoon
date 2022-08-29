@@ -10,7 +10,7 @@
     --
 |%
 ++  zebra                                                 ::  bounded zk +mule
-  |=  [bud=(unit @ud) cax=cache scry=granary-scry [s=* f=*] test-mode=?]
+  |=  [bud=(unit @ud) cax=cache scry=(unit granary-scry) [s=* f=*] test-mode=?]
   ^-  book
   %.  [s f scry test-mode]
   %*  .  zink
@@ -37,9 +37,8 @@
   ^-  json
   =/  hs  (hash -.n cax)
   =/  hf  (hash +.n cax)
-  =/  wtf=json  (hints:enjs h)
   %-  pairs:enjs:format
-  :~  hints+wtf
+  :~  hints+(hints:enjs h)
       subject+(num:enjs hs)
       formula+(num:enjs hf)
   ==
@@ -54,6 +53,8 @@
   =.  scrys  ?~(scry ~ [`*`scry]~)
   =-  -(q.p (flop q.p.-))
   |^  ^-  book
+  =-   ~&  hmm+[f p.p.-]  -
+  ^-  book
   ?+    f
     ?@  f  [%|^trace [%invalid %&^f]~]^app
     ?>  ?=(@ -.f)
@@ -252,7 +253,8 @@
       =^  htal  app  (hash +.f)
       [%&^~ [%9 %|^htal]~]^app
     =^  hcore  app  (hash core.f)
-    ?:  =(axis 0)  [%|^trace [%9 %& axis.f [hcore ~] %&^0 ~]~]^app
+    ?:  =(axis 0)
+      ~&  256  [%|^trace [%9 %& axis.f [hcore ~] %&^0 ~]~]^app
     =/  proof-cost  (dec (met 0 axis.f))
     =^  oob  app  (take-bud proof-cost)
     ?:  oob
@@ -264,6 +266,7 @@
     ?~  p.core-res  [%&^~ [%9 %& axis.f [hcore (flop core-hints)] %&^0 ~]~]^app
     =^  arm  app  (frag axis.f u.p.core-res)
     ?:  ?=(%| -.p.arm)
+      ~&  269+[s axis.f]
       :_  app
       [%|^trace [%9 %& axis.f [hcore (flop core-hints)] p.arm q.arm]~]
     =^  harm  app  (hash p.p.arm) :: this will always be a cache hit. dec?
@@ -367,8 +370,10 @@
     ::  if jet exists for this tag, and sample is good,
     ::  replace execution with jet
     =^  [=next=res =next=hints]  app
-      ?:  =(tag %zfast)
-        (jet tag.f u.p.clue-res)
+      ?:  =(tag.f %zfast)
+        ?.  ?=([@tas *] u.p.clue-res)
+          [%|^trace [%11 %& %&^[tag.f [hclue (flop clue-hints)]] hnext]~]^app
+        (jet u.p.clue-res)
       =?    trace
           ?=(?(%hunk %hand %lose %mean %spot) tag.f)
         [[tag.f u.p.clue-res] trace]
@@ -377,19 +382,18 @@
     ?:  ?=(%| -.next-res)
       ~&  190
       [%|^trace hit]^app
+    ?~  p.next-res  [%&^~ hit]^app
     :_  app
-    ?:  ?=(%| -.next-res)
-      ~&  286
-      [%|^trace hit]
-    ?~  p.next-res  [%&^~ hit]
     :_  hit
-    ?:  =(%fast tag.f)  [%&^p.next-res hit]^app
+    ?:  =(%fast tag.f)  %&^p.next-res
     :+  %&  ~
     .*  s
     [11 [tag.f 1 u.p.clue-res] 1 u.p.next-res]
   ::
       [%12 ref=* path=*]
-    ?~  scrys  [%|^trace [%12 %|^fh]~]^app
+    ?~  scrys
+      =^  fh  app  (hash +.f)
+        [%|^trace [%12 %|^fh]~]^app
     ::  todo: see notes for bud12 in zere
     =^  oob  app  (take-bud 5)
     ?:  oob
@@ -399,18 +403,18 @@
     =^  hpath  app  (hash path.f)
     =^  [=ref=res =ref=hints]  app
       $(f ref.f)
-    ?:  ?=(%| -.ref)
+    ?:  ?=(%| -.ref-res)
       ~&  289  [%|^trace [%12 %& [href (flop ref-hints)] [hpath ~]]~]^app
-    ?~  p.ref            [%&^~ [%12 %& [href (flop ref-hints)] [hpath ~]]~]^app
+    ?~  p.ref-res            [%&^~ [%12 %& [href (flop ref-hints)] [hpath ~]]~]^app
     =^  [=path=res =path=hints]  app
       $(f path.f)
     =/  hit  [%12 %& [href (flop ref-hints)] [hpath (flop path-hints)]]
-    ?:  ?=(%| -.path)
-      ~&  293  [%|^trace hit~]^app
-    ?~  p.path
-      [%&^~ hit~]^app
+    ?:  ?=(%| -.path-res)
+      ~&  293  [%|^trace hit ~]^app
+    ?~  p.path-res
+      [%&^~ hit ~]^app
     =-  -(q.p hit^q.p.-)
-    $(s i.scrys, f [9 2 10 [6 1 [p.ref p.path]] 0 1], scrys t.scry)
+    $(s i.scrys, f [9 2 10 [6 1 [p.ref-res p.path-res]] 0 1], scrys t.scrys)
   ==
   ::
   ++  zink-loop  $
@@ -456,14 +460,15 @@
             scrys  scry.sam^scrys
             bud    inner-bud
         ==
-      :-  p.new-book(q [%jet %zock [bud shash fhash hscry]]^q)
+      :-  p.new-book(q [%jet %zock [bud shash fhash hscry]]^q.p.new-book)
       %_    app
           cax  cax.q.new-book
           bud
         ?~  bud  bud
         ?>  ?=(^ bud.q.new-book)
+        ?>  ?=(^ inner-bud)
         ?~  bud.sam  bud.q.new-book
-        =/  diff  (sub inner-bud u.bud.q.new-book)
+        =/  diff  (sub u.inner-bud u.bud.q.new-book)
         `(sub u.bud diff)
       ==
     =-  [- ~]^app
@@ -651,6 +656,7 @@
     ::  (lth bud (mul 2 (dec (met 0 axis))))
     ::  and if it'll crash from a, so let's just run nock 10
     =/  mutant  .*(target [10 [axis 1 value] 0 1])
+    =^  mhash  app  (hash mutant)
     [%&^mutant^p.p.frg q.frg]^app
   ::
   ++  hash

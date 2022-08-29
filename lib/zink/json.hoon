@@ -15,8 +15,7 @@
     ^-  (list json)
     :-  ?:(?=(?(%cons %invalid %jet) -.hin) [%s -.hin] (num -.hin))
     :_  ~
-    ?:  &(?!(?=(?(%1 %cons %invalid %jet) -.hin)) ?=(%| +<.hin))
-        ?>  ?=(@ p.hin) :: compiler brings in an %invalid case here, wtf
+    ?:  &(?=(_-:*$<(?(%1 %cons %invalid %jet) cairo-hint) -.hin) ?=(%| +<.hin))
         (frond %broke (num p.hin))
     ::  for some reason previous conditional doesn't assert %& case here
     ::  it should mint-vain, but doesn't
@@ -29,7 +28,7 @@
       ==
     ::
         [%1 *]  (num +.hin)
-        [?(%2 %5) %& *]   (pairs sf1+(en-subf sf1.p.hin) sf2+(en-subf sf2.p.hin) ~)
+        [?(%2 %5 %12) %& *]   (pairs sf1+(en-subf sf1.p.hin) sf2+(en-subf sf2.p.hin) ~)
         [?(%3 %4) %& *]
       ?~  sf-res.p.hin  (frond %sf (en-subf sf.p.hin))
       %-  pairs
@@ -42,7 +41,7 @@
         [%9 %& *]
       %-  pairs
       :~  axis+(num axis.p.hin)
-          sf1+(en-subf sf1.p.hin)
+          sf1+(en-subf sf.p.hin)
           leaf-or-atom+(en-leaf-or-atom leaf-or-atom.p.hin)
           path+(en-path path.p.hin)
       ==
@@ -57,13 +56,6 @@
       ==
     ::
         [%11 %& *]  (en-11 p.hin)
-    ::
-        [%12 %& *]
-      %-  pairs
-      :~  grain-id+(num grain-id.p.hin)
-          leaf+(num leaf.p.hin)
-          path+(en-path path.p.hin)
-      ==
     ::
       [%jet *]  (en-noun +.hin)
     ::
@@ -81,8 +73,8 @@
     ^-  json
     =,  enjs:format
     ?-  -.a
-      %&  (pairs tag+(num tag.p.a) sf+(en-subf clue.p.a) next+(num next) ~)
-      %|  (pairs tag+(num p.a) next+(num next) ~)
+      %&  (pairs tag+(num tag.p.a) clue+(en-subf clue.p.a) sf+(num next) ~)
+      %|  (pairs tag+(num p.a) sf+(num next) ~)
     ==
 
   ++  en-invalid

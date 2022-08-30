@@ -1,23 +1,21 @@
 /-  spider, test=zere-test
-/+  zink-tests, strandio
+/+  zere-tests, strandio
 ::
 =*  strand     strand:spider
 |%
 +$  card  card:agent:gall
-++  put-fils
-  |=  fils=test-fils:test
+++  put-json
+  |=  [=path =json]
   =/  m  (strand ,~)
   ^-  form:m
-  ;<  our=@p  bind:m  get-our:strandio
-  %-  send-raw-cards:strandio
-  %+  turn  fils
-  |=  test-fil:test
-  ^-  card
-  [%pass /put %agent [our %hood] %poke %drum-put !>([%zere-tests^fil (crip (en-json:html jon))])]
+  %^  poke-our:strandio
+      %hood
+    %drum-put
+  !>([path (crip (en-json:html json))])
 --
 ^-  thread:spider
 |=  arg=vase
 =/  m  (strand ,vase)
 ^-  form:m
-;<  ~  bind:m  (put-fils zink-tests)
+;<  ~  bind:m  (put-json /zere-tests/json zere-tests)
 (pure:m !>(~))

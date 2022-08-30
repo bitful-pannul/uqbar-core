@@ -7,34 +7,31 @@
       |_  cax=cache
       +*  mk-core  .
       ++  test
-        ^-  [test-hints _mk-core]
-        =^  hint  cax  (gen-test-hints args(cax (~(uni by cax) cax.args)))
+        ^-  [json _mk-core]
+        =^  json  cax  (gen-test-hints args(cax (~(uni by cax) cax.args)))
         :_  mk-core(args *test-args)
-        %&^hint
+        json
       ::  
       ++  tests
-        |=  tests=(list [name=@tas args=[test-hints _mk-core]])
-        =|  =test-fils
-        |-  ^-  [test-hints _mk-core]
-        ?~  tests  [%|^test-fils]^mk-core
+        |=  tests=(list [name=@tas args=[json _mk-core]])
+        =|  jons=(list json)
+        |-  ^-  [json _mk-core]
+        ?~  tests  [%a jons]^mk-core
         =^  hints  mk-core  args.i.tests
         %_    $
             tests     t.tests
             mk-core   mk-core(args *test-args)
-            test-fils
-          ?:  ?=(%& -.hints)
-            [/[name.i.tests]/json p.hints]^test-fils
-          %+  weld  test-fils
-          (turn p.hints |=(test-fil `test-fil`[[name.i.tests^fil]^jon]))
+            jons
+          [%a [s+name.i.tests hints ~]]^jons
         ==
       ::
       ++  finish
-        |=  [=test-hints cor=_mk-core]
-        ^-  test-fils
-        ?>  ?=(%| -.test-hints)
-        p.test-hints
+        |=  [=json cor=_mk-core]
+        json
+      ::
+      --
+    ::
     --
-  --
 |%
 ++  gen-test-hints
   |=  test-args

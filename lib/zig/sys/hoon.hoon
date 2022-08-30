@@ -185,12 +185,12 @@
 ::    tree addressing
 +|  %tree
 ++  cap
-  ~/  %cap
   ::    tree head
   ::
   ::  tests whether an `a` is in the head or tail of a noun. produces %2 if it
   ::  is within the head, or %3 if it is within the tail.
   |=  a=@
+  ~>  %zfast.[%cap +<]
   ^-  ?(%2 %3)
   ?-  a
     %2        %2
@@ -200,12 +200,12 @@
   ==
 ::
 ++  mas
-  ~/  %mas
   ::    axis within head/tail
   ::
   ::  computes the axis of `a` within either the head or tail of a noun
   ::  (depends whether `a` lies within the the head or tail).
   |=  a=@
+  ~>  %zfast.[%mas +<]
   ^-  @
   ?-  a
     ?(%2 %3)  1
@@ -214,11 +214,11 @@
   ==
 ::
 ++  peg
-  ~/  %peg
   ::    axis within axis
   ::
   ::  computes the axis of {b} within axis {a}.
   |=  [a=@ b=@]
+  ~>  %zfast.[%peg +<]
   ?<  =(0 a)
   ::  a composed axis
   ^-  @
@@ -531,8 +531,8 @@
   (weld a ^+(a [b]~))
 ::
 ++  fand                                                ::  all indices
-  ~/  %fand
   |=  [nedl=(list) hstk=(list)]
+  ~>  %zfast.[%fand +<]
   =|  i=@ud
   =|  fnd=(list @ud)
   |-  ^+  fnd
@@ -547,8 +547,8 @@
   ^$(i +(i), hstk +.hstk)
 ::
 ++  find                                                ::  first index
-  ~/  %find
   |=  [nedl=(list) hstk=(list)]
+  ~>  %zfast.[%find +<]
   =|  i=@ud
   |-   ^-  (unit @ud)
   =+  [n=nedl h=hstk]
@@ -562,8 +562,8 @@
   ^$(i +(i), hstk +.hstk)
 ::
 ++  flop                                                ::  reverse
-  ~/  %flop
   |*  a=(list)
+  ~>  %zfast.[%flop +<]
   =>  .(a (homo a))
   ^+  a
   =+  b=`_a`~
@@ -603,25 +603,25 @@
   (f arg)
 ::
 ++  lent                                                ::  length
-  ~/  %lent
   |=  a=(list)
+  ~>  %zfast.[%lent +<]
   ^-  @
   =+  b=0
   |-
   ?~  a  b
   $(a t.a, b +(b))
 ::
-++  levy
-  ~/  %levy                                             ::  all of
+++  levy                                                ::  all of
   |*  [a=(list) b=$-(* ?)]
+  ~>  %zfast.[%levy +<]
   |-  ^-  ?
   ?~  a  &
   ?.  (b i.a)  |
   $(a t.a)
 ::
 ++  lien                                                ::  some of
-  ~/  %lien
   |*  [a=(list) b=$-(* ?)]
+  ~>  %zfast.[%lien +<]
   |-  ^-  ?
   ?~  a  |
   ?:  (b i.a)  &
@@ -635,8 +635,8 @@
   a
 ::
 ++  murn                                                ::  maybe transform
-  ~/  %murn
   |*  [a=(list) b=$-(* (unit))]
+  ~>  %zfast.[%murn +<]
   =>  .(a (homo a))
   |-  ^-  (list _?>(?=(^ a) (need (b i.a))))
   ?~  a  ~
@@ -645,83 +645,83 @@
   [+.c $(a t.a)]
 ::
 ++  oust                                                ::  remove
-  ~/  %oust
   |*  [[a=@ b=@] c=(list)]
+  ~>  %zfast.[%oust +<]
   (weld (scag +<-< c) (slag (add +<-< +<->) c))
 ::
 ++  reap                                                ::  replicate
-  ~/  %reap
   |*  [a=@ b=*]
+  ~>  %zfast.[%reap +<]
   |-  ^-  (list _b)
   ?~  a  ~
   [b $(a (dec a))]
 ::
 ++  rear                                                ::  last item of list
-  ~/  %rear
   |*  a=(list)
+  ~>  %zfast.[%rear +<]
   ^-  _?>(?=(^ a) i.a)
   ?>  ?=(^ a)
   ?:  =(~ t.a)  i.a  ::NOTE  avoiding tmi
   $(a t.a)
 ::
 ++  reel                                                ::  right fold
-  ~/  %reel
   |*  [a=(list) b=_=>(~ |=([* *] +<+))]
+  ~>  %zfast.[%reel +<]
   |-  ^+  ,.+<+.b
   ?~  a
     +<+.b
   (b i.a $(a t.a))
 ::
 ++  roll                                                ::  left fold
-  ~/  %roll
   |*  [a=(list) b=_=>(~ |=([* *] +<+))]
+  ~>  %zfast.[%roll +<]
   |-  ^+  ,.+<+.b
   ?~  a
     +<+.b
   $(a t.a, b b(+<+ (b i.a +<+.b)))
 ::
 ++  scag                                                ::  prefix
-  ~/  %scag
   |*  [a=@ b=(list)]
+  ~>  %zfast.[%scag +<]
   |-  ^+  b
   ?:  |(?=(~ b) =(0 a))  ~
   [i.b $(b t.b, a (dec a))]
 ::
 ++  skid                                                ::  separate
-  ~/  %skid
   |*  [a=(list) b=$-(* ?)]
+  ~>  %zfast.[%skid +<]
   |-  ^+  [p=a q=a]
   ?~  a  [~ ~]
   =+  c=$(a t.a)
   ?:((b i.a) [[i.a p.c] q.c] [p.c [i.a q.c]])
 ::
 ++  skim                                                ::  only
-  ~/  %skim
   |*  [a=(list) b=$-(* ?)]
+  ~>  %zfast.[%skim +<]
   |-
   ^+  a
   ?~  a  ~
   ?:((b i.a) [i.a $(a t.a)] $(a t.a))
 ::
 ++  skip                                                ::  except
-  ~/  %skip
   |*  [a=(list) b=$-(* ?)]
+  ~>  %zfast.[%skip +<]
   |-
   ^+  a
   ?~  a  ~
   ?:((b i.a) $(a t.a) [i.a $(a t.a)])
 ::
 ++  slag                                                ::  suffix
-  ~/  %slag
   |*  [a=@ b=(list)]
+  ~>  %zfast.[%slag +<]
   |-  ^+  b
   ?:  =(0 a)  b
   ?~  b  ~
   $(b t.b, a (dec a))
 ::
 ++  snag                                                ::  index
-  ~/  %snag
   |*  [a=@ b=(list)]
+  ~>  %zfast.[%snag +<]
   |-  ^+  ?>(?=(^ b) i.b)
   ?~  b
     ~_  leaf+"snag-fail"
@@ -730,16 +730,16 @@
   $(b t.b, a (dec a))
 ::
 ++  snip                                                ::  drop tail off list
-  ~/  %snip
   |*  a=(list)
+  ~>  %zfast.[%snip +<]
   ^+  a
   ?~  a  ~
   ?:  =(~ t.a)  ~
   [i.a $(a t.a)]
 ::
 ++  sort  !.                                            ::  quicksort
-  ~/  %sort
   |*  [a=(list) b=$-([* *] ?)]
+  ~>  %zfast.[%sort +<]
   =>  .(a ^.(homo a))
   |-  ^+  a
   ?~  a  ~
@@ -754,8 +754,8 @@
   ::  a: list
   ::  b: state
   ::  c: gate from list-item and state to product and new state
-  ~/  %spin
   |*  [a=(list) b=* c=_|=(^ [** +<+])]
+  ~>  %zfast.[%spin +<]
   =>  .(c `$-([_?>(?=(^ a) i.a) _b] [_-:(c) _b])`c)
   =/  acc=(list _-:(c))  ~
   ::  transformed list and updated state
@@ -769,8 +769,8 @@
   ::
   ::  a: list
   ::  b: gate from list-item and state to product and new state
-  ~/  %spun
   |*  [a=(list) b=_|=(^ [** +<+])]
+  ~>  %zfast.[%spun +<]
   ::  transformed list
   p:(spin a +<+.b b)
 ::
@@ -789,40 +789,40 @@
   [i=(b i.a) t=$(a t.a)]
 ::
 ++  weld                                                ::  concatenate
-  ~/  %weld
   |*  [a=(list) b=(list)]
+  ~>  %zfast.[%weld +<]
   =>  .(a ^.(homo a), b ^.(homo b))
   |-  ^+  b
   ?~  a  b
   [i.a $(a t.a)]
 ::
 ++  snap                                               ::  replace item
-  ~/  %snap
   |*  [a=(list) b=@ c=*]
+  ~>  %zfast.[%snap +<]
   ^+  a
   (weld (scag b a) [c (slag +(b) a)])
 ::
 ++  into                                               ::  insert item
-  ~/  %into
   |*  [a=(list) b=@ c=*]
+  ~>  %zfast.[%into +<]
   ^+  a
   (weld (scag b a) [c (slag b a)])
 ::
 ++  welp                                                ::  faceless weld
-  ~/  %welp
   =|  [* *]
   |@
   ++  $
+    ~>  %zfast.[%welp +<]
     ?~  +<-
       +<-(. +<+)
     +<-(+ $(+<- +<->))
   --
 ::
 ++  zing                                                ::  promote
-  ~/  %zing
   =|  *
   |@
   ++  $
+    ~>  %zfast.[%zing +<]
     ?~  +<
       +<
     (welp +<- $(+< +<+))
@@ -993,8 +993,8 @@
   ::                                                    ::
   ::
 ++  con                                                 ::  binary or
-  ~/  %con
   |=  [a=@ b=@]
+  ~>  %zfast.[%con +<]
   =+  [c=0 d=0]
   |-  ^-  @
   ?:  ?&(=(0 a) =(0 b))  d
@@ -1010,8 +1010,8 @@
   ==
 ::
 ++  dis                                                 ::  binary and
-  ~/  %dis
   |=  [a=@ b=@]
+  ~>  %zfast.[%dis +<]
   =|  [c=@ d=@]
   |-  ^-  @
   ?:  ?|(=(0 a) =(0 b))  d
@@ -1027,8 +1027,8 @@
   ==
 ::
 ++  mix                                                 ::  binary xor
-  ~/  %mix
   |=  [a=@ b=@]
+  ~>  %zfast.[%mix +<]
   ^-  @
   =+  [c=0 d=0]
   |-
@@ -1105,8 +1105,8 @@
   --
 ::
 ++  mug                                                 ::  mug with murmur3
-  ~/  %mug
   |=  a=*
+  ~>  %zfast.[%mug +<]
   |^  ?@  a  (mum 0xcafe.babe 0x7fff a)
       =/  b  (cat 5 $(a -.a) $(a +.a))
       (mum 0xdead.beef 0xfffe b)
@@ -1131,8 +1131,8 @@
 ::    Orders atoms before cells, and atoms in ascending LSB order.
 ::
 ++  aor
-  ~/  %aor
   |=  [a=* b=*]
+  ~>  %zfast.[%aor +<]
   ^-  ?
   ?:  =(a b)  &
   ?.  ?=(@ a)
@@ -1151,8 +1151,8 @@
 ::    Orders in ascending tree depth.
 ::
 ++  dor
-  ~/  %dor
   |=  [a=* b=*]
+  ~>  %zfast.[%dor +<]
   ^-  ?
   ?:  =(a b)  &
   ?.  ?=(@ a)
@@ -1167,8 +1167,8 @@
 ::    Orders in ascending +mug hash order, collisions fall back to +dor.
 ::
 ++  gor
-  ~/  %gor
   |=  [a=* b=*]
+  ~>  %zfast.[%gor +<]
   ^-  ?
   =+  [c=(mug a) d=(mug b)]
   ?:  =(c d)
@@ -1179,8 +1179,8 @@
 ::    Orders in ascending double +mug hash order, collisions fall back to +dor.
 ::
 ++  mor
-  ~/  %mor
   |=  [a=* b=*]
+  ~>  %zfast.[%mor +<]
   ^-  ?
   =+  [c=(mug (mug a)) d=(mug (mug b))]
   ?:  =(c d)
@@ -1192,8 +1192,8 @@
   ::                                                    ::
   ::
 ++  pow                                                 ::  unsigned exponent
-  ~/  %pow
   |=  [a=@ b=@]
+  ~>  %zfast.[%pow +<]
   ?:  =(b 0)  1
   |-  ?:  =(b 1)  a
   =+  c=$(b (div b 2))
@@ -1201,8 +1201,8 @@
   ?~  (dis b 1)  d  (mul d a)
 ::
 ++  sqt                                                 ::  unsigned sqrt/rem
-  ~/  %sqt
   |=  a=@  ^-  [p=@ q=@]
+  ~>  %zfast.[%sqt +<]
   ?~  a  [0 0]
   =+  [q=(div (dec (xeb a)) 2) r=0]
   =-  [-.b (sub a +.b)]
@@ -1221,28 +1221,27 @@
   ::                                                    ::
   ::
 ++  in                                                  ::  set engine
-  ~/  %in
   =|  a=(tree)  :: (set)
   |@
   ++  all                                               ::  logical AND
-    ~/  %all
     |*  b=$-(* ?)
+    ~>  %zfast.[%all^%in +>+< +<]
     |-  ^-  ?
     ?~  a
       &
     ?&((b n.a) $(a l.a) $(a r.a))
   ::
   ++  any                                               ::  logical OR
-    ~/  %any
     |*  b=$-(* ?)
+    ~>  %zfast.[%any^%in +>+< +<]
     |-  ^-  ?
     ?~  a
       |
     ?|((b n.a) $(a l.a) $(a r.a))
   ::
   ++  apt                                               ::  check correctness
+    ~>  %zfast.[%apt^%in +<]
     =<  $
-    ~/  %apt
     =|  [l=(unit) r=(unit)]
     |.  ^-  ?
     ?~  a   &
@@ -1253,8 +1252,8 @@
     ==
   ::
   ++  bif                                               ::  splits a by b
-    ~/  %bif
     |*  b=*
+    ~>  %zfast.[%bif^%in +>+< +<]
     ^+  [l=a r=a]
     =<  +
     |-  ^+  a
@@ -1271,8 +1270,8 @@
     c(l a(r l.c))
   ::
   ++  del                                               ::  b without any a
-    ~/  %del
     |*  b=*
+    ~>  %zfast.[%del^%in +>+< +<]
     |-  ^+  a
     ?~  a
       ~
@@ -1288,10 +1287,10 @@
     r.a(l $(r.a l.r.a))
   ::
   ++  dif                                               ::  difference
-    ~/  %dif
     =+  b=a
     |@
     ++  $
+      ~>  %zfast.[%dif^%in +>+< +<]
       |-  ^+  a
       ?~  b
         a
@@ -1318,8 +1317,8 @@
     $(a r.a, c (peg c 7))
   ::
   ++  gas                                               ::  concatenate
-    ~/  %gas
     |=  b=(list _?>(?=(^ a) n.a))
+    ~>  %zfast.[%gas^%in +>+< +<]
     |-  ^+  a
     ?~  b
       a
@@ -1327,8 +1326,8 @@
   ::  +has: does :b exist in :a?
   ::
   ++  has
-    ~/  %has
     |*  b=*
+    ~>  %zfast.[%has^%in +>+< +<]
     ^-  ?
     ::  wrap extracted item type in a unit because bunting fails
     ::
@@ -1354,10 +1353,10 @@
     $(a r.a)
   ::
   ++  int                                               ::  intersection
-    ~/  %int
     =+  b=a
     |@
     ++  $
+      ~>  %zfast.[%int^%in +>+< +<]
       |-  ^+  a
       ?~  b
         ~
@@ -1373,8 +1372,8 @@
     --
   ::
   ++  put                                               ::  puts b in a, sorted
-    ~/  %put
     |*  b=*
+    ~>  %zfast.[%put^%in +>+< +<]
     |-  ^+  a
     ?~  a
       [b ~ ~]
@@ -1393,15 +1392,15 @@
     c(l a(r l.c))
   ::
   ++  rep                                               ::  reduce to product
-    ~/  %rep
     |*  b=_=>(~ |=([* *] +<+))
+    ~>  %zfast.[%rep^%in +>+< +<]
     |-
     ?~  a  +<+.b
     $(a r.a, +<+.b $(a l.a, +<+.b (b n.a +<+.b)))
   ::
   ++  run                                               ::  apply gate to values
-    ~/  %run
     |*  b=gate
+    ~>  %zfast.[%run^%in +>+< +<]
     =+  c=`(set _?>(?=(^ a) (b n.a)))`~
     |-  ?~  a  c
     =.  c  (~(put in c) (b n.a))
@@ -1409,8 +1408,8 @@
     $(a r.a, c c)
   ::
   ++  tap                                               ::  convert to list
+    ~>  %zfast.[%tap^%in +<]
     =<  $
-    ~/  %tap
     =+  b=`(list _?>(?=(^ a) n.a))`~
     |.  ^+  b
     ?~  a
@@ -1418,10 +1417,10 @@
     $(a r.a, b [n.a $(a l.a)])
   ::
   ++  uni                                               ::  union
-    ~/  %uni
     =+  b=a
     |@
     ++  $
+      ~>  %zfast.[%uni^%in +>+< +<]
       ?:  =(a b)  a
       |-  ^+  a
       ?~  b
@@ -1440,8 +1439,8 @@
     --
   ::
   ++  wyt                                               ::  size of set
+    ~>  %zfast.[%wyt^%in +<]
     =<  $
-    ~%  %wyt  +  ~
     |.  ^-  @
     ?~(a 0 +((add $(a l.a) $(a r.a))))
   --
@@ -1450,29 +1449,28 @@
   ::                                                    ::
   ::
 ++  by                                                  ::  map engine
-  ~/  %by
   =|  a=(tree (pair))  ::  (map)
   =*  node  ?>(?=(^ a) n.a)
   |@
   ++  all                                               ::  logical AND
-    ~/  %all
     |*  b=$-(* ?)
+    ~>  %zfast.[%all^%by +>+< +<]
     |-  ^-  ?
     ?~  a
       &
     ?&((b q.n.a) $(a l.a) $(a r.a))
   ::
   ++  any                                               ::  logical OR
-    ~/  %any
     |*  b=$-(* ?)
+    ~>  %zfast.[%any^%by +>+< +<]
     |-  ^-  ?
     ?~  a
       |
     ?|((b q.n.a) $(a l.a) $(a r.a))
   ::
   ++  bif                                               ::  splits a by b
-    ~/  %bif
     |*  [b=* c=*]
+    ~>  %zfast.[%bif^%by +>+< +<]
     ^+  [l=a r=a]
     =<  +
     |-  ^+  a
@@ -1491,8 +1489,8 @@
     d(l a(r l.d))
   ::
   ++  del                                               ::  delete at key b
-    ~/  %del
     |*  b=*
+    ~>  %zfast.[%del^%by +>+< +<]
     |-  ^+  a
     ?~  a
       ~
@@ -1508,10 +1506,10 @@
     r.a(l $(r.a l.r.a))
   ::
   ++  dif                                               ::  difference
-    ~/  %dif
     =+  b=a
     |@
     ++  $
+      ~>  %zfast.[%dif^%by +>+< +<]
       |-  ^+  a
       ?~  b
         a
@@ -1538,8 +1536,8 @@
     $(a r.a, c (peg c 7))
   ::
   ++  apt                                               ::  check correctness
+    ~>  %zfast.[%apt^%by +<]
     =<  $
-    ~/  %apt
     =|  [l=(unit) r=(unit)]
     |.  ^-  ?
     ?~  a   &
@@ -1552,8 +1550,8 @@
     ==
   ::
   ++  gas                                               ::  concatenate
-    ~/  %gas
     |*  b=(list [p=* q=*])
+    ~>  %zfast.[%gas^%by +>+< +<]
     =>  .(b `(list _?>(?=(^ a) n.a))`b)
     |-  ^+  a
     ?~  b
@@ -1561,8 +1559,8 @@
     $(b t.b, a (put p.i.b q.i.b))
   ::
   ++  get                                               ::  grab value by key
-    ~/  %get
     |*  b=*
+    ~>  %zfast.[%get^%by +>+< +<]
     =>  .(b `_?>(?=(^ a) p.n.a)`b)
     |-  ^-  (unit _?>(?=(^ a) q.n.a))
     ?~  a
@@ -1582,15 +1580,15 @@
     (fall (get b) c)
   ::
   ++  has                                               ::  key existence check
-    ~/  %has
     |*  b=*
+    ~>  %zfast.[%has^%by +>+< +<]
     !=(~ (get b))
   ::
   ++  int                                               ::  intersection
-    ~/  %int
     =+  b=a
     |@
     ++  $
+      ~>  %zfast.[%int^%by +>+< +<]
       |-  ^+  a
       ?~  b
         ~
@@ -1610,8 +1608,8 @@
     --
   ::
   ++  jab
-    ~/  %jab
     |*  [key=_?>(?=(^ a) p.n.a) fun=$-(_?>(?=(^ a) q.n.a) _?>(?=(^ a) q.n.a))]
+    ~>  %zfast.[%jab^%by +>+< +<]
     ^+  a
     ::
     ?~  a  !!
@@ -1631,8 +1629,8 @@
     (put b u.c)
   ::
   ++  put                                               ::  adds key-value pair
-    ~/  %put
     |*  [b=* c=*]
+    ~>  %zfast.[%put^%by +>+< +<]
     |-  ^+  a
     ?~  a
       [[b c] ~ ~]
@@ -1653,8 +1651,8 @@
     d(l a(r l.d))
   ::
   ++  rep                                               ::  reduce to product
-    ~/  %rep
     |*  b=_=>(~ |=([* *] +<+))
+    ~>  %zfast.[%rep^%by +>+< +<]
     |-
     ?~  a  +<+.b
     $(a r.a, +<+.b $(a l.a, +<+.b (b n.a +<+.b)))
@@ -1670,8 +1668,8 @@
     [-.f a(l +.e, r +.f)]
   ::
   ++  run                                               ::  apply gate to values
-    ~/  %run
     |*  b=gate
+    ~>  %zfast.[%run^%by +>+< +<]
     |-
     ?~  a  a
     [n=[p=p.n.a q=(b q.n.a)] l=$(a l.a) r=$(a r.a)]
@@ -1683,8 +1681,8 @@
     [n=[p=p.n.a q=(b p.n.a q.n.a)] l=$(a l.a) r=$(a r.a)]
   ::
   ++  tap                                               ::  listify pairs
+    ~>  %zfast.[%tap^%by +<]
     =<  $
-    ~/  %tap
     =+  b=`(list _?>(?=(^ a) n.a))`~
     |.  ^+  b
     ?~  a
@@ -1692,10 +1690,10 @@
     $(a r.a, b [n.a $(a l.a)])
   ::
   ++  uni                                               ::  union, merge
-    ~/  %uni
     =+  b=a
     |@
     ++  $
+      ~>  %zfast.[%uni^%by +>+< +<]
       |-  ^+  a
       ?~  b
         a
@@ -1737,21 +1735,21 @@
   ::
   ::
   ++  urn                                               ::  apply gate to nodes
-    ~/  %urn
     |*  b=$-([* *] *)
+    ~>  %zfast.[%urn^%by +>+< +<]
     |-
     ?~  a  ~
     a(n n.a(q (b p.n.a q.n.a)), l $(a l.a), r $(a r.a))
   ::
   ++  wyt                                               ::  depth of map
+    ~>  %zfast.[%wyt^%by +<]
     =<  $
-    ~%  %wyt  +  ~
     |.  ^-  @
     ?~(a 0 +((add $(a l.a) $(a r.a))))
   ::
   ++  key                                               ::  set of keys
+    ~>  %zfast.[%key^%by +<]
     =<  $
-    ~/  %key
     =+  b=`(set _?>(?=(^ a) p.n.a))`~
     |.  ^+  b
     ?~  a   b
@@ -2031,8 +2029,8 @@
   ::                                                    ::
   ::
 ++  cue                                                 ::  unpack
-  ~/  %cue
   |=  a=@
+  ~>  %zfast.[%cu +<]
   ^-  *
   =+  b=0
   =+  m=`(map @ *)`~
@@ -2051,8 +2049,8 @@
   [(add 2 p.d) (need (~(get by m) q.d)) m]
 ::
 ++  jam                                                 ::  pack
-  ~/  %jam
   |=  a=*
+  ~>  %zfast.[%jam +<]
   ^-  @
   =+  b=0
   =+  m=`(map * @)`~
@@ -2075,8 +2073,8 @@
   [(add 2 p.d) (mix 3 (lsh [0 2] q.d)) m]
 ::
 ++  mat                                                 ::  length-encode
-  ~/  %mat
   |=  a=@
+  ~>  %zfast.[%mat +<]
   ^-  [p=@ q=@]
   ?:  =(0 a)
     [1 1]
@@ -2086,8 +2084,8 @@
   (cat 0 (bex c) (mix (end [0 (dec c)] b) (lsh [0 (dec c)] a)))
 ::
 ++  rub                                                 ::  length-decode
-  ~/  %rub
   |=  [a=@ b=@]
+  ~>  %zfast.[%rub +<]
   ^-  [p=@ q=@]
   =+  ^=  c
       =+  [c=0 m=(met 0 b)]
@@ -2263,7 +2261,6 @@
   ::  d=behavior:      return denormals, flush denormals to zero,
   ::                   infinite exponent range
   =>
-    ~%  %cofl  +>  ~
     ::  internal functions; mostly operating on [e=@s a=@u], in other words
     ::  positive numbers. many of these error out if a=0.
     |%
@@ -2388,8 +2385,8 @@
     ::  s is sticky bit: represents a value less than ulp(a) = 2^(e.a)
     ::
     ++  lug
-      ~/  %lug
       |=  [t=$?(%fl %ce %sm %lg %ne %na %nt) a=[e=@s a=@u] s=?]  ^-  fn
+      ~>  %zfast.[%lug^%fl +>+< +<]
       ?<  =(a.a 0)
       =-
         ?.  =(den %f)  -                                ::  flush denormals
@@ -2452,9 +2449,9 @@
       ?:  =(den %i)  [%f & a]
       ?:  =((cmp:si emx e.a) -1)  [%i &]  [%f & a]      ::  enforce max. exp
     ::
-    ++  drg                                             ::  dragon4; get
-      ~/  %drg                                          ::  printable decimal;
+    ++  drg                                             ::  dragon4; get printable decimal;
       |=  [a=[e=@s a=@u]]  ^-  [@s @u]                  ::  guaranteed accurate
+      ~>  %zfast.[%drg^%fl +>+< +<]
       ?<  =(a.a 0)                                      ::  for rounded floats
       =.  a  (xpd a)
       =+  r=(lsh [0 ?:((syn:si e.a) (abs:si e.a) 0)] a.a)
@@ -2835,7 +2832,6 @@
 ::
 ++  rd                                                  ::  double precision fp
   ^|
-  ~%  %rd  +>  ~
   |_  r=$?(%n %u %d %z)
   ::  round to nearest, round up, round down, round to zero
   ::
@@ -2848,57 +2844,68 @@
   ++  bit                                               ::  fn to @rd
     |=  [a=fn]  ^-  @rd  (bit:ma a)
   ::
-  ++  add  ~/  %add                                     ::  add
+  ++  add                                                   ::  add
     |=  [a=@rd b=@rd]  ^-  @rd
+    ~>  %zfast.[%add^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (add:ma a b)
   ::
-  ++  sub  ~/  %sub                                     ::  subtract
+  ++  sub                                                   ::  subtract
     |=  [a=@rd b=@rd]  ^-  @rd
+    ~>  %zfast.[%sub^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (sub:ma a b)
   ::
-  ++  mul  ~/  %mul                                     ::  multiply
+  ++  mul                                                   ::  multiply
     |=  [a=@rd b=@rd]  ^-  @rd
+    ~>  %zfast.[%mul^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (mul:ma a b)
   ::
-  ++  div  ~/  %div                                     ::  divide
+  ++  div                                                   ::  divide
     |=  [a=@rd b=@rd]  ^-  @rd
+    ~>  %zfast.[%div^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (div:ma a b)
   ::
-  ++  fma  ~/  %fma                                     ::  fused multiply-add
+  ++  fma                                                   ::  fused multiply-add
     |=  [a=@rd b=@rd c=@rd]  ^-  @rd
+    ~>  %zfast.[%fma^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (fma:ma a b c)
   ::
-  ++  sqt  ~/  %sqt                                     ::  square root
+  ++  sqt                                                   ::  square root
     |=  [a=@rd]  ^-  @rd  ~_  leaf+"rd-fail"
+    ~>  %zfast.[%sqt^%rd +>+< +<]
     (sqt:ma a)
   ::
-  ++  lth  ~/  %lth                                     ::  less-than
+  ++  lth                                                   ::  less-than
     |=  [a=@rd b=@rd]
+    ~>  %zfast.[%lth^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (lth:ma a b)
   ::
-  ++  lte  ~/  %lte                                     ::  less-equals
+  ++  lte                                                   ::  less-equals
     |=  [a=@rd b=@rd]
+    ~>  %zfast.[%lte^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (lte:ma a b)
   ::
-  ++  equ  ~/  %equ                                     ::  equals
+  ++  equ                                                   ::  equals
     |=  [a=@rd b=@rd]
+    ~>  %zfast.[%equ^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (equ:ma a b)
   ::
-  ++  gte  ~/  %gte                                     ::  greater-equals
+  ++  gte                                                   ::  greater-equals
     |=  [a=@rd b=@rd]
+    ~>  %zfast.[%gte^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (gte:ma a b)
   ::
-  ++  gth  ~/  %gth                                     ::  greater-than
+  ++  gth                                                   ::  greater-than
     |=  [a=@rd b=@rd]
+    ~>  %zfast.[%gth^%rd +>+< +<]
     ~_  leaf+"rd-fail"
     (gth:ma a b)
   ::
@@ -2912,7 +2919,6 @@
   --
 ::
 ++  rs                                                  ::  single precision fp
-  ~%  %rs  +>  ~
   ^|
   |_  r=$?(%n %u %d %z)
   ::  round to nearest, round up, round down, round to zero
@@ -2926,58 +2932,69 @@
   ++  bit                                               ::  fn to @rs
     |=  [a=fn]  ^-  @rs  (bit:ma a)
   ::
-  ++  add  ~/  %add                                     ::  add
+  ++  add                                             ::  add
     |=  [a=@rs b=@rs]  ^-  @rs
+    ~>  %zfast.[%add^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (add:ma a b)
   ::
-  ++  sub  ~/  %sub                                     ::  subtract
+  ++  sub                                             ::  subtract
     |=  [a=@rs b=@rs]  ^-  @rs
+    ~>  %zfast.[%sub^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (sub:ma a b)
   ::
-  ++  mul  ~/  %mul                                     ::  multiply
+  ++  mul                                             ::  multiply
     |=  [a=@rs b=@rs]  ^-  @rs
+    ~>  %zfast.[%mul^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (mul:ma a b)
   ::
-  ++  div  ~/  %div                                     ::  divide
+  ++  div                                             ::  divide
     |=  [a=@rs b=@rs]  ^-  @rs
+    ~>  %zfast.[%div^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (div:ma a b)
   ::
-  ++  fma  ~/  %fma                                     ::  fused multiply-add
+  ++  fma                                             ::  fused multiply-add
     |=  [a=@rs b=@rs c=@rs]  ^-  @rs
+    ~>  %zfast.[%fma^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (fma:ma a b c)
   ::
-  ++  sqt  ~/  %sqt                                     ::  square root
+  ++  sqt                                             ::  square root
     |=  [a=@rs]  ^-  @rs
+    ~>  %zfast.[%sqt^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (sqt:ma a)
   ::
-  ++  lth  ~/  %lth                                     ::  less-than
+  ++  lth                                             ::  less-than
     |=  [a=@rs b=@rs]
+    ~>  %zfast.[%lth^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (lth:ma a b)
   ::
-  ++  lte  ~/  %lte                                     ::  less-equals
+  ++  lte                                             ::  less-equals
     |=  [a=@rs b=@rs]
+    ~>  %zfast.[%lte^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (lte:ma a b)
   ::
-  ++  equ  ~/  %equ                                     ::  equals
+  ++  equ                                             ::  equals
     |=  [a=@rs b=@rs]
+    ~>  %zfast.[%equ^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (equ:ma a b)
   ::
-  ++  gte  ~/  %gte                                     ::  greater-equals
+  ++  gte                                             ::  greater-equals
     |=  [a=@rs b=@rs]
+    ~>  %zfast.[%gte^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (gte:ma a b)
   ::
-  ++  gth  ~/  %gth                                     ::  greater-than
+  ++  gth                                             ::  greater-than
     |=  [a=@rs b=@rs]
+    ~>  %zfast.[%gth^%rs +>+< +<]
     ~_  leaf+"rs-fail"
     (gth:ma a b)
   ::
@@ -2991,7 +3008,6 @@
   --
 ::
 ++  rq                                                  ::  quad precision fp
-  ~%  %rq  +>  ~
   ^|
   |_  r=$?(%n %u %d %z)
   ::  round to nearest, round up, round down, round to zero
@@ -3005,58 +3021,69 @@
   ++  bit                                               ::  fn to @rq
     |=  [a=fn]  ^-  @rq  (bit:ma a)
   ::
-  ++  add  ~/  %add                                     ::  add
+  ++  add                                             ::  add
     |=  [a=@rq b=@rq]  ^-  @rq
+    ~>  %zfast.[%add^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (add:ma a b)
   ::
-  ++  sub  ~/  %sub                                     ::  subtract
+  ++  sub                                             ::  subtract
     |=  [a=@rq b=@rq]  ^-  @rq
+    ~>  %zfast.[%sub^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (sub:ma a b)
   ::
-  ++  mul  ~/  %mul                                     ::  multiply
+  ++  mul                                             ::  multiply
     |=  [a=@rq b=@rq]  ^-  @rq
+    ~>  %zfast.[%mul^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (mul:ma a b)
   ::
-  ++  div  ~/  %div                                     ::  divide
+  ++  div                                             ::  divide
     |=  [a=@rq b=@rq]  ^-  @rq
+    ~>  %zfast.[%div^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (div:ma a b)
   ::
-  ++  fma  ~/  %fma                                     ::  fused multiply-add
+  ++  fma                                             ::  fused multiply-add
     |=  [a=@rq b=@rq c=@rq]  ^-  @rq
+    ~>  %zfast.[%fma^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (fma:ma a b c)
   ::
-  ++  sqt  ~/  %sqt                                     ::  square root
+  ++  sqt                                             ::  square root
     |=  [a=@rq]  ^-  @rq
+    ~>  %zfast.[%sqt^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (sqt:ma a)
   ::
-  ++  lth  ~/  %lth                                     ::  less-than
+  ++  lth                                             ::  less-than
     |=  [a=@rq b=@rq]
+    ~>  %zfast.[%lth^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (lth:ma a b)
   ::
-  ++  lte  ~/  %lte                                     ::  less-equals
+  ++  lte                                             ::  less-equals
     |=  [a=@rq b=@rq]
+    ~>  %zfast.[%lte^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (lte:ma a b)
   ::
-  ++  equ  ~/  %equ                                     ::  equals
+  ++  equ                                             ::  equals
     |=  [a=@rq b=@rq]
+    ~>  %zfast.[%equ^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (equ:ma a b)
   ::
-  ++  gte  ~/  %gte                                     ::  greater-equals
+  ++  gte                                             ::  greater-equals
     |=  [a=@rq b=@rq]
+    ~>  %zfast.[%gte^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (gte:ma a b)
   ::
-  ++  gth  ~/  %gth                                     ::  greater-than
+  ++  gth                                             ::  greater-than
     |=  [a=@rq b=@rq]
+    ~>  %zfast.[%gth^%rq +>+< +<]
     ~_  leaf+"rq-fail"
     (gth:ma a b)
   ::
@@ -3084,58 +3111,69 @@
   ++  bit                                               ::  fn to @rh
     |=  [a=fn]  ^-  @rh  (bit:ma a)
   ::
-  ++  add  ~/  %add                                     ::  add
+  ++  add                                             ::  add
     |=  [a=@rh b=@rh]  ^-  @rh
+    ~>  %zfast.[%add^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (add:ma a b)
   ::
-  ++  sub  ~/  %sub                                     ::  subtract
+  ++  sub                                             ::  subtract
     |=  [a=@rh b=@rh]  ^-  @rh
+    ~>  %zfast.[%sub^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (sub:ma a b)
   ::
-  ++  mul  ~/  %mul                                     ::  multiply
+  ++  mul                                             ::  multiply
     |=  [a=@rh b=@rh]  ^-  @rh
+    ~>  %zfast.[%mul^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (mul:ma a b)
   ::
-  ++  div  ~/  %div                                     ::  divide
+  ++  div                                             ::  divide
     |=  [a=@rh b=@rh]  ^-  @rh
+    ~>  %zfast.[%div^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (div:ma a b)
   ::
-  ++  fma  ~/  %fma                                     ::  fused multiply-add
+  ++  fma                                             ::  fused multiply-add
     |=  [a=@rh b=@rh c=@rh]  ^-  @rh
+    ~>  %zfast.[%fma^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (fma:ma a b c)
   ::
-  ++  sqt  ~/  %sqt                                     ::  square root
+  ++  sqt                                             ::  square root
     |=  [a=@rh]  ^-  @rh
+    ~>  %zfast.[%sqt^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (sqt:ma a)
   ::
-  ++  lth  ~/  %lth                                     ::  less-than
+  ++  lth                                             ::  less-than
     |=  [a=@rh b=@rh]
+    ~>  %zfast.[%lth^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (lth:ma a b)
   ::
-  ++  lte  ~/  %lte                                     ::  less-equals
+  ++  lte                                             ::  less-equals
     |=  [a=@rh b=@rh]
+    ~>  %zfast.[%lte^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (lte:ma a b)
   ::
-  ++  equ  ~/  %equ                                     ::  equals
+  ++  equ                                             ::  equals
     |=  [a=@rh b=@rh]
+    ~>  %zfast.[%equ^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (equ:ma a b)
   ::
-  ++  gte  ~/  %gte                                     ::  greater-equals
+  ++  gte                                             ::  greater-equals
     |=  [a=@rh b=@rh]
+    ~>  %zfast.[%gte^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (gte:ma a b)
   ::
-  ++  gth  ~/  %gth                                     ::  greater-than
+  ++  gth                                             ::  greater-than
     |=  [a=@rh b=@rh]
+    ~>  %zfast.[%gth^%rh +>+< +<]
     ~_  leaf+"rh-fail"
     (gth:ma a b)
   ::
@@ -3297,8 +3335,8 @@
   (shaf %sham (jam yux))
 ::
 ++  shas                                                ::  salted hash
-  ~/  %shas
   |=  [sal=@ ruz=@]
+  ~>  %zfast.[%shas +<]
   (shax (mix sal (shax ruz)))
 ::
 ++  shax                                                ::  sha-256
@@ -3403,8 +3441,8 @@
   (shal [(met 3 ruz) ruz])
 ::
 ++  shal                                                ::  sha-512 with length
-  ~/  %shal
   |=  [len=@ ruz=@]  ^-  @
+  ~>  %zfast.[%shal +<]
   =>  .(ruz (cut 3 [0 len] ruz))
   =+  [few==>(fe .(a 6)) wac=|=([a=@ b=@] (cut 6 [a 1] b))]
   =+  [sum=sum.few ror=ror.few net=net.few inv=inv.few]
@@ -3581,7 +3619,6 @@
   $(j +(j), a tem, b a, c (rol 0 30 b), d c, e d)
 ::
 ++  og                                                  ::  shax-powered rng
-  ~/  %og
   |_  a=@
   ++  rad                                               ::  random in range
     |=  b=@  ^-  @
@@ -3596,8 +3633,8 @@
     [r +>.$(a (shas %og-s (mix a r)))]
   ::
   ++  raw                                               ::  random bits
-    ~/  %raw
     |=  b=@  ^-  @
+    ~>  %zfast.[%raw^%og +>+< +<]
     %+  can
       0
     =+  c=(shas %og-a (mix b a))
@@ -3616,7 +3653,6 @@
   --
 ::
 ++  sha                                                 ::  correct byte-order
-  ~%  %sha  ..sha  ~
   =>  |%
       ++  flin  |=(a=@ (swp 3 a))                       ::  flip input
       ++  flim  |=(byts [wid (rev 3 wid dat)])          ::  flip input w= length
@@ -3637,8 +3673,8 @@
   ++  sha-512l  :(cork flim shal (flip 64))
   ::
   ++  sha-1l
-    ~/  %sha1
     |=  byts
+    ~>  %zfast.[%sha-1l +<]
     ^-  @
     =+  [few==>(fe .(a 5)) wac=|=([a=@ b=@] (cut 5 [a 1] b))]
     =+  [sum=sum.few ror=ror.few rol=rol.few net=net.few inv=inv.few]
@@ -3820,11 +3856,6 @@
   --
 ::
 ++  ob
-  ~%  %ob  ..ob
-    ==
-      %fein  fein
-      %fynd  fynd
-    ==
   |%
   ::
   ::  +fein: conceal structure, v3.
@@ -3833,8 +3864,8 @@
   ::    trivial to tell which planet a star has spawned under.
   ::
   ++  fein
-    ~/  %fein
     |=  pyn=@  ^-  @
+    ~>  %zfast.[%fein^%ob +<]
     ?:  &((gte pyn 0x1.0000) (lte pyn 0xffff.ffff))
       (add 0x1.0000 (feis (sub pyn 0x1.0000)))
     ?:  &((gte pyn 0x1.0000.0000) (lte pyn 0xffff.ffff.ffff.ffff))
@@ -3849,8 +3880,8 @@
   ::    Restores obfuscated values that have been enciphered with +fein.
   ::
   ++  fynd
-    ~/  %fynd
     |=  cry=@  ^-  @
+    ~>  %zfast.[%fynd^%ob +<]
     ?:  &((gte cry 0x1.0000) (lte cry 0xffff.ffff))
       (add 0x1.0000 (tail (sub cry 0x1.0000)))
     ?:  &((gte cry 0x1.0000.0000) (lte cry 0xffff.ffff.ffff.ffff))
@@ -4047,6 +4078,10 @@
               [%1 p=*]                                  ::  block
               [%2 p=(list tank)]                        ::  stack trace
           ==                                            ::
++$  zoon  $%  [%0 bud=(unit @ud) product=*]             ::  success
+              [%1 bud=(unit @ud)]                       ::  crash
+              [%2 bud=(unit @ud)]                       ::  out of budget
+          ==                                            ::
 ++  wonk  =+  veq=$:edge                                ::  product from edge
           |@  ++  $  ?~(q.veq !! p.u.q.veq)             ::
           --                                            ::
@@ -4082,7 +4117,6 @@
 ::::  4a: exotic bases
   ::
 ++  po                                                  ::  phonetic base
-  ~/  %po
   =+  :-  ^=  sis                                       ::  prefix syllables
       'dozmarbinwansamlitsighidfidlissogdirwacsabwissib\
       /rigsoldopmodfoglidhopdardorlorhodfolrintogsilmir\
@@ -4118,20 +4152,26 @@
       /remlysfynwerrycsugnysnyllyndyndemluxfedsedbecmun\
       /lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes'
   |%
-  ++  ins  ~/  %ins                                     ::  parse prefix
-           |=  a=@tas
-           =+  b=0
-           |-  ^-  (unit @)
-           ?:(=(256 b) ~ ?:(=(a (tos b)) [~ b] $(b +(b))))
-  ++  ind  ~/  %ind                                     ::  parse suffix
-           |=  a=@tas
-           =+  b=0
-           |-  ^-  (unit @)
-           ?:(=(256 b) ~ ?:(=(a (tod b)) [~ b] $(b +(b))))
-  ++  tos  ~/  %tos                                     ::  fetch prefix
-           |=(a=@ ?>((lth a 256) (cut 3 [(mul 3 a) 3] sis)))
-  ++  tod  ~/  %tod                                     ::  fetch suffix
-           |=(a=@ ?>((lth a 256) (cut 3 [(mul 3 a) 3] dex)))
+  ++  ins                                             ::  parse prefix
+    |=  a=@tas
+    ~>  %zfast.[%ins^%po +<]
+    =+  b=0
+    |-  ^-  (unit @)
+    ?:(=(256 b) ~ ?:(=(a (tos b)) [~ b] $(b +(b))))
+  ++  ind                                             ::  parse suffix
+    |=  a=@tas
+    ~>  %zfast.[%ind^%po +<]
+    =+  b=0
+    |-  ^-  (unit @)
+    ?:(=(256 b) ~ ?:(=(a (tod b)) [~ b] $(b +(b))))
+  ++  tos                                             ::  fetch prefix
+    |=  a=@
+    ~>  %zfast.[%tos^%po +<]
+    ?>((lth a 256) (cut 3 [(mul 3 a) 3] sis))
+  ++  tod                                             ::  fetch suffix
+    |=  a=@
+    ~>  %zfast.[%tod^%po +<]
+    ?>((lth a 256) (cut 3 [(mul 3 a) 3] dex))
   --
 ::
 ++  fa                                                  ::  base58check
@@ -4328,8 +4368,8 @@
   [[i.b p.c] q.c]
 ::
 ++  trip                                                ::  cord to tape
-  ~/  %trip
   |=  a=@  ^-  tape
+  ~>  %zfast.[%trip +<]
   ?:  =(0 (met 3 a))
     ~
   [^-(@ta (end 3 a)) $(a (rsh 3 a))]
@@ -4751,12 +4791,11 @@
 ::::  4e: parsing (combinators)
   ::
 ++  bend                                                ::  conditional comp
-  ~/  %bend
   =+  raq=|*([a=* b=*] [~ u=[a b]])
   |@
   ++  $
-    ~/  %fun
     |*  [vex=edge sab=rule]
+    ~>  %zfast.[%fun^%bend +>+< +<]
     ?~  q.vex
       vex
     =+  yit=(sab q.u.q.vex)
@@ -4770,12 +4809,11 @@
   --
 ::
 ++  comp
-  ~/  %comp
   =+  raq=|*([a=* b=*] [a b])                           ::  arbitrary compose
   |@
   ++  $
-    ~/  %fun
     |*  [vex=edge sab=rule]
+    ~>  %zfast.[%fun^%comp +>+< +<]
     ~!  +<
     ?~  q.vex
       vex
@@ -4788,10 +4826,9 @@
 ::
 ++  fail  |=(tub=nail [p=p.tub q=~])                    ::  never parse
 ++  glue                                                ::  add rule
-  ~/  %glue
   |*  bus=rule
-  ~/  %fun
   |*  [vex=edge sab=rule]
+  ~>  %zfast.[%fun^%glue +>+< +<]
   (plug vex ;~(pfix bus sab))
 ::
 ++  less                                                ::  no first and second
@@ -4802,14 +4839,14 @@
   (fail +<.sab)
 ::
 ++  pfix                                                ::  discard first rule
-  ~/  %pfix
   |*  sam=[vex=edge sab=rule]
+  ~>  %zfast.[%pfix +<]
   %.  sam
   (comp |*([a=* b=*] b))
 ::
 ++  plug                                                ::  first then second
-  ~/  %plug
   |*  [vex=edge sab=rule]
+  ~>  %zfast.[%plug +<]
   ?~  q.vex
     vex
   =+  yit=(sab q.u.q.vex)
@@ -4819,8 +4856,8 @@
   [p=yur q=[~ u=[p=[p.u.q.vex p.u.q.yit] q=q.u.q.yit]]]
 ::
 ++  pose                                                ::  first or second
-  ~/  %pose
   |*  [vex=edge sab=rule]
+  ~>  %zfast.[pose +<]
   ?~  q.vex
     =+  roq=(sab)
     [p=(last p.vex p.roq) q=q.roq]
@@ -4834,8 +4871,8 @@
   roq
 ::
 ++  sfix                                                ::  discard second rule
-  ~/  %sfix
   |*  sam=[vex=edge sab=rule]
+  ~>  %zfast.[%sfix +<]
   %.  sam
   (comp |*([a=* b=*] a))
 ::
@@ -4860,30 +4897,27 @@
   tyd
 ::
 ++  cold                                                ::  replace w+ constant
-  ~/  %cold
   |*  [cus=* sef=rule]
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%cold +>+< +<]
   =+  vex=(sef tub)
   ?~  q.vex
     vex
   [p=p.vex q=[~ u=[p=cus q=q.u.q.vex]]]
 ::
 ++  cook                                                ::  apply gate
-  ~/  %cook
   |*  [poq=gate sef=rule]
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%cook +>+< +<]
   =+  vex=(sef tub)
   ?~  q.vex
     vex
   [p=p.vex q=[~ u=[p=(poq p.u.q.vex) q=q.u.q.vex]]]
 ::
 ++  easy                                                ::  always parse
-  ~/  %easy
   |*  huf=*
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%easy +>+< +<]
   ^-  (like _huf)
   [p=p.tub q=[~ u=[p=huf q=tub]]]
 ::
@@ -4903,11 +4937,10 @@
   (sef p.tub (weld pre q.tub))
 ::
 ++  here                                                ::  place-based apply
-  ~/  %here
   =+  [hez=|=([a=pint b=*] [a b]) sef=*rule]
   |@
   ++  $
-    ~/  %fun
+    ~>  %zfast.[%fun^%here +>+< +<]
     |=  tub=nail
     =+  vex=(sef tub)
     ?~  q.vex
@@ -4952,11 +4985,10 @@
     (fail tub)
   $(p.tub (lust i.q.tub p.tub), q.tub t.q.tub, daf (rsh 3 daf))
 ::
-++  just                                                ::  XX redundant, jest
-  ~/  %just                                             ::  match a char
+++  just                                                ::  XX redundant, jest. match a char
   |=  daf=char
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%just +>+< +<]
   ^-  (like char)
   ?~  q.tub
     (fail tub)
@@ -4973,10 +5005,9 @@
   --
 ::
 ++  mask                                                ::  match char in set
-  ~/  %mask
   |=  bud=(list char)
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%mask +>+< +<]
   ^-  (like char)
   ?~  q.tub
     (fail tub)
@@ -5028,10 +5059,9 @@
   [p=p.vex q=[~ u=[p=u.gey q=q.u.q.vex]]]
 ::
 ++  shim                                                ::  match char in range
-  ~/  %shim
   |=  [les=@ mos=@]
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%shim +>+< +<]
   ^-  (like char)
   ?~  q.tub
     (fail tub)
@@ -5040,10 +5070,9 @@
   (next tub)
 ::
 ++  stag                                                ::  add a label
-  ~/  %stag
   |*  [gob=* sef=rule]
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%stag +>+< +<]
   =+  vex=(sef tub)
   ?~  q.vex
     vex
@@ -5057,8 +5086,8 @@
   [i=[p=-.i.leh q=+.i.leh] t=$(leh t.leh)]
 ::
 ++  stew                                                ::  switch by first char
-  ~/  %stew
   |*  leh=(list [p=?(@ [@ @]) q=rule])                  ::  char+range keys
+  ~>  %zfast.[%stew +>+< +<]
   =+  ^=  wor                                           ::  range complete lth
       |=  [ort=?(@ [@ @]) wan=?(@ [@ @])]
       ?@  ort
@@ -5084,8 +5113,8 @@
       ?:  (mor p.n.yal p.n.nuc)
         [n.yal l.yal nuc]
       [n.nuc [n.yal l.yal l.nuc] r.nuc]
-  ~%  %fun  ..^$  ~
   |=  tub=nail
+  ~>  %zfast.[%fun^%tew [+>+< +>+>-] +<]
   ?~  q.tub
     (fail tub)
   |-
@@ -5110,10 +5139,9 @@
   (stir `(list _(wonk *fel))`~ |*([a=* b=*] [a b]) fel)
 ::
 ++  stir
-  ~/  %stir
   |*  [rud=* raq=_=>(~ |*([a=* b=*] [a b])) fel=rule]
-  ~/  %fun
   |=  tub=nail
+  ~>  %zfast.[%fun^%stir +>+< +<]
   ^-  (like _rud)
   ::
   ::  lef: successful interim parse results (per .fel)
@@ -5137,9 +5165,9 @@
   [~ (raq p.u.+.q.vex p.u.q.wag) q.u.q.wag]
 ::
 ++  stun                                                ::  parse several times
-  ~/  %stun
   |*  [lig=[@ @] fel=rule]
   |=  tub=nail
+  ~>  %zfast.[%fun^%stun +>+< +<]
   ^-  (like (list _(wonk (fel))))
   ?:  =(0 +.lig)
     [p.tub [~ ~ tub]]
@@ -5770,7 +5798,7 @@
       ;~(pfix hep (stag %c (cook taft urx:ab)))
     ==
   ++  nuck
-    ~/  %nuck  |=  a=nail  %.  a
+    |=  a=nail  ~>  %zfast.[%nuck +<]  %.  a
     %+  knee  *coin  |.  ~+
     %-  stew
     ^.  stet  ^.  limo
@@ -5912,13 +5940,12 @@
   ~>  %zfast.[%scot +<]
   ~(rent co %$ mol)
 ++  scow
-  ~/  %scow
-  |=(mol=dime ~(rend co %$ mol))
+  |=(mol=dime ~>(%zfast.[%scow +<] ~(rend co %$ mol)))
 ++  slat  |=(mod=@tas |=(txt=@ta (slaw mod txt)))
 ++  slav  |=([mod=@tas txt=@ta] (need (slaw mod txt)))
 ++  slaw
-  ~/  %slaw
   |=  [mod=@tas txt=@ta]
+  ~>  %zfast.[%slaw +<]
   ^-  (unit @)
   ?+    mod
       ::  slow fallback case to the full slay
@@ -5987,10 +6014,10 @@
 ::  +mink: raw virtual nock
 ::
 ++  mink  !.
-  ~/  %mink
   |=  $:  [subject=* formula=*]
           scry=$-(^ (unit (unit)))
       ==
+  ~>  %zfast.[%mink +<]
   =|  trace=(list [@ta *])
   |^  ^-  tone
       ?+  formula  [%2 trace]
@@ -6223,8 +6250,8 @@
 ::  +mole: typed unitary virtual
 ::
 ++  mole
-  ~/  %mole
   |*  tap=(trap)
+  ~>  %zfast.[%mole +<]
   ^-  (unit _$:tap)
   =/  mur  (mure tap)
   ?~(mur ~ `$:tap)
@@ -6238,8 +6265,8 @@
 ::  +mule: typed virtual
 ::
 ++  mule
-  ~/  %mule
   |*  tap=(trap)
+  ~>  %zfast.[%mule +<]
   =/  mud  (mute tap)
   ?-  -.mud
     %&  [%& p=$:tap]
@@ -6249,6 +6276,7 @@
 ::
 ++  mure
   |=  tap=(trap)
+  ~>  %zfast.[%mure +<]
   ^-  (unit)
   =/  ton  (mink [tap %9 2 %0 1] |=((pair) ``.*(~ [%12 1+p 1+q])))
   ?.(?=(%0 -.ton) ~ `product.ton)
@@ -6256,6 +6284,7 @@
 ::
 ++  mute
   |=  tap=(trap)
+  ~>  %zfast.[%mute +<]
   ^-  (each * (list tank))
   =/  ton  (mock [tap %9 2 %0 1] |=((pair) ``.*(~ [%12 1+p 1+q])))
   ?-  -.ton
@@ -6269,8 +6298,8 @@
 ::  +slum: slam a gate on a sample using raw nock, untyped
 ::
 ++  slum
-  ~/  %slum
   |=  [gat=* sam=*]
+  ~>  %zfast.[%slum +<]
   ^-  *
   .*(gat [%9 2 %10 [6 %1 sam] %0 1])
 ::  +soft: virtual clam
@@ -6278,7 +6307,290 @@
 ++  soft
   |*  han=$-(* *)
   |=(fud=* (mole |.((han fud))))
+::  +zock: budgeted nock
 ::
+++  zock  !.
+  |=  $:  bud=(unit @ud)
+          [s=* f=*]
+          scry=$-(^ (unit (unit)))
+      ==
+  ~>  %zfast.[%zock +<]
+  ^-  zoon
+  =/  scrys=(list *)  ~[scry]
+  =-  ?^(-< [-<- bud -<+] [-<- bud])
+  |^  ^-  [$%([%0 p=*] %1 %2) bud=(unit @ud)]
+      ?+    f
+        =^  oob  bud  (take-bud 2)
+        ?:  oob  %1^bud
+        %2^bud
+      ::
+          [^ *]
+        =^  oob  bud  (take-bud 4)
+        ?:  oob  %1^bud
+        =^  head  bud  $(f -.f)
+        ?@  head  head^bud
+        =^  tail  bud  $(f +.f)
+        ?@  tail  tail^bud
+        [%0 p.head p.tail]^bud
+      ::
+          [%0 axis=@]
+        =^  oob  bud  (take-bud 1)
+        ?:  oob  %1^bud
+        ?:  =(axis 0)  %2^bud
+        =/  proof-cost  (dec (met 0 axis.f))
+        =^  oob  bud  (take-bud proof-cost)
+        ?:  oob  %1^bud
+        =/  part  (frag axis.f s)
+        ?~  part  %2^bud
+        [%0 u.part]^bud
+      ::
+          [%1 constant=*]
+        [%0 constant.f]^bud
+      ::
+          [%2 s=* f=*]
+        =^  oob  bud  (take-bud 3)
+        ?:  oob  %1^bud
+        =^  s  bud  $(f s.f)
+        ?@  s  s^bud
+        =^  f  bud  $(f f.f)
+        ?@  f  f^bud
+        %=  $
+          s  p.s
+          f  p.f
+        ==
+      ::
+          [%3 argument=*]
+        =^  oob  bud  (take-bud 3)
+        ?:  oob  %1^bud
+        =^  argument  bud  $(f argument.f)
+        ?@  argument  argument^bud
+        [%0 .?(p.argument)]^bud
+      ::
+          [%4 argument=*]
+        =^  oob  bud  (take-bud 3)
+        ?:  oob  %1^bud
+        =^  argument  bud  $(f argument.f)
+        ?@  argument  argument^bud
+        ?^  p.argument  %2^bud
+        [%0 .+(p.argument)]^bud
+      ::
+          [%5 a=* b=*]
+        =^  oob  bud  (take-bud 3)
+        ?:  oob  %1^bud
+        =^  a  bud  $(f a.f)
+        ?@  a  a^bud
+        =^  b  bud  $(f b.f)
+        ?@  b  b^bud
+        [%0 =(p.a p.b)]^bud
+      ::
+          [%6 test=* yes=* no=*]
+        =^  oob  bud  (take-bud 4)
+        ?:  oob  %1^bud
+        =^  result  bud  $(f test.f)
+        ?@  result  result^bud
+        ?+  p.result
+              %2^bud
+          %&  $(f yes.f)
+          %|  $(f no.f)
+        ==
+      ::
+          [%7 s=* next=*]
+        =^  oob  bud  (take-bud 3)
+        ?:  oob  %1^bud
+        =^  s  bud  $(f s.f)
+        ?@  s  s^bud
+        %=  $
+          s  p.s
+          f  next.f
+        ==
+      ::
+          [%8 head=* next=*]
+        =^  oob  bud  (take-bud 4)
+        ?:  oob  %1^bud
+        =^  head  bud  $(f head.f)
+        ?@  head  head^bud
+        %=  $
+          s  [p.head s]
+          f  next.f
+        ==
+      ::
+          [%9 axis=@ core=*]
+        =^  oob  bud  (take-bud 5)
+        ?:  oob  %1^bud
+        =/  proof-cost  (dec (met 0 axis.f))
+        =^  oob  bud  (take-bud proof-cost)
+        ?:  oob  %1^bud
+        =^  core  bud  $(f core.f)
+        ?@  core  core^bud
+        =/  arm  (frag axis.f p.core)
+        ?~  arm  %2^bud
+        %=  $
+          s  p.core
+          f  u.arm
+        ==
+      ::
+          [%10 [axis=@ value=*] target=*]
+        =^  oob  bud  (take-bud 5)
+        ?:  oob  %1^bud
+        ?:  =(0 axis.f)  %2^bud
+        =/  proof-cost  (mul 2 (dec (met 0 axis.f)))
+        =^  oob  bud  (take-bud proof-cost)
+        ?:  oob  %1^bud
+        =^  target  bud  $(f target.f)
+        ?@  target  target^bud
+        =^  value  bud  $(f value.f)
+        ?@  value  value^bud
+        =/  mutant=(unit *)
+          (edit axis.f p.target p.value)
+        ?~  mutant  %2^bud
+        [%0 u.mutant]^bud
+      ::
+          [%11 tag=@ next=*]
+        =^  oob  bud  (take-bud 3)
+        ?:  oob  %1^bud
+        =^  next  bud  $(f next.f)
+        ?@  next  next^bud
+        :_  bud
+        :-  %0
+        .*  s
+        [11 tag.f 1 p.next]
+      ::
+          [%11 [tag=@ clue=*] next=*]
+        =^  oob  bud  (take-bud 5)
+        ?:  oob  %1^bud
+        =^  clue  bud  $(f clue.f)
+        ?@  clue  clue^bud
+        =^  next  bud
+          ?:  =(tag.f %zfast)
+            ?.  ?=([@tas *] p.clue)  %2^bud
+            (jet next.f p.clue)
+          $(f next.f)
+        ?@  next  next^bud
+        :_  bud
+        :-  %0
+        .*  s
+        [11 [tag.f 1 p.clue] 1 p.next]
+      ::
+          [%12 ref=* path=*]
+        ?~  scrys  %2^bud
+        =^  oob  bud  (take-bud 5)
+        ?:  oob  %1^bud
+        =^  ref  bud  $(f ref.f)
+        ?@  ref  ref^bud
+        =^  path  bud  $(f path.f)
+        ?@  path  path^bud
+        =^  result  bud  $(scrys t.scrys, s i.scrys, f p.ref^p.path)
+        ?@  result  result^bud
+        [%0 p.result]^bud
+      ==
+  ::
+  ++  zock-loop  $
+  ++  frag
+    |=  [axis=@ noun=*]
+    ^-  (unit)
+    ?:  =(0 axis)  ~
+    |-  ^-  (unit)
+    ?:  =(1 axis)  `noun
+    ?@  noun  ~
+    =/  pick  (cap axis)
+    %=  $
+      axis  (mas axis)
+      noun  ?-(pick %2 -.noun, %3 +.noun)
+    ==
+  ::
+  ++  edit
+    |=  [axis=@ target=* value=*]
+    ^-  (unit)
+    ?:  =(1 axis)  `value
+    ?@  target  ~
+    =/  pick  (cap axis)
+    =/  mutant
+      %=  $
+        axis    (mas axis)
+        target  ?-(pick %2 -.target, %3 +.target)
+      ==
+    ?~  mutant  ~
+    ?-  pick
+      %2  `[u.mutant +.target]
+      %3  `[-.target u.mutant]
+    ==
+  ::
+  ++  take-bud
+    |=  amt=@ud
+    ^-  [? (unit @ud)]
+    ?~  bud  %|^bud
+    ?:  (lth u.bud amt)  %&^bud
+    %|^~^(sub u.bud amt)
+  ::
+  ++  jet
+    |=  [next=* jet=@tas sam=*]
+    ^-  [$%([%0 p=*] %1 %2) bud=(unit @ud)]
+    ?:  ?=(%zock jet)
+      ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  %2^bud
+      =/  inner-bud=(unit @ud)
+        ?~  bud  bud.sam
+        ?~  bud.sam  bud
+        ?:  (lth u.bud u.bud.sam)  bud
+        bud.sam
+      =+  res=zock-loop(s s.sam, f f.sam, bud bud.sam, scrys scry.sam^scrys)
+      =/  diff
+        ?~  inner-bud  0
+        ?>  ?=(^ bud.res)
+        (sub u.inner-bud u.bud.res)
+      =/  outer-bud
+        ?~  bud  bud
+        ?>  ?=(^ bud.res)
+        ?>  ?=(^ inner-bud)
+        `(sub u.bud diff)
+      =/  real-inner-bud
+        ?~  bud.sam  ~
+        `(sub u.bud.sam diff)
+      :_  outer-bud
+      ?-  -.res
+          [%0 *]  [%0 [%0 real-inner-bud p.-.res]]
+          %1
+        ?:  =(outer-bud `0)  %1
+        [%0 [%1 real-inner-bud]]
+          %2  [%0 [%2 real-inner-bud]]
+      ==
+    ?~  j=(~(get by jets) jet)  %2^bud
+    =^  oog  bud  (take-bud u.j)
+    ?:  oog  %1^bud
+    =-  -(bud bud)
+    zock-loop(bud ~, s next)
+  ::
+  +$  jetmap  (map @tas @ud)
+  ++  jets
+    ::  TODO: determine *real* costs
+    ::  these are totally made up placeholders
+    %-  ~(gas by *jetmap)
+    :~  ::  math
+        [%add 1]  [%dec 1]  [%div 1]
+        [%dvr 1]  [%gte 1]  [%gth 1]
+        [%lte 1]  [%lth 1]  [%max 1]
+        [%min 1]  [%mod 1]  [%mul 1]
+        [%sub 1]
+        ::  bits
+        [%bex 1]  [%can 1]  [%cat 1]
+        [%cut 1]  [%end 1]  [%fil 1]
+        [%lsh 1]  [%met 1]  [%rap 1]
+        [%rep 1]  [%rev 1]  [%rip 1]
+        [%rsh 1]  [%run 1]  [%rut 1]
+        [%sew 1]  [%swp 1]  [%xeb 1]
+        ::  list
+        [%turn 5]
+        ::  sha
+        [%sham 1.000]
+        [%shax 1.000]
+        [%shay 1.000]
+        ::  etc
+        [%need 1]
+        [%scot 5]
+        [%pedersen-hash 10]
+        [%zock 1]
+      ==
+  ::
+  --
 ::::  4o: molds and mold builders
   ::
 +$  abel  typo                                          ::  original sin: type
@@ -6490,7 +6802,7 @@
     [%sgbr p=hoon q=hoon]                               ::  ~|  sell on trace
     [%sgcb p=hoon q=hoon]                               ::  ~_  tank on trace
     [%sgcn p=chum q=hoon r=tyre s=hoon]                 ::  ~%  general jet hint
-    [%sgfs p=chum q=hoon]                               ::  ~/  function j-hint
+    [%sgfs p=chum q=hoon]                               ::  ~>  %zfast.[function j-hint +<]
     [%sggl p=$@(term [p=term q=hoon]) q=hoon]           ::  ~<  backward hint
     [%sggr p=$@(term [p=term q=hoon]) q=hoon]           ::  ~>  forward hint
     [%sgbc p=term q=hoon]                               ::  ~$  profiler hit

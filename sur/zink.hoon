@@ -76,5 +76,6 @@
       [%need 1]
       [%scot 5]
       [%pedersen-hash 10]
+      [%zock 1]
     ==
 --

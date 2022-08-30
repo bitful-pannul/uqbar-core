@@ -3,13 +3,13 @@
 =<  =|  test-args
     =*  args  -
     |%
-    ++  mk
+    ++  mk  :: if we want to preserve cache, we probably want to fire at the end, actually
       |_  cax=cache
       +*  mk-core  .
       ++  test
         ^-  [json _mk-core]
         =^  json  cax  (gen-test-hints args(cax (~(uni by cax) cax.args)))
-        :_  mk-core(args *test-args)
+        :_  mk-core(args *test-args) :: todo: preserve cache
         json
       ::  
       ++  tests
@@ -20,7 +20,7 @@
         =^  hints  mk-core  args.i.tests
         %_    $
             tests     t.tests
-            mk-core   mk-core(args *test-args)
+            mk-core   mk-core(args *test-args) :: todo: preserve cache
             jons
           [%a [s+name.i.tests hints ~]]^jons
         ==

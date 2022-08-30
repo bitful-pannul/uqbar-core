@@ -295,14 +295,8 @@
       ~&  239  [%|^trace [%10 %& axis.f [hval val-hints] [htar ~] %&^0 ~]~]^app
     ?~  p.val-res
       [%&^~ [%10 %& axis.f [hval val-hints] [htar ~] %&^0 ~]~]^app
-    =^  oob  app  (take-bud proof-cost)
-    ?:  oob
-      [%&^~ [%10 %& axis.f [hval val-hints] [htar ~] %&^0 ~]~]^app
     =^  [=tar=res =tar=hints]  app
       $(f target.f)
-    =^  oob  app  (take-bud proof-cost)
-    ?:  oob
-      [%&^~ [%10 %& axis.f [hval val-hints] [htar tar-hints] %&^0 ~]~]^app
     ?:  ?=(%| -.tar-res)
       ~&  235
       :_  app
@@ -330,7 +324,7 @@
     ==
   ::
        [%11 tag=@ next=*]
-    =^  oob  app  (take-bud 5)
+    =^  oob  app  (take-bud 3)
     ?:  oob
       =^  fh  app  (hash +.f)
         [%&^~ [%11 %|^fh]~]^app
@@ -358,11 +352,14 @@
     ~?  ?=(%zfast tag.f)
       ?>  ?=([[@ @] *] clue.f) :: todo: shouldn't crash here
       "jet: {<`@tas`+.-.clue.f>}"
+    =^  htag  app  (hash tag.f)
+    :: we can go straight to jetting in zere with this
+    =/  tag-hint=@  ?:(?=(%zfast tag.f) htag tag.f)
     =^  [=clue=res =clue=hints]  app
       $(f clue.f)
     ?:  ?=(%| -.clue-res)
       ~&  269
-      [%|^trace [%11 %& %&^[tag.f [hclue clue-hints]] hnext]~]^app
+      [%|^trace [%11 %& %&^[tag-hint [hclue clue-hints]] hnext]~]^app
     ?~  p.clue-res  [%&^~ ~]^app
     ::  if jet exists for this tag, and sample is good,
     ::  replace execution with jet
@@ -370,13 +367,13 @@
       ?:  =(tag.f %zfast)
         :: todo: does this safe fail in zere?
         ?.  ?=([@tas *] u.p.clue-res)
-          [%|^trace [%11 %& %&^[tag.f [hclue clue-hints]] hnext]~]^app
+          [%|^trace [%11 %& %&^[tag-hint [hclue clue-hints]] hnext]~]^app
         (jet u.p.clue-res)
       =?    trace
           ?=(?(%hunk %hand %lose %mean %spot) tag.f)
         [[tag.f u.p.clue-res] trace]
       $(f next.f)
-    =/  hit  [%11 %& %&^[tag.f [hclue clue-hints]] hnext]^next-hints
+    =/  hit  [%11 %& %&^[tag-hint [hclue clue-hints]] hnext]^next-hints
     ?:  ?=(%| -.next-res)
       ~&  190
       [%|^trace hit]^app
@@ -460,16 +457,29 @@
             scrys  scry.sam^scrys
             bud    inner-bud
         ==
-      :-  p.new-book(q [%jet %zock [bud shash fhash hscry]]^q.p.new-book)
+      =/  diff
+        ?~  inner-bud  0
+        ?>  ?=(^ bud.q.new-book)
+        (sub u.inner-bud u.bud.q.new-book)
+      =/  outer-bud
+        ?~  bud  bud
+        `(sub u.bud diff)
+      =/  real-inner-bud
+        ?~  bud.sam  ~
+        `(sub u.bud.sam diff)
+      =/  =res
+        ?-  p.p.new-book
+            [%& ^]  %&^~^[%0 real-inner-bud u.p.p.p.new-book]
+            [%& ~]
+          ?:  =(outer-bud `0)  %&^~
+          %&^~^[%1 real-inner-bud]
+        ::
+            [%| *]  %&^~^[%2 real-inner-bud]
+        ==
+      :-  res^[[%jet %zock [bud shash fhash hscry]] q.p.new-book]
       %_    app
           cax  cax.q.new-book
-          bud
-        ?~  bud  bud
-        ?>  ?=(^ bud.q.new-book)
-        ?>  ?=(^ inner-bud)
-        ?~  bud.sam  bud.q.new-book
-        =/  diff  (sub u.inner-bud u.bud.q.new-book)
-        `(sub u.bud diff)
+          bud  outer-bud
       ==
     =-  [- [%jet tag sam]~]^app
     ::  TODO: probably unsustainable to need to include assertions to

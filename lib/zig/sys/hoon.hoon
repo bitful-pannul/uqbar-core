@@ -5087,7 +5087,7 @@
 ::
 ++  stew                                                ::  switch by first char
   |*  leh=(list [p=?(@ [@ @]) q=rule])                  ::  char+range keys
-  ~>  %zfast.[%stew +>+< +<]
+  ~>  %zfast.[%stew +<]
   =+  ^=  wor                                           ::  range complete lth
       |=  [ort=?(@ [@ @]) wan=?(@ [@ @])]
       ?@  ort

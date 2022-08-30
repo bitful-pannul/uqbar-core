@@ -5,16 +5,16 @@
     +$  fail      (list [@ta *])
     +$  res       (each good fail)
     +$  body      [p=res q=hints]
-    +$  appendix  [cax=cache bud=(unit @ud)]
+    +$  appendix  [cax=cache bud=(unit @ud) scrys=(list *)]
     +$  book      (pair body appendix)
     --
 |%
 ++  zebra                                                 ::  bounded zk +mule
   |=  [bud=(unit @ud) cax=cache scry=(unit granary-scry) [s=* f=*] test-mode=?]
   ^-  book
-  %.  [s f scry test-mode]
+  %.  [s f test-mode]
   %*  .  zink
-    app  [cax bud]
+    app  [cax bud ?~(scry ~ [`*`u.scry ~])]
   ==
 ::
 ++  hash
@@ -47,14 +47,10 @@
   =|  appendix
   =*  app  -
   =|  trace=fail
-  =|  scrys=(list *)
-  |=  [s=* f=* scry=(unit granary-scry) test-mode=?]
+  |=  [s=* f=* test-mode=?]
   ^-  book
-  =.  scrys  ?~(scry ~ [`*`scry]~)
-  =-  -(q.p (flop q.p.-))
+  =-  -(q.p q.p.-)
   |^  ^-  book
-  =-   ~&  hmm+[f p.p.-]  -
-  ^-  book
   ?+    f
     ?@  f  [%|^trace [%invalid %&^f]~]^app
     ?>  ?=(@ -.f)
@@ -69,11 +65,11 @@
     =^  [=hed=res =hed=hints]  app
       $(f -.f)
     ?:  ?=(%| -.hed-res)
-      ~&  61  [%|^trace [%cons [hhed (flop hed-hints)] [htal ~]]~]^app
-    ?~  p.hed-res  [%&^~ [%cons [hhed (flop hed-hints)] [htal ~]]~]^app
+      ~&  61  [%|^trace [%cons [hhed hed-hints] [htal ~]]~]^app
+    ?~  p.hed-res  [%&^~ [%cons [hhed hed-hints] [htal ~]]~]^app
     =^  [=tal=res =tal=hints]  app
       $(f +.f)
-    =/  hit  [%cons [hhed (flop hed-hints)] [htal (flop tal-hints)]]~
+    =/  hit  [%cons [hhed hed-hints] [htal tal-hints]]~
     ?:  ?=(%| -.tal-res)
       ~&  65  [%|^trace hit]^app
     ?~  p.tal-res  [%&^~ hit]^app
@@ -112,11 +108,11 @@
     =^  [=sub=res =sub=hints]  app
       $(f sub.f)
     ?:  ?=(%| -.sub-res)
-      ~&  99  [%|^trace [%2 %& [hsub (flop sub-hints)] [hfor ~]]~]^app
-    ?~  p.sub-res  [%&^~ [%2 %& [hsub (flop sub-hints)] [hfor ~]]~]^app
+      ~&  99  [%|^trace [%2 %& [hsub sub-hints] [hfor ~]]~]^app
+    ?~  p.sub-res  [%&^~ [%2 %& [hsub sub-hints] [hfor ~]]~]^app
     =^  [=for=res =for=hints]  app
       $(f for.f)
-    =/  hit=cairo-hint  [%2 %& [hsub (flop sub-hints)] [hfor (flop for-hints)]]
+    =/  hit=cairo-hint  [%2 %& [hsub sub-hints] [hfor for-hints]]
     ?:  ?=(%| -.for-res)
       ~&  103  [%|^trace hit ~]^app
     ?~  p.for-res  [%&^~ hit ~]^app
@@ -135,18 +131,18 @@
     =^  [=arg=res =arg=hints]  app
       $(f arg.f)
     ?:  ?=(%| -.arg-res)
-      ~&  114  [%|^trace [%3 %& [harg (flop arg-hints)] ~]~]^app
-    ?~  p.arg-res  [%&^~ [%3 %& [harg (flop arg-hints)] ~]~]^app
+      ~&  114  [%|^trace [%3 %& [harg arg-hints] ~]~]^app
+    ?~  p.arg-res  [%&^~ [%3 %& [harg arg-hints] ~]~]^app
     ?@  u.p.arg-res
       :_  app
       :-  [%& ~ %.n]
-      [%3 %& [harg (flop arg-hints)] ~ %atom u.p.arg-res]~
+      [%3 %& [harg arg-hints] ~ %atom u.p.arg-res]~
     ::  should be cached. dec?
     =^  hhash  app  (hash -.u.p.arg-res)
     =^  thash  app  (hash +.u.p.arg-res)
     :_  app
     :-  [%& ~ %.y]
-    [%3 %& [harg (flop arg-hints)] ~ %cell hhash thash]~
+    [%3 %& [harg arg-hints] ~ %cell hhash thash]~
   ::
       [%4 arg=*]
     =^  oob  app  (take-bud 3)
@@ -157,16 +153,16 @@
     =^  [=arg=res =arg=hints]  app
       $(f arg.f)
     ?:  ?=(%| -.arg-res)
-      ~&  131  [%|^trace [%4 %& [harg (flop arg-hints)] ~]~]^app
-    ?~  p.arg-res  [%&^~ [%4 %& [harg (flop arg-hints)] ~]~]^app
+      ~&  131  [%|^trace [%4 %& [harg arg-hints] ~]~]^app
+    ?~  p.arg-res  [%&^~ [%4 %& [harg arg-hints] ~]~]^app
     ?^  u.p.arg-res
       =^  hhed  app  (hash -.u.p.arg-res)
       =^  htal  app  (hash +.u.p.arg-res)
       :: =+  arg=[]
-      ~&  135  [%|^trace [%4 %& [harg (flop arg-hints)] `%cell^[hhed htal]]~]^app
+      ~&  135  [%|^trace [%4 %& [harg arg-hints] `%cell^[hhed htal]]~]^app
     :_  app
     :-  [%& ~ .+(u.p.arg-res)]
-    [%4 %& [harg (flop arg-hints)] `%atom^u.p.arg-res]~
+    [%4 %& [harg arg-hints] `%atom^u.p.arg-res]~
   ::
       [%5 a=* b=*]
     =^  oob  app  (take-bud 3)
@@ -178,11 +174,11 @@
     =^  [=a=res =a=hints]  app
       $(f a.f)
     ?:  ?=(%| -.a-res)
-      ~&  146  [%|^trace [%5 %& [ha (flop a-hints)] [hb ~]]~]^app
-    ?~  p.a-res  [%&^~ [%5 %& [ha (flop a-hints)] [hb ~]]~]^app
+      ~&  146  [%|^trace [%5 %& [ha a-hints] [hb ~]]~]^app
+    ?~  p.a-res  [%&^~ [%5 %& [ha a-hints] [hb ~]]~]^app
     =^  [=b=res =b=hints]  app
       $(f b.f)
-    =/  hit  [%5 %& [ha (flop a-hints)] [hb (flop b-hints)]]~
+    =/  hit  [%5 %& [ha a-hints] [hb b-hints]]~
     ?:  ?=(%| -.b-res)
       ~&  150  [%|^trace hit]^app
     ?~  p.b-res  [%&^~ hit]^app
@@ -201,7 +197,7 @@
     =^  hno    app  (hash no.f)
     =^  [=res =hints]  app
       $(f test.f)
-    =/  hit  [%6 %& [htest (flop hints)] hyes hno]
+    =/  hit  [%6 %& [htest hints] hyes hno]
     ?:  ?=(%| -.res)
       ~&  164  [%|^trace hit ~]^app
     ?~  p.res  [%&^~ hit ~]^app
@@ -220,7 +216,7 @@
     =^  hnext  app  (hash next.f)
     =^  [=sub=res =sub=hints]  app
       $(f subj.f)
-    =/  hit  [%7 %& [hsubj (flop sub-hints)] hnext]
+    =/  hit  [%7 %& [hsubj sub-hints] hnext]
     ?:  ?=(%| -.sub-res)  ~&  179  [%|^trace hit ~]^app
     ?~  p.sub-res  [%&^~ hit ~]^app
     =-  -(q.p hit^q.p.-)
@@ -238,7 +234,7 @@
     =^  hnext  app  (hash next.f)
     =^  [=hed=res =hed=hints]  app
       $(f hed.f)
-    =/  hit  [%8 %& [hhed (flop hed-hints)] hnext]
+    =/  hit  [%8 %& [hhed hed-hints] hnext]
     ?:  ?=(%| -.hed-res)  ~&  198  [%|^trace hit ~]^app
     ?~  p.hed-res  [%&^~ hit ~]^app
     =-  -(q.p hit^q.p.-)
@@ -262,18 +258,18 @@
     =^  [=core=res =core=hints]  app
       $(f core.f)
     ?:  ?=(%| -.core-res)
-      ~&  211  [%|^trace [%9 %& axis.f [hcore (flop core-hints)] %&^0 ~]~]^app
-    ?~  p.core-res  [%&^~ [%9 %& axis.f [hcore (flop core-hints)] %&^0 ~]~]^app
+      ~&  211  [%|^trace [%9 %& axis.f [hcore core-hints] %&^0 ~]~]^app
+    ?~  p.core-res  [%&^~ [%9 %& axis.f [hcore core-hints] %&^0 ~]~]^app
     =^  arm  app  (frag axis.f u.p.core-res)
     ?:  ?=(%| -.p.arm)
       ~&  269+[s axis.f]
       :_  app
-      [%|^trace [%9 %& axis.f [hcore (flop core-hints)] p.arm q.arm]~]
+      [%|^trace [%9 %& axis.f [hcore core-hints] p.arm q.arm]~]
     =^  harm  app  (hash p.p.arm) :: this will always be a cache hit. dec?
-    =/  hit  [%9 %& axis.f [hcore (flop core-hints)] %&^harm q.arm]
+    =/  hit  [%9 %& axis.f [hcore core-hints] %&^harm q.arm]
     =-  -(q.p hit^q.p.-)
     %_  $
-      s    p.core-res
+      s    u.p.core-res
       f    p.p.arm
     ==
   ::
@@ -289,47 +285,48 @@
     ?:  =(0 axis.f)
       ~&  232  [%|^trace [%10 %& axis.f [hval ~] [htar ~] %&^0 ~]~]^app
     =/  proof-cost  (mul 2 (dec (met 0 axis.f)))
+    :: todo: don't take gas until the end, but check in between each val
     =^  oob  app  (take-bud proof-cost)
     ?:  oob
       [%&^~ [%10 %& axis.f [hval ~] [htar ~] %&^0 ~]~]^app
     =^  [=val=res =val=hints]  app
       $(f value.f)
     ?:  ?=(%| -.val-res)
-      ~&  239  [%|^trace [%10 %& axis.f [hval (flop val-hints)] [htar ~] %&^0 ~]~]^app
+      ~&  239  [%|^trace [%10 %& axis.f [hval val-hints] [htar ~] %&^0 ~]~]^app
     ?~  p.val-res
-      [%&^~ [%10 %& axis.f [hval (flop val-hints)] [htar ~] %&^0 ~]~]^app
+      [%&^~ [%10 %& axis.f [hval val-hints] [htar ~] %&^0 ~]~]^app
     =^  oob  app  (take-bud proof-cost)
     ?:  oob
-      [%&^~ [%10 %& axis.f [hval (flop val-hints)] [htar ~] %&^0 ~]~]^app
+      [%&^~ [%10 %& axis.f [hval val-hints] [htar ~] %&^0 ~]~]^app
     =^  [=tar=res =tar=hints]  app
       $(f target.f)
     =^  oob  app  (take-bud proof-cost)
     ?:  oob
-      [%&^~ [%10 %& axis.f [hval (flop val-hints)] [htar (flop tar-hints)] %&^0 ~]~]^app
+      [%&^~ [%10 %& axis.f [hval val-hints] [htar tar-hints] %&^0 ~]~]^app
     ?:  ?=(%| -.tar-res)
       ~&  235
       :_  app
       :-  %|^trace
-      [%10 %& axis.f [hval (flop val-hints)] [htar (flop tar-hints)] %&^0 ~]~
+      [%10 %& axis.f [hval val-hints] [htar tar-hints] %&^0 ~]~
     ?~  p.tar-res
       :_  app
       :-  %&^~
-      [%10 %& axis.f [hval (flop val-hints)] [htar (flop tar-hints)] %&^0 ~]~
+      [%10 %& axis.f [hval val-hints] [htar tar-hints] %&^0 ~]~
     =^  mutant  app
       (edit axis.f u.p.tar-res u.p.val-res)
     ?:  ?=(%| -.p.mutant)
       :_  app
       :-  %|^trace
       :_  ~
-      :*  %10  %&  axis.f  [hval (flop val-hints)]
-         [htar (flop tar-hints)]  p.mutant  q.mutant
+      :*  %10  %&  axis.f  [hval val-hints]
+         [htar tar-hints]  p.mutant  q.mutant
       ==
     =^  hold  app  (hash old.p.p.mutant)
     :_  app
     :-  %&^~^mut.p.p.mutant
     :_  ~
-    :*  %10  %&  axis.f  [hval (flop val-hints)]
-        [htar (flop tar-hints)]  %&^hold  q.mutant
+    :*  %10  %&  axis.f  [hval val-hints]
+        [htar tar-hints]  %&^hold  q.mutant
     ==
   ::
        [%11 tag=@ next=*]
@@ -358,27 +355,28 @@
     =^  hnext  app  (hash next.f)
     ::  look for jet with this tag and compute sample
     ~&  >  "hint: {<`@tas`tag.f>}"
-    ~?  ?=(%fast tag.f)
-      ?>  ?=([@ @ [@ @] @] clue.f)
-      "jet: {<`@tas`-.+.clue.f>}"
+    ~?  ?=(%zfast tag.f)
+      ?>  ?=([[@ @] *] clue.f) :: todo: shouldn't crash here
+      "jet: {<`@tas`+.-.clue.f>}"
     =^  [=clue=res =clue=hints]  app
       $(f clue.f)
     ?:  ?=(%| -.clue-res)
       ~&  269
-      [%|^trace [%11 %& %&^[tag.f [hclue (flop clue-hints)]] hnext]~]^app
+      [%|^trace [%11 %& %&^[tag.f [hclue clue-hints]] hnext]~]^app
     ?~  p.clue-res  [%&^~ ~]^app
     ::  if jet exists for this tag, and sample is good,
     ::  replace execution with jet
     =^  [=next=res =next=hints]  app
       ?:  =(tag.f %zfast)
+        :: todo: does this safe fail in zere?
         ?.  ?=([@tas *] u.p.clue-res)
-          [%|^trace [%11 %& %&^[tag.f [hclue (flop clue-hints)]] hnext]~]^app
+          [%|^trace [%11 %& %&^[tag.f [hclue clue-hints]] hnext]~]^app
         (jet u.p.clue-res)
       =?    trace
           ?=(?(%hunk %hand %lose %mean %spot) tag.f)
         [[tag.f u.p.clue-res] trace]
       $(f next.f)
-    =/  hit  [%11 %& %&^[tag.f [hclue (flop clue-hints)]] hnext]^next-hints
+    =/  hit  [%11 %& %&^[tag.f [hclue clue-hints]] hnext]^next-hints
     ?:  ?=(%| -.next-res)
       ~&  190
       [%|^trace hit]^app
@@ -391,9 +389,10 @@
     [11 [tag.f 1 u.p.clue-res] 1 u.p.next-res]
   ::
       [%12 ref=* path=*]
-    ?~  scrys
-      =^  fh  app  (hash +.f)
-        [%|^trace [%12 %|^fh]~]^app
+    ?:  =(scrys 0) :: dunno why i can't use ?~
+      ^-  book
+      =^  fh  app  `[phash appendix]`(hash +.f)
+      [%|^trace [%12 %|^fh]~]^app
     ::  todo: see notes for bud12 in zere
     =^  oob  app  (take-bud 5)
     ?:  oob
@@ -404,17 +403,18 @@
     =^  [=ref=res =ref=hints]  app
       $(f ref.f)
     ?:  ?=(%| -.ref-res)
-      ~&  289  [%|^trace [%12 %& [href (flop ref-hints)] [hpath ~]]~]^app
-    ?~  p.ref-res            [%&^~ [%12 %& [href (flop ref-hints)] [hpath ~]]~]^app
+      ~&  289  [%|^trace [%12 %& [href ref-hints] [hpath ~]]~]^app
+    ?~  p.ref-res            [%&^~ [%12 %& [href ref-hints] [hpath ~]]~]^app
     =^  [=path=res =path=hints]  app
       $(f path.f)
-    =/  hit  [%12 %& [href (flop ref-hints)] [hpath (flop path-hints)]]
+    =/  hit  [%12 %& [href ref-hints] [hpath (flop path-hints)]]
     ?:  ?=(%| -.path-res)
       ~&  293  [%|^trace hit ~]^app
     ?~  p.path-res
       [%&^~ hit ~]^app
-    =-  -(q.p hit^q.p.-)
-    $(s i.scrys, f [9 2 10 [6 1 [p.ref-res p.path-res]] 0 1], scrys t.scrys)
+    ?>  ?=(^ scrys) :: see above comment
+    =-  -(q.p hit^q.p.-, scrys.q scrys)
+    $(s i.scrys, f [9 2 10 [6 1 [p.ref-res p.path-res]] 0 1], scrys.app t.scrys)
   ==
   ::
   ++  zink-loop  $
@@ -471,7 +471,7 @@
         =/  diff  (sub u.inner-bud u.bud.q.new-book)
         `(sub u.bud diff)
       ==
-    =-  [- ~]^app
+    =-  [- [%jet tag sam]~]^app
     ::  TODO: probably unsustainable to need to include assertions to
     ::  make all jets crash safe.
     ?+    tag  %|^trace

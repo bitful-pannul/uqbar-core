@@ -37,7 +37,7 @@
       ==
       [%11 (each [(each [tag=@ clue=subf] @) sf=phash] phash)]
       [%12 (each [sf1=subf sf2=subf] phash)]
-      [%jet jet=@t data=*] :: not every jet will return the whole sample as a noun
+      [%jet jet=@tas data=*] :: not every jet will return the whole sample as a noun
       [%cons sf1=subf sf2=subf]
       [%invalid (each @ [@ phash])]
   ==

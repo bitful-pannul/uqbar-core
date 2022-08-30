@@ -41,7 +41,7 @@
         [%9 %& *]
       %-  pairs
       :~  axis+(num axis.p.hin)
-          sf1+(en-subf sf.p.hin)
+          sf+(en-subf sf.p.hin)
           leaf-or-atom+(en-leaf-or-atom leaf-or-atom.p.hin)
           path+(en-path path.p.hin)
       ==
@@ -57,7 +57,11 @@
     ::
         [%11 %& *]  (en-11 p.hin)
     ::
-      [%jet *]  (en-noun +.hin)
+        [%jet *]
+        %-  pairs
+        :~  jet+s+jet.hin
+            arg+(en-noun data.hin)
+        ==
     ::
         [%cons *]  (pairs sf1+(en-subf sf1.hin) sf2+(en-subf sf2.hin) ~)
         [%invalid *]  (en-invalid +.hin)

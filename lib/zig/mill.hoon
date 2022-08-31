@@ -350,28 +350,29 @@
         ::  generate ZK-proof hints with zebra
         ::
         =/  =book
-          (zebra budget zink-cax search gun test-mode)
-        :-  hit.q.book
-        ?:  ?=(%| -.p.book)
+          (zebra `budget zink-cax `search gun test-mode)
+        ?>  ?=(^ bud.q.book)
+        :-  q.p.book
+        ?:  ?=(%| -.p.p.book)
           ::  error in contract execution
-          ~&  >>>  p.book
-          [~ bud.q.book %6]
+          ~&  >>>  p.p.book
+          [~ u.bud.q.book %6]
         ::  chick result
-        ?~  p.p.book
+        ?~  p.p.p.book
           ~&  >>>  "mill: ran out of gas"
           [~ 0 %8]
-        [(hole (unit chick:smart) p.p.book) bud.q.book %0]
+        [(hole (unit chick:smart) p.p.p.book) u.bud.q.book %0]
       ::
       ++  search
         |=  pat=^
-        ^-  (unit [path=(list phash) product=*])
+        ^-  (unit (unit [path=(list phash) product=*]))
         ?.  ?=([%0 %granary @ ~] +.pat)   ~
         ?~  id=(slaw %ux -.+.+.+.pat)     ~
         ~&  >>  "looking for grain: {<`@ux`u.id>}"
         ?~  grain=(get:big granary u.id)
           ~&  >>>  "didn't find it"  ~
         ::  TODO populate path using +mek in merk
-        `[(mek:big granary u.id) u.grain]
+        ``[(mek:big granary u.id) u.grain]
       --
     ::
     ::  +harvest: take a completed execution and validate all changes

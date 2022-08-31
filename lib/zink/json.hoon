@@ -59,7 +59,7 @@
     ::
         [%jet *]
         %-  pairs
-        :~  jet+s+jet.hin
+        :~  jet+(en-jet jet.hin)
             arg+(en-noun data.hin)
         ==
     ::
@@ -67,6 +67,16 @@
         [%invalid *]  (en-invalid +.hin)
     ==
     ::
+  ++  en-jet
+    |=  n=*
+    ^-  json
+    :-  %s
+    |-  ^-  cord
+    ?@  n  ?~(n '' (scot %tas n))
+    ?>  ?=(@ -.n)
+    ?~  -.n  $(n +.n)
+    :((cury cat 3) (scot %tas -.n) ':' $(n +.n))
+  ::
   ++  en-noun
     |=  n=*
     |-  ^-  json

@@ -1128,7 +1128,7 @@
           292.063.708.816.422
   ++  hash
     |=  [a=@ b=@]
-    ~>  %pedersen-hash.+<
+    ~>  %zfast.[%pedersen-hash +<]
     ^-  @
     |^
     =/  x  (has a)
@@ -1720,8 +1720,8 @@
       |_  key=@H
       ::                                                ::  ++en:ecba:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  blk=@H  ^-  @uxH
+        ~>  %zfast.[%$^%en^%ecba^%aes^%crypto +>+< +<]
         =+  (ahem 4 4 10)
         =:
           key  (~(net fe 7) key)
@@ -1731,8 +1731,8 @@
         (be & (ex key) blk)
       ::                                                ::  ++de:ecba:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  blk=@H  ^-  @uxH
+        ~>  %zfast.[%$^%de^%ecba^%aes^%crypto +>+< +<]
         =+  (ahem 4 4 10)
         =:
           key  (~(net fe 7) key)
@@ -1746,8 +1746,8 @@
       |_  key=@I
       ::                                                ::  ++en:ecbb:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  blk=@H  ^-  @uxH
+        ~>  %zfast.[%$^%en^%ecbb^%aes^%crypto +>+< +<]
         =+  (ahem 6 4 12)
         =:
           key  (rsh 6 (~(net fe 8) key))
@@ -1757,8 +1757,8 @@
         (be & (ex key) blk)
       ::                                                ::  ++de:ecbb:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  blk=@H  ^-  @uxH
+        ~>  %zfast.[%$^%de^%ecbb^%aes^%crypto +>+< +<]
         =+  (ahem 6 4 12)
         =:
           key  (rsh 6 (~(net fe 8) key))
@@ -1769,12 +1769,11 @@
       --  ::ecbb
     ::                                                  ::  ++ecbc:aes:crypto
     ++  ecbc                                            ::  AES-256 ECB
-      ~%  %ecbc  +>  ~
       |_  key=@I
       ::                                                ::  ++en:ecbc:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  blk=@H  ^-  @uxH
+        ~>  %zfast.[%$^%en^%ecbc^%aes^%crypto +>+< +<]
         =+  (ahem 8 4 14)
         =:
           key  (~(net fe 8) key)
@@ -1784,8 +1783,8 @@
         (be & (ex key) blk)
       ::                                                ::  ++de:ecbc:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  blk=@H  ^-  @uxH
+        ~>  %zfast.[%$^%de^%ecbc^%aes^%crypto +>+< +<]
         =+  (ahem 8 4 14)
         =:
           key  (~(net fe 8) key)
@@ -1796,12 +1795,11 @@
       --  ::ecbc
     ::                                                  ::  ++cbca:aes:crypto
     ++  cbca                                            ::  AES-128 CBC
-      ~%  %cbca  +>  ~
       |_  [key=@H prv=@H]
       ::                                                ::  ++en:cbca:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  txt=@  ^-  @ux
+        ~>  %zfast.[%$^%en^%cbca^%aes^%crypto +>+< +<]
         =+  pts=?:(=(txt 0) `(list @)`~[0] (flop (rip 7 txt)))
         =|  cts=(list @)
         %+  rep  7
@@ -1817,8 +1815,8 @@
         ==
       ::                                                ::  ++de:cbca:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  txt=@  ^-  @ux
+        ~>  %zfast.[%$^%de^%cbca^%aes^%crypto +>+< +<]
         =+  cts=?:(=(txt 0) `(list @)`~[0] (flop (rip 7 txt)))
         =|  pts=(list @)
         %+  rep  7
@@ -1835,12 +1833,11 @@
       --  ::cbca
     ::                                                  ::  ++cbcb:aes:crypto
     ++  cbcb                                            ::  AES-192 CBC
-      ~%  %cbcb  +>  ~
       |_  [key=@I prv=@H]
       ::                                                ::  ++en:cbcb:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  txt=@  ^-  @ux
+        ~>  %zfast.[%$^%en^%cbcb^%aes^%crypto +>+< +<]
         =+  pts=?:(=(txt 0) `(list @)`~[0] (flop (rip 7 txt)))
         =|  cts=(list @)
         %+  rep  7
@@ -1856,8 +1853,8 @@
         ==
       ::                                                ::  ++de:cbcb:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  txt=@  ^-  @ux
+        ~>  %zfast.[%$^%de^%cbcb^%aes^%crypto +>+< +<]
         =+  cts=?:(=(txt 0) `(list @)`~[0] (flop (rip 7 txt)))
         =|  pts=(list @)
         %+  rep  7
@@ -1874,12 +1871,11 @@
       --  ::cbcb
     ::                                                  ::  ++cbcc:aes:crypto
     ++  cbcc                                            ::  AES-256 CBC
-      ~%  %cbcc  +>  ~
       |_  [key=@I prv=@H]
       ::                                                ::  ++en:cbcc:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  txt=@  ^-  @ux
+        ~>  %zfast.[%$^%en^%cbcc^%aes^%crypto +>+< +<]
         =+  pts=?:(=(txt 0) `(list @)`~[0] (flop (rip 7 txt)))
         =|  cts=(list @)
         %+  rep  7
@@ -1895,8 +1891,8 @@
         ==
       ::                                                ::  ++de:cbcc:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  txt=@  ^-  @ux
+        ~>  %zfast.[%$^%de^%cbcc^%aes^%crypto +>+< +<]
         =+  cts=?:(=(txt 0) `(list @)`~[0] (flop (rip 7 txt)))
         =|  pts=(list @)
         %+  rep  7
@@ -1921,12 +1917,11 @@
       [(~(sum fe mod) i.bqs 1) t.bqs]
     ::                                                  ::  ++ctra:aes:crypto
     ++  ctra                                            ::  AES-128 CTR
-      ~%  %ctra  +>  ~
       |_  [key=@H mod=bloq len=@ ctr=@H]
       ::                                                ::  ++en:ctra:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  txt=@
+        ~>  %zfast.[%$^%en^%ctra^%aes^%crypto +>+< +<]
         ^-  @ux
         =/  encrypt  ~(en ecba key)
         =/  blocks  (add (div len 16) ?:(=((^mod len 16) 0) 0 1))
@@ -1948,12 +1943,11 @@
       --  ::ctra
     ::                                                  ::  ++ctrb:aes:crypto
     ++  ctrb                                            ::  AES-192 CTR
-      ~%  %ctrb  +>  ~
       |_  [key=@I mod=bloq len=@ ctr=@H]
       ::                                                ::  ++en:ctrb:aes:crypto
       ++  en
-        ~/  %en
         |=  txt=@
+        ~>  %zfast.[%$^%en^%ctrb^%aes^%crypto +>+< +<]
         ^-  @ux
         =/  encrypt  ~(en ecbb key)
         =/  blocks  (add (div len 16) ?:(=((^mod len 16) 0) 0 1))
@@ -1975,12 +1969,11 @@
       --  ::ctrb
     ::                                                  ::  ++ctrc:aes:crypto
     ++  ctrc                                            ::  AES-256 CTR
-      ~%  %ctrc  +>  ~
       |_  [key=@I mod=bloq len=@ ctr=@H]
       ::                                                ::  ++en:ctrc:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  txt=@
+        ~>  %zfast.[%$^%en^%ctrc^%aes^%crypto +>+< +<]
         ^-  @ux
         =/  encrypt  ~(en ecbc key)
         =/  blocks  (add (div len 16) ?:(=((^mod len 16) 0) 0 1))
@@ -2052,8 +2045,8 @@
       [k1 k2]
     ::                                                  ::  ++maca:aes:crypto
     ++  maca                                            ::  AES-128 CMAC
-      ~/  %maca
       |=  [key=@H oct=(unit @) txt=@]
+      ~>  %zfast.[%$^%maca +<]^%aes^%crypto
       ^-  @ux
       =+  [sub=(suba key) len=?~(oct (met 3 txt) u.oct)]
       =+  ^=  pdt
@@ -2072,8 +2065,8 @@
       (~(sit fe 7) mac)
     ::                                                  ::  ++macb:aes:crypto
     ++  macb                                            ::  AES-192 CMAC
-      ~/  %macb
       |=  [key=@I oct=(unit @) txt=@]
+      ~>  %zfast.[%$^%macb +<]^%aes^%crypto
       ^-  @ux
       =+  [sub=(subb key) len=?~(oct (met 3 txt) u.oct)]
       =+  ^=  pdt
@@ -2092,8 +2085,8 @@
       (~(sit fe 7) mac)
     ::                                                  ::  ++macc:aes:crypto
     ++  macc                                            :: AES-256 CMAC
-      ~/  %macc
       |=  [key=@I oct=(unit @) txt=@]
+      ~>  %zfast.[%$^%macc +<]^%aes^%crypto
       ^-  @ux
       =+  [sub=(subc key) len=?~(oct (met 3 txt) u.oct)]
       =+  ^=  pdt
@@ -2112,8 +2105,8 @@
       (~(sit fe 7) mac)
     ::                                                  ::  ++s2va:aes:crypto
     ++  s2va                                            ::  AES-128 S2V
-      ~/  %s2va
       |=  [key=@H ads=(list @)]
+      ~>  %zfast.[%$^%s2va +<]^%aes^%crypto
       ?~  ads  (maca key `16 0x1)
       =/  res  (maca key `16 0x0)
       %+  maca  key
@@ -2129,8 +2122,8 @@
       ==
     ::                                                  ::  ++s2vb:aes:crypto
     ++  s2vb                                            ::  AES-192 S2V
-      ~/  %s2vb
       |=  [key=@I ads=(list @)]
+      ~>  %zfast.[%$^%s2vb +<]^%aes^%crypto
       ?~  ads  (macb key `16 0x1)
       =/  res  (macb key `16 0x0)
       %+  macb  key
@@ -2146,8 +2139,8 @@
       ==
     ::                                                  ::  ++s2vc:aes:crypto
     ++  s2vc                                            ::  AES-256 S2V
-      ~/  %s2vc
       |=  [key=@I ads=(list @)]
+      ~>  %zfast.[%$^%s2vc +<]^%aes^%crypto
       ?~  ads  (macc key `16 0x1)
       =/  res  (macc key `16 0x0)
       %+  macc  key
@@ -2163,12 +2156,11 @@
       ==
     ::                                                  ::  ++siva:aes:crypto
     ++  siva                                            ::  AES-128 SIV
-      ~%  %siva  +>  ~
       |_  [key=@I vec=(list @)]
       ::                                                ::  ++en:siva:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  txt=@
+        ~>  %zfast.[%$^%en^%siva^%aes^%crypto +>+< +<]
         ^-  (trel @uxH @ud @ux)
         =+  [k1=(rsh 7 key) k2=(end 7 key)]
         =+  iv=(s2va k1 (weld vec (limo ~[txt])))
@@ -2180,8 +2172,8 @@
         (~(en ctra k2 7 len hib) txt)
       ::                                                ::  ++de:siva:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  [iv=@H len=@ txt=@]
+        ~>  %zfast.[%$^%de^%siva^%aes^%crypto +>+< +<]
         ^-  (unit @ux)
         =+  [k1=(rsh 7 key) k2=(end 7 key)]
         =*  hib  (dis iv 0xffff.ffff.ffff.ffff.7fff.ffff.7fff.ffff)
@@ -2193,12 +2185,11 @@
       --  ::siva
     ::                                                  ::  ++sivb:aes:crypto
     ++  sivb                                            ::  AES-192 SIV
-      ~%  %sivb  +>  ~
       |_  [key=@J vec=(list @)]
       ::                                                ::  ++en:sivb:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
         |=  txt=@
+        ~>  %zfast.[%$^%en^%sivb^%aes^%crypto +>+< +<]
         ^-  (trel @uxH @ud @ux)
         =+  [k1=(rsh [6 3] key) k2=(end [6 3] key)]
         =+  iv=(s2vb k1 (weld vec (limo ~[txt])))
@@ -2209,8 +2200,8 @@
         (~(en ctrb k2 7 len hib) txt)
       ::                                                ::  ++de:sivb:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  [iv=@H len=@ txt=@]
+        ~>  %zfast.[%$^%de^%sivb^%aes^%crypto +>+< +<]
         ^-  (unit @ux)
         =+  [k1=(rsh [6 3] key) k2=(end [6 3] key)]
         =*  hib  (dis iv 0xffff.ffff.ffff.ffff.7fff.ffff.7fff.ffff)
@@ -2222,11 +2213,10 @@
       --  ::sivb
     ::                                                  ::  ++sivc:aes:crypto
     ++  sivc                                            ::  AES-256 SIV
-      ~%  %sivc  +>  ~
       |_  [key=@J vec=(list @)]
       ::                                                ::  ++en:sivc:aes:crypto
       ++  en                                            ::  encrypt
-        ~/  %en
+        ~>  %zfast.[%$^%en^%sivc^%aes^%crypto +>+< +<]
         |=  txt=@
         ^-  (trel @uxH @ud @ux)
         =+  [k1=(rsh 8 key) k2=(end 8 key)]
@@ -2239,8 +2229,8 @@
         (~(en ctrc k2 7 len hib) txt)
       ::                                                ::  ++de:sivc:aes:crypto
       ++  de                                            ::  decrypt
-        ~/  %de
         |=  [iv=@H len=@ txt=@]
+        ~>  %zfast.[%$^%de^%sivc^%aes^%crypto +>+< +<]
         ^-  (unit @ux)
         =+  [k1=(rsh 8 key) k2=(end 8 key)]
         =*  hib  (dis iv 0xffff.ffff.ffff.ffff.7fff.ffff.7fff.ffff)
@@ -2335,12 +2325,11 @@
         =+  bby=(pro.fq 4 (inv.fq 5))
         [(xrec bby) bby]
       --  ::
-    ~%  %ed  +  ~
     |%
     ::
     ++  point-add
-      ~/  %point-add
       |=  [a-point=@udpoint b-point=@udpoint]
+      ~>  %zfast.[%$^%poin^%ed^%cryptot-add +<]
       ^-  @udpoint
       ::
       =/  a-point-decoded=[@ @]  (need (deco a-point))
@@ -2350,8 +2339,8 @@
       (ward a-point-decoded b-point-decoded)
     ::
     ++  scalarmult
-      ~/  %scalarmult
       |=  [a=@udscalar a-point=@udpoint]
+      ~>  %zfast.[%$^%scal^%ed^%cryptoarmult +<]
       ^-  @udpoint
       ::
       =/  a-point-decoded=[@ @]  (need (deco a-point))
@@ -2360,15 +2349,15 @@
       (scam a-point-decoded a)
     ::
     ++  scalarmult-base
-      ~/  %scalarmult-base
       |=  scalar=@udscalar
+      ~>  %zfast.[%$^%scal^%ed^%cryptoarmult-base +<]
       ^-  @udpoint
       %-  etch
       (scam bb scalar)
     ::
     ++  add-scalarmult-scalarmult-base
-      ~/  %add-scalarmult-scalarmult-base
       |=  [a=@udscalar a-point=@udpoint b=@udscalar]
+      ~>  %zfast.[%$^%add-^%ed^%cryptoscalarmult-scalarmult-base +<]
       ^-  @udpoint
       ::
       =/  a-point-decoded=[@ @]  (need (deco a-point))
@@ -2379,8 +2368,8 @@
       (scam a-point-decoded a)
     ::
     ++  add-double-scalarmult
-      ~/  %add-double-scalarmult
       |=  [a=@udscalar a-point=@udpoint b=@udscalar b-point=@udpoint]
+      ~>  %zfast.[%$^%add-^%ed^%cryptodouble-scalarmult +<]
       ^-  @udpoint
       ::
       =/  a-point-decoded=[@ @]  (need (deco a-point))
@@ -2392,8 +2381,8 @@
       (scam b-point-decoded b)
     ::                                                  ::  ++puck:ed:crypto
     ++  puck                                            ::  public key
-      ~/  %puck
       |=  sk=@I  ^-  @
+      ~>  %zfast.[%$^%puck^%ed^%crypto +<]
       ?:  (gth (met 3 sk) 32)  !!
       =+  h=(shal (rsh [0 3] b) sk)
       =+  ^=  a
@@ -2409,8 +2398,8 @@
       (can 0 ~[[b se] [b pu]])
     ::                                                  ::  ++shar:ed:crypto
     ++  shar                                            ::  curve25519 secret
-      ~/  %shar
       |=  [pub=@ sek=@]
+      ~>  %zfast.[%$^%shar^%ed^%crypto +<]
       ^-  @ux
       =+  exp=(shal (rsh [0 3] b) (suck sek))
       =.  exp  (dis exp (can 0 ~[[3 0] [251 (fil 0 251 1)]]))
@@ -2420,8 +2409,8 @@
       (curt prv crv)
     ::                                                  ::  ++sign:ed:crypto
     ++  sign                                            ::  certify
-      ~/  %sign
       |=  [m=@ se=@]  ^-  @
+      ~>  %zfast.[%$^%sign^%ed^%crypto +<]
       =+  sk=(suck se)
       =+  pk=(cut 0 [b b] sk)
       =+  h=(shal (rsh [0 3] b) sk)
@@ -2450,8 +2439,8 @@
       (can 0 ~[[b (etch rr)] [b ss]])
     ::                                                  ::  ++veri:ed:crypto
     ++  veri                                            ::  validate
-      ~/  %veri
       |=  [s=@ m=@ pk=@]  ^-  ?
+      ~>  %zfast.[%$^%veri^%ed^%crypto +<]
       ?:  (gth (div b 4) (met 3 s))  |
       ?:  (gth (div b 8) (met 3 pk))  |
       =+  cb=(rsh [0 3] b)
@@ -2464,7 +2453,7 @@
       =+  h=(shaz ha)
       =((scam bb ss) (ward u.rr (scam u.aa h)))
     --  ::ed
-  ::                                                    ::
+  ::               ~                                     ::
   ::::                    ++scr:crypto                  ::  (2b3) scrypt
     ::                                                  ::::
   ++  scr
@@ -2601,13 +2590,13 @@
       (add (lsh [3 b] q) (mix k (fil 3 b 0x5c)))
     ::                                                  ::  ++pbk:scr:crypto
     ++  pbk                                             :: PBKDF2-HMAC-SHA256
-      ~/  %pbk
       |=  [p=@ s=@ c=@ d=@]
+      ~>  %zfast.[%pbk^%scr +<]
       (pbl p (met 3 p) s (met 3 s) c d)
     ::                                                  ::  ++pbl:scr:crypto
     ++  pbl                                             ::  w+length
-      ~/  %pbl
       |=  [p=@ pl=@ s=@ sl=@ c=@ d=@]
+      ~>  %zfast.[%pbl^%scr +<]
       =>  .(p (end [3 pl] p), s (end [3 sl] s))
       =+  h=32
       ::
@@ -2634,13 +2623,13 @@
       (end [3 d] t)
     ::                                                  ::  ++hsh:scr:crypto
     ++  hsh                                             ::  scrypt
-      ~/  %hsh
       |=  [p=@ s=@ n=@ r=@ z=@ d=@]
+      ~>  %zfast.[%hsh^%scr +<]
       (hsl p (met 3 p) s (met 3 s) n r z d)
     ::                                                  ::  ++hsl:scr:crypto
     ++  hsl                                             ::  w+length
-      ~/  %hsl
       |=  [p=@ pl=@ s=@ sl=@ n=@ r=@ z=@ d=@]
+      ~>  %zfast.[%hsl^%scr +<]
       =|  v=(list (list @))
       =>  .(p (end [3 pl] p), s (end [3 sl] s))
       =+  u=(mul (mul 128 r) z)
@@ -2791,10 +2780,10 @@
     ::
     ::  keccak
     ::
-    ++  keccak-224  ~/  %k224  |=(a=octs (keccak 1.152 448 224 a))
-    ++  keccak-256  ~/  %k256  |=(a=octs (keccak 1.088 512 256 a))
-    ++  keccak-384  ~/  %k384  |=(a=octs (keccak 832 768 384 a))
-    ++  keccak-512  ~/  %k512  |=(a=octs (keccak 576 1.024 512 a))
+    ++  keccak-224  |=(a=octs ~>(%zfast.[%$^%keccak224^%keccak^%crypto +<] (keccak 1.152 448 224 a)))
+    ++  keccak-256  |=(a=octs ~>(%zfast.[%$^%keccak256^%keccak^%crypto +<] (keccak 1.088 512 256 a)))
+    ++  keccak-384  |=(a=octs ~>(%zfast.[%$^%keccak384^%keccak^%crypto +<] (keccak 832 768 384 a)))
+    ++  keccak-512  |=(a=octs ~>(%zfast.[%$^%keccak512^%keccak^%crypto +<] (keccak 576 1.024 512 a)))
     ::
     ++  keccak  (cury (cury hash keccak-f) padding-keccak)
     ::
@@ -3120,10 +3109,10 @@
     ::  main logic
     ::
     ++  hmac
-      ~/  %hmac
       ::  boq: block size in bytes used by haj
       ::  out: bytes output by haj
       |*  [[haj=$-([@u @] @) boq=@u out=@u] key=byts msg=byts]
+      ~>  %zfast.[%$^%hmac^%hmac^%crypto +<]
       ::  ensure key and message fit signaled lengths
       =.  dat.key  (end [3 wid.key] dat.key)
       =.  dat.msg  (end [3 wid.msg] dat.msg)
@@ -3354,7 +3343,6 @@
       ::  general recovery omitted, but possible
       --
     ++  secp256k1
-      ~%  %secp256k1  +  ~
       |%
       ++  t  :: in the battery for jet matching
         ^-  domain
@@ -3377,8 +3365,8 @@
       ++  add-points        add-points:curve
       ++  mul-point-scalar  mul-point-scalar:curve
       ++  make-k
-        ~/  %make
         |=  [hash=@uvI private-key=@]
+        ~>  %zfast.[%$^%make-k^%secp256k1^%secp^%crypto +<]
         ::  checks sizes
         (make-k:curve hash private-key)
       ++  priv-to-pub
@@ -3387,8 +3375,8 @@
         (priv-to-pub:curve private-key)
       ::
       ++  ecdsa-raw-sign
-        ~/  %sign
         |=  [hash=@uvI private-key=@]
+        ~>  %zfast.[%$^%ecdsa-raw-sign^%secp256k1^%secp^%crypto +<]
         ^-  [v=@ r=@ s=@]
         =/  c  curve
         ::  raw-sign checks sizes
@@ -3405,8 +3393,8 @@
         [v x.rp s]
       ::
       ++  ecdsa-raw-recover
-        ~/  %reco
         |=  [hash=@ sig=[v=@ r=@ s=@]]
+        ~>  %zfast.[%$^%ecdsa-raw-recover^%secp256k1^%secp^%crypto +<]
         ^-  point
         ?>  (lte v.sig 3)
         =/  c   curve

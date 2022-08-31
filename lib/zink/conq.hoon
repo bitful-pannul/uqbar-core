@@ -60,7 +60,7 @@
   (slap (slop smart-lib payload) contract-hoon)
 ::
 ++  conq
-  |=  [hoonlib-txt=@t smartlib-txt=@t cax=cache bud=@ud]
+  |=  [hoonlib-txt=@t smartlib-txt=@t cax=cache]
   ^-  cache
   |^
   =.  cax
@@ -134,7 +134,7 @@
   =/  cor  .*([q.smart-lib pay.cont] bat.cont)
   =/  dor  [-:!>(*contract:smart) cor]
   =/  gun  (ajar:mill dor %write !>(*cart:smart) !>(*yolk:smart))
-  =/  =book  (zebra bud cax *granary-scry gun %.n)
+  =/  =book  (zebra ~ cax ~ gun %.n)
   ~&  p.book
   cax.q.book
   ::

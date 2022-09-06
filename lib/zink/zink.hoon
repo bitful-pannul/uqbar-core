@@ -32,28 +32,6 @@
   =/  ht  $(n +.n)
   (hash:pedersen hh ht)
 ::
-++  gen-cache
-  |=  [n=*]
-  =|  cax=cache
-  |-  ^-  cache
-  ::  test mode disables hashing, so it won't generate valid hints.
-  ::  however, computation is *much* faster since hashing is the
-  ::  most expensive aspect of the process.
-  =-  ->
-  |-  ^-  [(pair phash @ud) cache]
-  =/  mh  (~(get by cax) n)
-  ?^  mh
-    [u.mh cax]
-  ?@  n
-    =/  h  [(hash:pedersen n 0) 1]
-    :-  h
-    (~(put by cax) n h)
-  =^  hh=(pair phash @ud)  cax  $(n -.n)
-  =^  ht=(pair phash @ud)  cax  $(n +.n)
-  =/  h  [(hash:pedersen p.hh p.ht) +((add q.hh q.ht))]
-  :-  h
-  (~(put by cax) n h)
-::
 ++  create-hints
   |=  [n=^ h=hints cax=cache]
   ^-  json
@@ -121,7 +99,7 @@
     [[%& `const.f] [%1 hres]~]^app
   ::
       [%2 sub=* for=*]
-    =^  oob  app  (take-bud 3)
+    =^  oob  app  (take-bud 3) :: note, i think 4 because of the *[subf-res-1 subf-res-2]
     ?:  oob
       =^  htal  app  (hash +.f)
       [%&^~ [%2 %|^htal]~]^app
@@ -180,7 +158,6 @@
     ?^  u.p.arg-res
       =^  hhed  app  (hash -.u.p.arg-res)
       =^  htal  app  (hash +.u.p.arg-res)
-      :: =+  arg=[]
       ~&  135  [%|^trace [%4 %& [harg arg-hints] `%cell^[hhed htal]]~]^app
     :_  app
     :-  [%& ~ .+(u.p.arg-res)]
@@ -374,7 +351,7 @@
     ~?  ?=(%zfast tag.f)
       ?>  ?=([[%1 jet] *] clue.f) :: todo: shouldn't crash here
       =-  "jet: {(sa:dejs:format -)}"
-      (en-jet:enjs +.-.clue.f)
+      (en-jet:enjs ->.clue.f)
     =^  htag  app  (hash tag.f)
     :: we can go straight to jetting in zere with this
     =/  tag-hint=@  ?:(?=(%zfast tag.f) htag tag.f)
@@ -391,7 +368,7 @@
         :: todo: does this safe fail in zere? no it doesnt
         ?.  ?=([jet *] u.p.clue-res)
           [%|^trace [%11 %& %&^[tag-hint [hclue clue-hints]] hnext]~]^app
-        (run-jet +.clue.f `jet`-.u.p.clue-res +.u.p.clue-res)
+        (run-jet +.clue.f u.p.clue-res)
       =?    trace
           ?=(?(%hunk %hand %lose %mean %spot) tag.f)
         [[tag.f u.p.clue-res] trace]
@@ -447,16 +424,286 @@
     %|^app(u.bud (sub u.bud amt))
   ::
   ++  run-jet
-    |=  [sam-clue=* jet=* sam=*]
-    ?>  ?=(^jet jet)
+    |=  [sam-clue=* =jet sam=*]
     ^-  book
     ?~  cost=(~(get by jets) jet)
       ~&  >>  "no jet found"  [%&^~ ~]^app
     ?:  ?&(?=(^ bud) (lth u.bud u.cost))  [%&^~ ~]^app
-    =-  -(bud.q (bind bud.q.- |=(bud=@ (sub bud u.cost))))
     ^-  book
-    ?:  ?=([%$ %zock] jet)
-      ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  [%|^trace ~]^app
+    ?+    jet
+      =-  [- [%jet jet (noun:enjs sam)]~]^app
+      =^  oob  app  (take-bud u.cost)
+      ?:  oob
+        %&^~
+      ?~  res=(run-zuse-jet jet sam-clue sam)  %|^trace
+      %&^res
+    ::
+        [%$ %pedersen-hash]
+      =^  oob  app  (take-bud u.cost)
+      ?:  oob
+        [%&^~ [%jet jet ~]~]^app
+      ?.  ?=([@ @] sam)  [%|^trace ~]^app
+      [%&^(some (hash:pedersen sam)) ~]^app
+    ::
+        [%$ %pmug]
+      =^  hsam  app  (hash sam)
+      [%&^~^hsam [%jet jet (noun:enjs sam)]~]^app
+    ::
+        [%$ %pgor]
+      ?.  ?=([h=* t=*] sam)  [%|^trace ~]^app
+      =/  hit  [%jet jet (noun:enjs sam)]~
+      =^  res  app  (pgor sam)
+      ?~  res  [%|^trace hit]^app
+      [%&^res hit]^app
+    ::
+        [%$ %pmor]
+      ?.  ?=([h=* t=*] sam)  [%|^trace ~]^app
+      =/  hit  [%jet jet (noun:enjs sam)]~
+      =^  res  app  (pmor sam)
+      ?~  res  [%|^trace hit]^app
+      [%&^res hit]^app
+    ::
+        [%$ %reel]
+      ::  we want the hints in reverse order easier to
+      ::  prove the list hash that way in zere
+      ::  todo: oob early if not enough gas to hash list
+      ?.  ?=([lis=* [bat=* [bunt-el=* acc=*] con=*]] sam)  [%|^trace ~]^app
+      =^  hlis  app  (hash lis.sam)
+      =^  hbat  app  (hash bat.sam)
+      =^  hbunt-el  app  (hash bunt-el.sam)
+      =^  hinit  app  (hash acc.sam)
+      =^  hcon  app  (hash con.sam)
+      |^
+      =^  lax  app  (hash-and-flop lis.sam)
+      ?.  ?=(%& -.lax)  [%|^trace [%jet jet (en-not-list p.lax)]~]^app
+      =*  hax  p.p.lax
+      =*  lis  q.p.lax
+      =*  acc  acc.sam
+      =|  hit=(list hints)
+      |-  ^-  book
+      ?~  lis  [%&^~^acc [%jet jet (en-hints hax (flop hit))]~]^app
+      =^  [=el=res =el=hints]  app
+        zink-loop(s [bat.sam [i.lis acc] con.sam], f bat.sam)
+      =.  hit  el-hints^hit
+      ?.  ?=(%& -.el-res)  [%|^trace [%jet jet (en-hints hax (flop hit))]~]^app
+      ?~  p.el-res  [%&^~ [%jet jet (en-hints hax (flop hit))]~]^app
+      $(acc u.p.el-res, lis t.lis)
+      ::
+      ++  en-hints
+        |=  [hax=(list phash) hit=(list hints)]
+        ^-  json
+        %-  pairs:enjs:format
+        :~  list+(num:enjs hlis)
+            battery+(num:enjs hbat)
+            bunt-el+(num:enjs hbunt-el)
+            init+(num:enjs hinit)
+            context+(num:enjs hcon)
+            hashes+a+(turn hax num:enjs)
+            hints+a+(turn hit hints:enjs)
+        ==
+      ::
+      ++  en-not-list
+        |=  [hax=(list phash) crash-end=@]
+        ^-  json
+        %-  pairs:enjs:format
+        :~  list+(num:enjs hlis)
+            battery+(num:enjs hbat)
+            battery+(num:enjs hbat)
+            bunt-el+(num:enjs hbunt-el)
+            context+(num:enjs hcon)
+            hashes+a+(turn hax num:enjs)
+            crash-end+(num:enjs crash-end)
+        ==
+      ::
+      --
+    ::
+        [%$ %roll]
+      ::  we want the hints in reverse order easier to
+      ::  prove the list hash that way in zere
+      ::  todo: oob early if not enough gas to hash list
+      ?.  ?=([lis=* [bat=* [bunt-el=* acc=*] con=*]] sam)  [%|^trace ~]^app
+      =^  hlis  app  (hash lis.sam)
+      =^  hbat  app  (hash bat.sam)
+      =^  hbunt-el  app  (hash bunt-el.sam)
+      =^  hinit  app  (hash acc.sam)
+      =^  hcon  app  (hash con.sam)
+      |^
+      =^  lax  app  (hash-and-flop lis.sam)
+      ?.  ?=(%& -.lax)  [%|^trace [%jet jet (en-not-list p.lax)]~]^app
+      =*  hax  p.p.lax
+      =*  lis  q.p.lax
+      =*  acc  acc.sam
+      =.  lis  (flop lis)  :: can probably make more efficient
+      =|  hit=(list hints)
+      |-  ^-  book
+      ?~  lis  [%&^~^acc [%jet jet (en-hints hax (flop hit))]~]^app
+      =^  [=el=res =el=hints]  app
+        zink-loop(s [bat.sam [i.lis acc] con.sam], f bat.sam)
+      =.  hit  el-hints^hit
+      ?.  ?=(%& -.el-res)  [%|^trace [%jet jet (en-hints hax (flop hit))]~]^app
+      ?~  p.el-res  [%&^~ [%jet jet (en-hints hax (flop hit))]~]^app
+      $(acc u.p.el-res, lis t.lis)
+      ::
+      ++  en-hints
+        |=  [hax=(list phash) hit=(list hints)]
+        ^-  json
+        %-  pairs:enjs:format
+        :~  list+(num:enjs hlis)
+            battery+(num:enjs hbat)
+            bunt-el+(num:enjs hbunt-el)
+            init+(num:enjs hinit)
+            context+(num:enjs hcon)
+            hashes+a+(turn hax num:enjs)
+            hints+a+(turn hit hints:enjs)
+        ==
+      ::
+      ++  en-not-list
+        |=  [hax=(list phash) crash-end=@]
+        ^-  json
+        %-  pairs:enjs:format
+        :~  list+(num:enjs hlis)
+            battery+(num:enjs hbat)
+            battery+(num:enjs hbat)
+            bunt-el+(num:enjs hbunt-el)
+            context+(num:enjs hcon)
+            hashes+a+(turn hax num:enjs)
+            crash-end+(num:enjs crash-end)
+        ==
+      ::
+      --
+    ::
+        [%$ %turn]
+      ::  we want the hints in reverse order easier to
+      ::  prove the list hash that way in zere
+      ::  todo: oob early if not enough gas to hash list
+      ?.  ?=([lis=* [bat=* bunt=* con=*]] sam)  [%|^trace ~]^app
+      =^  hlis  app  (hash lis.sam)
+      =^  hbat  app  (hash bat.sam)
+      =^  hbunt  app  (hash bunt.sam)
+      =^  hcon  app  (hash con.sam)
+      |^
+      =^  lax  app  (hash-and-flop lis.sam)
+      ?.  ?=(%& -.lax)  [%|^trace [%jet jet (en-not-list p.lax)]~]^app
+      =*  hax  p.p.lax
+      =*  lis  q.p.lax
+      =|  hit=(list hints)
+      =|  res=(list)
+      |-  ^-  book
+      ?~  lis  [%&^~^res [%jet jet (en-hints hax (flop hit))]~]^app
+      =^  [=el=^res =el=hints]  app  zink-loop(s [bat.sam i.lis con.sam], f bat.sam)
+      =.  hit  el-hints^hit
+      ?.  ?=(%& -.el-res)  [%|^trace [%jet jet (en-hints hax (flop hit))]~]^app
+      ?~  p.el-res  [%&^~ [%jet jet (en-hints hax (flop hit))]~]^app
+      $(res u.p.el-res^res, lis t.lis)
+      ::
+      ++  en-hints
+        |=  [hax=(list phash) hit=(list hints)]
+        ^-  json
+        %-  pairs:enjs:format
+        :~  list+(num:enjs hlis)
+            battery+(num:enjs hbat)
+            bunt+(num:enjs hbunt)
+            context+(num:enjs hcon)
+            hashes+a+(turn hax num:enjs)
+            hints+a+(turn hit hints:enjs)
+        ==
+      ::
+      ++  en-not-list
+        |=  [hax=(list phash) crash-end=@]
+        ^-  json
+        %-  pairs:enjs:format
+        :~  list+(num:enjs hlis)
+            battery+(num:enjs hbat)
+            bunt+(num:enjs hbunt)
+            context+(num:enjs hcon)
+            hashes+a+(turn hax num:enjs)
+            crash-end+(num:enjs crash-end)
+        ==
+      ::
+      --
+    ::
+        [%$ %has %pin]
+      ?~  sam=((soft ,[set=(tree) val=*]) sam)  [%|^trace ~]^app
+      =>  .(sam u.sam)
+      =^  [axis=@ leaf=(unit) path=(list phash)]  app
+        (dig-in-tree set.sam val.sam pgor test same)
+      =^  hset  app  (hash set.sam)
+      =^  hval  app  (hash val.sam)
+      =^  hleaf  app  (hash (fall leaf ~))
+      =-  [%&^~^?~(leaf %| %&) hit]^app
+      ^=  hit=(hints)
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  set+(num:enjs hset)
+          val+(num:enjs hval)
+          axis+(num:enjs axis)
+          path+a+(turn path num:enjs)
+          leaf+(num:enjs hleaf)
+      ==
+    ::
+        [%$ %put %pin]
+      ?~  sam=((soft ,[set=(tree) val=*]) sam)  [%|^trace ~]^app
+      =>  .(sam u.sam)
+      =^  res  app
+        (put-in-tree set.sam val.sam pgor pmor test same)
+      =^  hset  app  (hash set.sam)
+      =^  hval  app  (hash val.sam)
+      ?.  ?=(%& +<.res)
+        =-  [%&^~^a.res hit]^app
+        ^=  hit=(hints)
+        =/  [axis=@ path=(list phash)]  p.res
+        :_  ~
+        :+  %jet  jet
+        %-  pairs:enjs:format
+        :~  set+(num:enjs hset)
+            val+(num:enjs hval)
+            axis+(num:enjs axis)
+            path+a+(turn path num:enjs)
+        ==
+      =-  [%&^~^a.res hit]^app
+      ^=  hit=(hints)
+      =/  [nodes=(list phash) left=(list phash) right=(list phash)]  p.res
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  set+(num:enjs hset)
+          val+(num:enjs hval)
+          nodes+a+(turn nodes num:enjs)
+          left+a+(turn left num:enjs)
+          right+a+(turn right num:enjs)
+      ==
+    ::
+        [%tap %pin]
+      ?~  set=((soft (tree)) sam)  [%|^trace ~]^app
+      =>  .(set u.set)
+      =^  hset  app  (hash set)
+      =^  [res=(list) nodes=hash-tree]  app  (tap-in-tree set)
+      =-  [%&^~^res hit]^app
+      ^-  hit=hints
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  set+(num:enjs hset)
+          nodes+(en-hash-tree nodes)
+      ==
+    ::
+        [%apt %pin]
+      ?~  set=((soft (tree)) sam)  [%|^trace ~]^app
+      =>  .(set u.set)
+      =^  hset  app  (hash set)
+      =^  [res=? nodes=hash-tree]  app  (apt-in-tree set pgor pmor)
+      =-  [%&^~^res hit]^app
+      ^-  hit=hints
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  set+(num:enjs hset)
+          nodes+(en-hash-tree nodes)
+      ==
+    ::
+        [%$ %zock]
+     ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  [%|^trace ~]^app
       =^  shash  app  (hash s.sam)
       =^  fhash  app  (hash f.sam)
       =^  hscry  app  (hash scry.sam)
@@ -491,20 +738,175 @@
         ::
             [%| *]  %&^~^[%2 real-inner-bud]
         ==
-      :-  res^[[%jet %$^%zock [bud shash fhash hscry]] q.p.new-book]
+      :-  res^[[%jet %$^%zock (noun:enjs [bud shash fhash hscry])] q.p.new-book]
       %_    app
           cax  cax.q.new-book
           bud  outer-bud
       ==
-    =-  [- [%jet jet sam]~]^app
-    ?+    jet
-      ?~  res=(run-zuse-jet jet sam-clue sam)  %|^trace
-      %&^res
-    ::
-        [%$ %pedersen-hash]
-      ?.  ?=([@ @] sam)  %|^trace
-      %&^(some (hash:pedersen sam))
     ==
+  ::
+  +$  hash-tree  (tree [n=phash l=phash r=phash])
+  ++  en-hash-tree
+    |=  =hash-tree
+    |-  ^-  json
+    ?~  hash-tree  ~
+    %-  pairs:enjs:format
+    :~  hn+(num:enjs n.n.hash-tree)
+        hl+(num:enjs l.n.hash-tree)
+        hr+(num:enjs r.n.hash-tree)
+        l+$(hash-tree l.hash-tree)
+        r+$(hash-tree r.hash-tree)
+    ==
+  ::
+  ++  pgor
+    |=  [a=* b=*]
+    ^-  [(unit ?) appendix]
+    =^  c  app  (hash a)
+    =^  d  app  (hash b)
+    ?:  =(c d)  ~^app
+    [`(lth c d)]^app
+  ::
+  ++  pmor
+    |=  [a=* b=*]
+    ^-  [(unit ?) appendix]
+    =^  c  app  (hash a)
+    =^  d  app  (hash b)
+    =^  c  app  (hash c)
+    =^  d  app  (hash d)
+    ?:  =(c d)  ~^app
+    [`(lth c d)]^app
+  ::
+  ++  dig-in-tree :: basically dig, but returns axis in ~ case, and val
+    |*  [a=(tree) b=* gor=$-(^ [(unit ?) appendix]) eq=$-(^ ?) get=$-(* *)]
+    ^-  [[axis=@ val=(unit _(get)) path=(list phash)] appendix]
+    ?:  =(~ a)  [1 ~ ~]^app
+    =/  axis  1
+    =|  path=(list phash)
+    |-  ^-  _^$
+    ?~  a
+      [axis ~ path]^app
+    ?:  (eq b n.a)
+      =^  htala  app  (hash +.a)
+      [(peg axis 2) `(get n.a) htala^path]^app
+    =^  hna  app  (hash n.a)
+    =^  g  app  (gor b n.a)
+    ?>  ?=(^ g)
+    ?:  u.g
+      =^  hra  app  (hash r.a)
+      $(a l.a, axis (peg axis 6), path hra^hna^path)
+    =^  hla  app  (hash l.a)
+    $(a r.a, axis (peg axis 7), path hla^hna^path)
+  ::
+  ++  put-in-tree
+    |*  $:  a=(tree)  b=*
+            gor=$-(^ [(unit ?) appendix])
+            mor=$-(^ [(unit ?) appendix])
+            eq=$-(^ ?)
+            get=$-(* *)
+        ==
+    =|  path=(list phash)
+    =/  axis  1
+    |-  ^-  $:  $:  a=_a
+                    %+  each  [nodes=(list phash) left=(list phash) right=(list phash)]
+                    [axis=@ path=(list phash)]
+                ==
+                appendix
+            ==
+    ?~  a
+      [[b ~ ~] %& ~ ~ ~]^app
+    ?:  (eq (get b) (get n.a))
+      =^  htala  app  (hash +.a)
+      [[b l.a r.a] %| (peg axis 2) htala^path]^app
+    =^  hna  app  (hash n.a)
+    =^  hra  app  (hash r.a)
+    =^  hla  app  (hash l.a)
+    =^  g  app  (gor b n.a)
+    ?>  ?=(^ g)
+    ?:  u.g
+      =^  c  app  $(a l.a, path hra^hna^path, axis (peg axis 6))
+      ?.  ?=(%& +<.c)  [c(a a(l a.c)) app]
+      ?>  ?=(^ a.c)
+      =^  m  app  (mor n.a n.a.c)
+      ?>  ?=(^ m)
+      :_  app
+      %_  c
+        nodes.p  hna^nodes.p.c
+        left.p   hla^left.p.c
+        right.p  hra^right.p.c
+        a      ?:(u.m a(l a.c) a.c(r a(l r.a.c)))
+      ==
+    =^  c  app  $(a r.a, path hla^hna^path, axis (peg axis 7))
+    ?.  ?=(%& +<.c)  [c(a a(r a.c)) app]
+    ?>  ?=(^ a.c)
+    =^  m  app  (mor n.a n.a.c)
+    ?>  ?=(^ m)
+    :_  app
+    %_  c
+      nodes.p  hna^nodes.p.c
+      left.p   hla^left.p.c
+      right.p  hra^right.p.c
+      a        ?:(u.m a(r a.c) a.c(l a(r l.a.c)))
+    ==
+  ::
+  ++  tap-in-tree
+    |=  a=(tree)
+    ^-  [[res=(list) nodes=hash-tree] appendix]
+    ?:  =(a ~)  [~ ~]^app
+    =|  res=(list)
+    |-  ^-  _^$
+    ?~  a  [res ~]^app
+    =^  hna  app  (hash n.a)
+    =^  hla  app  (hash l.a)
+    =^  hra  app  (hash r.a)
+    =^  l  app  $(a l.a)
+    =^  r  app  $(a r.a, res n.a^res.l)
+    :_  app
+    r(nodes [n=[hna hla hra] nodes.l nodes.r])
+  ::
+  ++  apt-in-tree
+    |*  $:  a=(tree)
+            gor=$-(^ [(unit ?) appendix])
+            mor=$-(^ [(unit ?) appendix])
+        ==
+    ^-  [[? nodes=hash-tree] appendix]
+    ?:  =(a ~)  [%& ~]^app
+    =|  [l=(unit) r=(unit)]
+    |-  ^-  $_  ^$
+    ?~  a  [& ~]^app
+    =^  hna  app  (hash n.a)
+    =^  hla  app  (hash l.a)
+    =^  hra  app  (hash r.a)
+    =/  nodes  [hna hla hra]
+    =^  g-na-ul   app  ?~(l [~ u=%&]^app (gor n.a u.l))
+    ?>  ?=(^ g-na-ul)
+    ?.  u.g-na-ul  [%| [nodes ~ ~]]^app
+    =^  g-ur-na   app  ?~(r [~ u=%&]^app (gor u.r n.a))
+    ?>  ?=(^ g-ur-na)
+    ?.  u.g-ur-na  [%| [nodes ~ ~]]^app
+    :: todo: prob more efficient to do mor first
+    :: but zere jet is easier if not more efficient to write
+    :: apt'ing l/r first
+    =^  apt-la  app  $(a l.a, l `n.a)
+    ?.  -.apt-la  [%| [nodes nodes.apt-la ~]]^app
+    =^  apt-ra  app  $(a r.a, r `n.a)
+    ?.  -.apt-ra  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
+    =^  m-na-nla  app  ?~(l.a [~ u=%&]^app (mor n.a n.l.a))
+    ?>  ?=(^ m-na-nla)
+    ?.  u.m-na-nla  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
+    =^  m-na-nra  app  ?~(r.a [~ u=%&]^app (mor n.a n.r.a))
+    ?>  ?=(^ m-na-nra)
+    ?.  u.m-na-nra  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
+    [%& [nodes nodes.apt-la nodes.apt-ra]]^app
+  ::
+  ++  hash-and-flop
+    |=  [lis=*]
+    =|  out=(list)
+    =|  hax=(list phash)
+    |-  ^-  [(each (pair (list phash) (list)) (pair (list phash) @)) appendix]
+    ?~  lis  [%& hax out]^app
+    ?@  lis  [%| hax lis]^app
+    =^  hel  app  (hash -.lis)
+    $(lis +.lis, out [-.lis out], hax [hel hax])
   ::
   ++  run-zuse-jet
     |=  [jet=* clue=* clue-res=*]
@@ -574,20 +976,23 @@
     ::  however, computation is *much* faster since hashing is the
     ::  most expensive aspect of the process.
     ?:  test-mode  [0x1 app]
-    =-  [p.-< ->]
+    =-  [-<- ->]
     |-  ^-  [(pair phash @ud) appendix]
     =/  mh  (~(get by cax) n)
     ?^  mh
       [u.mh app]
     ?@  n
-      =/  h  [(hash:pedersen n 0) 1]
-      :-  h
-      app(cax (~(put by cax) n h))
-    =^  hh=(pair phash @ud)  app  $(n -.n)
-    =^  ht=(pair phash @ud)  app  $(n +.n)
-    =/  h  [(hash:pedersen p.hh p.ht) +((add q.hh q.ht))]
-    :-  h
-    app(cax (~(put by cax) n h))
+      =/  h  (hash:pedersen n 0)
+      =/  v  [h 1]
+      :-  v
+      app(cax (~(put by cax) n v))
+    =^  vh  app  $(n -.n)
+    =^  vt  app  $(n +.n)
+    =/  h  (hash:pedersen p.vh p.vt)
+    =/  v
+      [h +((add q.vh q.vt))]
+    :-  v
+    app(cax (~(put by cax) n v))
   ::
   ++  frag
     |=  [axis=@ s=*]

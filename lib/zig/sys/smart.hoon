@@ -6,6 +6,846 @@
 ::::::                                         ::::  ::  ::::::  ::  ::  ::  ::
 =<
 |%
+::::  2e: pedersen hashing                              ::
+  ::                                                    ::
+  ::
+++  pmug                                                 ::  mug with pedersen
+  |=  a=*
+  ~>  %zfast.[%$^%mug +<]
+  ?@  a
+    (hash:pedersen a 0)
+  (hash:pedersen $(a -.a) $(a +.a))
+::                                                      ::
+::::  2f: noun ordering                                 ::
+  ::                                                    ::
+  ::    aor, dor, gor, mor                              ::
+  ::
+::  +aor: alphabetical order
+::
+::    Orders atoms before cells, and atoms in ascending LSB order.
+::
+++  aor
+  |=  [a=* b=*]
+  ~>  %zfast.[%$^%aor +<]
+  ^-  ?
+  ?:  =(a b)  &
+  ?.  ?=(@ a)
+    ?:  ?=(@ b)  |
+    ?:  =(-.a -.b)
+      $(a +.a, b +.b)
+    $(a -.a, b -.b)
+  ?.  ?=(@ b)  &
+  |-
+  =+  [c=(end 3 a) d=(end 3 b)]
+  ?:  =(c d)
+    $(a (rsh 3 a), b (rsh 3 b))
+  (lth c d)
+::  +dor: depth order
+::
+::    Orders in ascending tree depth.
+::
+++  dor
+  |=  [a=* b=*]
+  ~>  %zfast.[%$^%dor +<]
+  ^-  ?
+  ?:  =(a b)  &
+  ?.  ?=(@ a)
+    ?:  ?=(@ b)  |
+    ?:  =(-.a -.b)
+      $(a +.a, b +.b)
+    $(a -.a, b -.b)
+  ?.  ?=(@ b)  &
+  (lth a b)
+::  +pgor: mug order
+::
+::    Orders in ascending +pmug hash order
+::
+++  pgor
+  |=  [a=* b=*]
+  ~>  %zfast.[%$^%pgor +<]
+  ^-  ?
+  =+  [c=(pmug a) d=(pmug b)]
+  ?>  !=(c d)
+  (lth c d)
+::  +pmor: (more) pmug order
+::
+::    Orders in ascending double +pmug hash order
+::
+++  pmor
+  |=  [a=* b=*]
+  ~>  %zfast.[%$^%pmor +<]
+  ^-  ?
+  =+  [c=(pmug (pmug a)) d=(pmug (pmug b))]
+  ?>  !=(c d)
+  (lth c d)
+::::                                                    ::
+  ::                                                    ::
+  ::  2h: set logic                                     ::
+  ::                                                    ::
+  ::
+++  pin                                                  ::  set engine
+  =|  a=(tree)  :: (pset)
+  |@
+  ++  all                                               ::  logical AND
+    |*  b=$-(* ?)
+    ~>  %zfast.[%$^%all^%pin +>+< +<]
+    |-  ^-  ?
+    ?~  a
+      &
+    ?&((b n.a) $(a l.a) $(a r.a))
+  ::
+  ++  any                                               ::  logical OR
+    |*  b=$-(* ?)
+    ~>  %zfast.[%$^%any^%pin +>+< +<]
+    |-  ^-  ?
+    ?~  a
+      |
+    ?|((b n.a) $(a l.a) $(a r.a))
+  ::
+  ++  apt                                               ::  check correctness
+    ~>  %zfast.[%apt^%pin +<]
+    =<  $
+    =|  [l=(unit) r=(unit)]
+    |.  ^-  ?
+    ?~  a   &
+    ?&  ?~(l & (pgor n.a u.l))
+        ?~(r & (pgor u.r n.a))
+        ?~(l.a & ?&((pmor n.a n.l.a) $(a l.a, l `n.a)))
+        ?~(r.a & ?&((pmor n.a n.r.a) $(a r.a, r `n.a)))
+    ==
+  ::
+  ++  bif                                               ::  splits a by b
+    |*  b=*
+    ~>  %zfast.[%$^%bif^%pin +>+< +<]
+    ^+  [l=a r=a]
+    =<  +
+    |-  ^+  a
+    ?~  a
+      [b ~ ~]
+    ?:  =(b n.a)
+      a
+    ?:  (pgor b n.a)
+      =+  c=$(a l.a)
+      ?>  ?=(^ c)
+      c(r a(l r.c))
+    =+  c=$(a r.a)
+    ?>  ?=(^ c)
+    c(l a(r l.c))
+  ::
+  ++  del                                               ::  b without any a
+    |*  b=*
+    ~>  %zfast.[%$^%del^%pin +>+< +<]
+    |-  ^+  a
+    ?~  a
+      ~
+    ?.  =(b n.a)
+      ?:  (pgor b n.a)
+        a(l $(a l.a))
+      a(r $(a r.a))
+    |-  ^-  [$?(~ _a)]
+    ?~  l.a  r.a
+    ?~  r.a  l.a
+    ?:  (pmor n.l.a n.r.a)
+      l.a(r $(l.a r.l.a))
+    r.a(l $(r.a l.r.a))
+  ::
+  ++  dif                                               ::  difference
+    =+  b=a
+    |@
+    ++  $
+      ~>  %zfast.[%$^%dif^%pin +>+< +<]
+      |-  ^+  a
+      ?~  b
+        a
+      =+  c=(bif n.b)
+      ?>  ?=(^ c)
+      =+  d=$(a l.c, b l.b)
+      =+  e=$(a r.c, b r.b)
+      |-  ^-  [$?(~ _a)]
+      ?~  d  e
+      ?~  e  d
+      ?:  (pmor n.d n.e)
+        d(r $(d r.d))
+      e(l $(e l.e))
+    --
+  ::
+  ++  dig                                               ::  axis of a in b
+    |=  b=*
+    =+  c=1
+    |-  ^-  (unit @)
+    ?~  a  ~
+    ?:  =(b n.a)  [~ u=(peg c 2)]
+    ?:  (pgor b n.a)
+      $(a l.a, c (peg c 6))
+    $(a r.a, c (peg c 7))
+  ::
+  ++  gas                                               ::  concatenate
+    |=  b=(list _?>(?=(^ a) n.a))
+    ~>  %zfast.[%$^%gas^%pin +>+< +<]
+    |-  ^+  a
+    ?~  b
+      a
+    $(b t.b, a (put i.b))
+  ::  +has: does :b exist in :a?
+  ::
+  ++  has
+    |*  b=*
+    ~>  %zfast.[%$^%has^%pin +>+< +<]
+    ^-  ?
+    ::  wrap extracted item type in a unit because bunting fails
+    ::
+    ::    If we used the real item type of _?^(a n.a !!) as the sample type,
+    ::    then hoon would bunt it to create the default sample for the gate.
+    ::
+    ::    However, bunting that expression fails if :a is ~. If we wrap it
+    ::    in a unit, the bunted unit doesn't include the bunted item type.
+    ::
+    ::    This way we can ensure type safety of :b without needing to perform
+    ::    this failing bunt. It's a hack.
+    ::
+    %.  [~ b]
+    |=  b=(unit _?>(?=(^ a) n.a))
+    =>  .(b ?>(?=(^ b) u.b))
+    |-  ^-  ?
+    ?~  a
+      |
+    ?:  =(b n.a)
+      &
+    ?:  (pgor b n.a)
+      $(a l.a)
+    $(a r.a)
+  ::
+  ++  int                                               ::  intersection
+    =+  b=a
+    |@
+    ++  $
+      ~>  %zfast.[%$^%int^%pin +>+< +<]
+      |-  ^+  a
+      ?~  b
+        ~
+      ?~  a
+        ~
+      ?.  (pmor n.a n.b)
+        $(a b, b a)
+      ?:  =(n.b n.a)
+        a(l $(a l.a, b l.b), r $(a r.a, b r.b))
+      ?:  (pgor n.b n.a)
+        %-  uni(a $(a l.a, r.b ~))  $(b r.b)
+      %-  uni(a $(a r.a, l.b ~))  $(b l.b)
+    --
+  ::
+  ++  put                                               ::  puts b in a, sorted
+    |*  b=*
+    ~>  %zfast.[%$^%put^%pin +>+< +<]
+    |-  ^+  a
+    ?~  a
+      [b ~ ~]
+    ?:  =(b n.a)
+      a
+    ?:  (pgor b n.a)
+      =+  c=$(a l.a)
+      ?>  ?=(^ c)
+      ?:  (pmor n.a n.c)
+        a(l c)
+      c(r a(l r.c))
+    =+  c=$(a r.a)
+    ?>  ?=(^ c)
+    ?:  (pmor n.a n.c)
+      a(r c)
+    c(l a(r l.c))
+  ::
+  ++  rep                                               ::  reduce to product
+    |*  b=_=>(~ |=([* *] +<+))
+    ~>  %zfast.[%$^%rep^%pin +>+< +<]
+    |-
+    ?~  a  +<+.b
+    $(a r.a, +<+.b $(a l.a, +<+.b (b n.a +<+.b)))
+  ::
+  ++  run                                               ::  apply gate to values
+    |*  b=gate
+    ~>  %zfast.[%$^%run^%pin +>+< +<]
+    =+  c=`(pset _?>(?=(^ a) (b n.a)))`~
+    |-  ?~  a  c
+    =.  c  (~(put pin c) (b n.a))
+    =.  c  $(a l.a, c c)
+    $(a r.a, c c)
+  ::
+  ++  tap                                               ::  convert to list
+    ~>  %zfast.[%tap^%pin +<]
+    =<  $
+    =+  b=`(list _?>(?=(^ a) n.a))`~
+    |.  ^+  b
+    ?~  a
+      b
+    $(a r.a, b [n.a $(a l.a)])
+  ::
+  ++  uni                                               ::  union
+    =+  b=a
+    |@
+    ++  $
+      ~>  %zfast.[%$^%uni^%pin +>+< +<]
+      ?:  =(a b)  a
+      |-  ^+  a
+      ?~  b
+        a
+      ?~  a
+        b
+      ?:  =(n.b n.a)
+        b(l $(a l.a, b l.b), r $(a r.a, b r.b))
+      ?:  (pmor n.a n.b)
+        ?:  (pgor n.b n.a)
+          $(l.a $(a l.a, r.b ~), b r.b)
+        $(r.a $(a r.a, l.b ~), b l.b)
+      ?:  (pgor n.a n.b)
+        $(l.b $(b l.b, r.a ~), a r.a)
+      $(r.b $(b r.b, l.a ~), a l.a)
+    --
+  ::
+  ++  wyt                                               ::  size of set
+    ~>  %zfast.[%wyt^%pin +<]
+    =<  $
+    |.  ^-  @
+    ?~(a 0 +((add $(a l.a) $(a r.a))))
+  --
+::                                                      ::
+::::  2i: map logic                                     ::
+  ::                                                    ::
+  ::
+++  pby                                                  ::  map engine
+  =|  a=(tree (pair))  ::  (pmap)
+  =*  node  ?>(?=(^ a) n.a)
+  |@
+  ++  all                                               ::  logical AND
+    |*  b=$-(* ?)
+    ~>  %zfast.[%$^%all^%pby +>+< +<]
+    |-  ^-  ?
+    ?~  a
+      &
+    ?&((b q.n.a) $(a l.a) $(a r.a))
+  ::
+  ++  any                                               ::  logical OR
+    |*  b=$-(* ?)
+    ~>  %zfast.[%$^%any^%pby +>+< +<]
+    |-  ^-  ?
+    ?~  a
+      |
+    ?|((b q.n.a) $(a l.a) $(a r.a))
+  ::
+  ++  bif                                               ::  splits a by b
+    |*  [b=* c=*]
+    ~>  %zfast.[%$^%bif^%pby +>+< +<]
+    ^+  [l=a r=a]
+    =<  +
+    |-  ^+  a
+    ?~  a
+      [[b c] ~ ~]
+    ?:  =(b p.n.a)
+      ?:  =(c q.n.a)
+        a
+      a(n [b c])
+    ?:  (pgor b p.n.a)
+      =+  d=$(a l.a)
+      ?>  ?=(^ d)
+      d(r a(l r.d))
+    =+  d=$(a r.a)
+    ?>  ?=(^ d)
+    d(l a(r l.d))
+  ::
+  ++  del                                               ::  delete at key b
+    |*  b=*
+    ~>  %zfast.[%$^%del^%pby +>+< +<]
+    |-  ^+  a
+    ?~  a
+      ~
+    ?.  =(b p.n.a)
+      ?:  (pgor b p.n.a)
+        a(l $(a l.a))
+      a(r $(a r.a))
+    |-  ^-  [$?(~ _a)]
+    ?~  l.a  r.a
+    ?~  r.a  l.a
+    ?:  (pmor p.n.l.a p.n.r.a)
+      l.a(r $(l.a r.l.a))
+    r.a(l $(r.a l.r.a))
+  ::
+  ++  dif                                               ::  difference
+    =+  b=a
+    |@
+    ++  $
+      ~>  %zfast.[%$^%dif^%pby +>+< +<]
+      |-  ^+  a
+      ?~  b
+        a
+      =+  c=(bif p.n.b q.n.b)
+      ?>  ?=(^ c)
+      =+  d=$(a l.c, b l.b)
+      =+  e=$(a r.c, b r.b)
+      |-  ^-  [$?(~ _a)]
+      ?~  d  e
+      ?~  e  d
+      ?:  (pmor p.n.d p.n.e)
+        d(r $(d r.d))
+      e(l $(e l.e))
+    --
+  ::
+  ++  dig                                               ::  axis of b key
+    |=  b=*
+    =+  c=1
+    |-  ^-  (unit @)
+    ?~  a  ~
+    ?:  =(b p.n.a)  [~ u=(peg c 2)]
+    ?:  (pgor b p.n.a)
+      $(a l.a, c (peg c 6))
+    $(a r.a, c (peg c 7))
+  ::
+  ++  apt                                               ::  check correctness
+    ~>  %zfast.[%apt^%pby +<]
+    =<  $
+    =|  [l=(unit) r=(unit)]
+    |.  ^-  ?
+    ?~  a   &
+    ?&  ?~(l & &((pgor p.n.a u.l) !=(p.n.a u.l)))
+        ?~(r & &((pgor u.r p.n.a) !=(u.r p.n.a)))
+        ?~  l.a   &
+        &((pmor p.n.a p.n.l.a) !=(p.n.a p.n.l.a) $(a l.a, l `p.n.a))
+        ?~  r.a   &
+        &((pmor p.n.a p.n.r.a) !=(p.n.a p.n.r.a) $(a r.a, r `p.n.a))
+    ==
+  ::
+  ++  gas                                               ::  concatenate
+    |*  b=(list [p=* q=*])
+    ~>  %zfast.[%$^%gas^%pby +>+< +<]
+    =>  .(b `(list _?>(?=(^ a) n.a))`b)
+    |-  ^+  a
+    ?~  b
+      a
+    $(b t.b, a (put p.i.b q.i.b))
+  ::
+  ++  get                                               ::  grab value by key
+    |*  b=*
+    ~>  %zfast.[%$^%get^%pby +>+< +<]
+    =>  .(b `_?>(?=(^ a) p.n.a)`b)
+    |-  ^-  (unit _?>(?=(^ a) q.n.a))
+    ?~  a
+      ~
+    ?:  =(b p.n.a)
+      (some q.n.a)
+    ?:  (pgor b p.n.a)
+      $(a l.a)
+    $(a r.a)
+  ::
+  ++  got                                               ::  need value by key
+    |*  b=*
+    (need (get b))
+  ::
+  ++  gut                                               ::  fall value by key
+    |*  [b=* c=*]
+    (fall (get b) c)
+  ::
+  ++  has                                               ::  key existence check
+    |*  b=*
+    ~>  %zfast.[%$^%has^%pby +>+< +<]
+    !=(~ (get b))
+  ::
+  ++  int                                               ::  intersection
+    =+  b=a
+    |@
+    ++  $
+      ~>  %zfast.[%$^%int^%pby +>+< +<]
+      |-  ^+  a
+      ?~  b
+        ~
+      ?~  a
+        ~
+      ?:  (pmor p.n.a p.n.b)
+        ?:  =(p.n.b p.n.a)
+          b(l $(a l.a, b l.b), r $(a r.a, b r.b))
+        ?:  (pgor p.n.b p.n.a)
+          %-  uni(a $(a l.a, r.b ~))  $(b r.b)
+        %-  uni(a $(a r.a, l.b ~))  $(b l.b)
+      ?:  =(p.n.a p.n.b)
+        b(l $(b l.b, a l.a), r $(b r.b, a r.a))
+      ?:  (pgor p.n.a p.n.b)
+        %-  uni(a $(b l.b, r.a ~))  $(a r.a)
+      %-  uni(a $(b r.b, l.a ~))  $(a l.a)
+    --
+  ::
+  ++  jab
+    |*  [key=_?>(?=(^ a) p.n.a) fun=$-(_?>(?=(^ a) q.n.a) _?>(?=(^ a) q.n.a))]
+    ~>  %zfast.[%$^%jab^%pby +>+< +<]
+    ^+  a
+    ::
+    ?~  a  !!
+    ::
+    ?:  =(key p.n.a)
+      a(q.n (fun q.n.a))
+    ::
+    ?:  (pgor key p.n.a)
+      a(l $(a l.a))
+    ::
+    a(r $(a r.a))
+  ::
+  ++  mar                                               ::  add with validation
+    |*  [b=* c=(unit *)]
+    ?~  c
+      (del b)
+    (put b u.c)
+  ::
+  ++  put                                               ::  adds key-value pair
+    |*  [b=* c=*]
+    ~>  %zfast.[%$^%put^%pby +>+< +<]
+    |-  ^+  a
+    ?~  a
+      [[b c] ~ ~]
+    ?:  =(b p.n.a)
+      ?:  =(c q.n.a)
+        a
+      a(n [b c])
+    ?:  (pgor b p.n.a)
+      =+  d=$(a l.a)
+      ?>  ?=(^ d)
+      ?:  (pmor p.n.a p.n.d)
+        a(l d)
+      d(r a(l r.d))
+    =+  d=$(a r.a)
+    ?>  ?=(^ d)
+    ?:  (pmor p.n.a p.n.d)
+      a(r d)
+    d(l a(r l.d))
+  ::
+  ++  rep                                               ::  reduce to product
+    |*  b=_=>(~ |=([* *] +<+))
+    ~>  %zfast.[%$^%rep^%pby +>+< +<]
+    |-
+    ?~  a  +<+.b
+    $(a r.a, +<+.b $(a l.a, +<+.b (b n.a +<+.b)))
+  ::
+  ++  rib                                               ::  transform + product
+    |*  [b=* c=gate]
+    |-  ^+  [b a]
+    ?~  a  [b ~]
+    =+  d=(c n.a b)
+    =.  n.a  +.d
+    =+  e=$(a l.a, b -.d)
+    =+  f=$(a r.a, b -.e)
+    [-.f a(l +.e, r +.f)]
+  ::
+  ++  run                                               ::  apply gate to values
+    |*  b=gate
+    ~>  %zfast.[%$^%run^%pby +>+< +<]
+    |-
+    ?~  a  a
+    [n=[p=p.n.a q=(b q.n.a)] l=$(a l.a) r=$(a r.a)]
+  ::
+  ++  rut                                               ::  apply gate to nodes
+    |*  b=gate
+    |-
+    ?~  a  a
+    [n=[p=p.n.a q=(b p.n.a q.n.a)] l=$(a l.a) r=$(a r.a)]
+  ::
+  ++  tap                                               ::  listify pairs
+    ~>  %zfast.[%tap^%pby +<]
+    =<  $
+    =+  b=`(list _?>(?=(^ a) n.a))`~
+    |.  ^+  b
+    ?~  a
+      b
+    $(a r.a, b [n.a $(a l.a)])
+  ::
+  ++  uni                                               ::  union, merge
+    =+  b=a
+    |@
+    ++  $
+      ~>  %zfast.[%$^%uni^%pby +>+< +<]
+      |-  ^+  a
+      ?~  b
+        a
+      ?~  a
+        b
+      ?:  =(p.n.b p.n.a)
+        b(l $(a l.a, b l.b), r $(a r.a, b r.b))
+      ?:  (pmor p.n.a p.n.b)
+        ?:  (pgor p.n.b p.n.a)
+          $(l.a $(a l.a, r.b ~), b r.b)
+        $(r.a $(a r.a, l.b ~), b l.b)
+      ?:  (pgor p.n.a p.n.b)
+        $(l.b $(b l.b, r.a ~), a r.a)
+      $(r.b $(b r.b, l.a ~), a l.a)
+    --
+  ::
+  ++  uno                                               ::  general union
+    =+  b=a
+    |@
+    ++  $
+      |=  meg=$-([_p:node _q:node _q:node] _q:node)
+      |-  ^+  a
+      ?~  b
+        a
+      ?~  a
+        b
+      ?:  =(p.n.b p.n.a)
+        :+  [p.n.a (meg p.n.a q.n.a q.n.b)]
+          $(b l.b, a l.a)
+        $(b r.b, a r.a)
+      ?:  (pmor p.n.a p.n.b)
+        ?:  (pgor p.n.b p.n.a)
+          $(l.a $(a l.a, r.b ~), b r.b)
+        $(r.a $(a r.a, l.b ~), b l.b)
+      ?:  (pgor p.n.a p.n.b)
+        $(l.b $(b l.b, r.a ~), a r.a)
+      $(r.b $(b r.b, l.a ~), a l.a)
+    --
+  ::
+  ::
+  ++  urn                                               ::  apply gate to nodes
+    |*  b=$-([* *] *)
+    ~>  %zfast.[%$^%urn^%pby +>+< +<]
+    |-
+    ?~  a  ~
+    a(n n.a(q (b p.n.a q.n.a)), l $(a l.a), r $(a r.a))
+  ::
+  ++  wyt                                               ::  depth of map
+    ~>  %zfast.[%wyt^%pby +<]
+    =<  $
+    |.  ^-  @
+    ?~(a 0 +((add $(a l.a) $(a r.a))))
+  ::
+  ++  key                                               ::  set of keys
+    ~>  %zfast.[%key^%pby +<]
+    =<  $
+    =+  b=`(pset _?>(?=(^ a) p.n.a))`~
+    |.  ^+  b
+    ?~  a   b
+    $(a r.a, b $(a l.a, b (~(put in b) p.n.a)))
+  ::
+  ++  val                                               ::  list of vals
+    =+  b=`(list _?>(?=(^ a) q.n.a))`~
+    |-  ^+  b
+    ?~  a   b
+    $(a r.a, b [q.n.a $(a l.a)])
+  --
+::                                                      ::
+::::  2j: jar and jug logic                             ::
+  ::                                                    ::
+  ::
+++  pja                                                  ::  jar engine
+  =|  a=(tree (pair * (list)))  ::  (jar)
+  |@
+  ++  get                                               ::  gets list by key
+    |*  b=*
+    =+  c=(~(get pby a) b)
+    ?~(c ~ u.c)
+  ::
+  ++  add                                               ::  adds key-list pair
+    |*  [b=* c=*]
+    =+  d=(get b)
+    (~(put pby a) b [c d])
+  --
+++  pju                                                  ::  jug engine
+  =|  a=(tree (pair * (tree)))  ::  (jug)
+  |@
+  ++  del                                               ::  del key-set pair
+    |*  [b=* c=*]
+    ^+  a
+    =+  d=(get b)
+    =+  e=(~(del pin d) c)
+    ?~  e
+      (~(del pby a) b)
+    (~(put pby a) b e)
+  ::
+  ++  gas                                               ::  concatenate
+    |*  b=(list [p=* q=*])
+    =>  .(b `(list _?>(?=([[* ^] ^] a) [p=p q=n.q]:n.a))`b)
+    |-  ^+  a
+    ?~  b
+      a
+    $(b t.b, a (put p.i.b q.i.b))
+  ::
+  ++  get                                               ::  gets set by key
+    |*  b=*
+    =+  c=(~(get pby a) b)
+    ?~(c ~ u.c)
+  ::
+  ++  has                                               ::  existence check
+    |*  [b=* c=*]
+    ^-  ?
+    (~(has in (get b)) c)
+  ::
+  ++  put                                               ::  add key-set pair
+    |*  [b=* c=*]
+    ^+  a
+    =+  d=(get b)
+    (~(put pby a) b (~(put pin d) c))
+  --
+::                                                      ::
+::::  2k: queue logic                                   ::
+  ::                                                    ::
+  ::
+++  pto                                                  ::  queue engine
+  =|  a=(tree)  ::  (qeu)
+  |@
+  ++  apt                                               ::  check correctness
+    |-  ^-  ?
+    ?~  a  &
+    ?&  ?~(l.a & ?&((pmor n.a n.l.a) $(a l.a)))
+        ?~(r.a & ?&((pmor n.a n.r.a) $(a r.a)))
+    ==
+  ::
+  ++  bal
+    |-  ^+  a
+    ?~  a  ~
+    ?.  |(?=(~ l.a) (pmor n.a n.l.a))
+      $(a l.a(r $(a a(l r.l.a))))
+    ?.  |(?=(~ r.a) (pmor n.a n.r.a))
+      $(a r.a(l $(a a(r l.r.a))))
+    a
+  ::
+  ++  dep                                               ::  max depth of queue
+    |-  ^-  @
+    ?~  a  0
+    +((max $(a l.a) $(a r.a)))
+  ::
+  ++  gas                                               ::  insert list to que
+    |=  b=(list _?>(?=(^ a) n.a))
+    |-  ^+  a
+    ?~(b a $(b t.b, a (put i.b)))
+  ::
+  ++  get                                               ::  head-rest pair
+    |-  ^+  ?>(?=(^ a) [p=n.a q=*(tree _n.a)])
+    ?~  a
+      !!
+    ?~  r.a
+      [n.a l.a]
+    =+  b=$(a r.a)
+    :-  p.b
+    ?:  |(?=(~ q.b) (pmor n.a n.q.b))
+      a(r q.b)
+    a(n n.q.b, l a(r l.q.b), r r.q.b)
+  ::
+  ++  nip                                               ::  removes root
+    |-  ^+  a
+    ?~  a  ~
+    ?~  l.a  r.a
+    ?~  r.a  l.a
+    ?:  (pmor n.l.a n.r.a)
+      l.a(r $(l.a r.l.a))
+    r.a(l $(r.a l.r.a))
+  ::
+  ++  nap                                               ::  removes root
+    ?>  ?=(^ a)
+    ?:  =(~ l.a)  r.a
+    =+  b=get(a l.a)
+    bal(n.a p.b, l.a q.b)
+  ::
+  ++  put                                               ::  insert new tail
+    |*  b=*
+    |-  ^+  a
+    ?~  a
+      [b ~ ~]
+    bal(l.a $(a l.a))
+  ::
+  ++  tap                                               ::  adds list to end
+    =+  b=`(list _?>(?=(^ a) n.a))`~
+    |-  ^+  b
+    =+  0                                               ::  hack for jet match
+    ?~  a
+      b
+    $(a r.a, b [n.a $(a l.a)])
+  ::
+  ++  top                                               ::  produces head
+    |-  ^-  (unit _?>(?=(^ a) n.a))
+    ?~  a  ~
+    ?~(r.a [~ n.a] $(a r.a))
+  --
+::
+::::  2o: containers                                    ::
+  ::                                                    ::
+  ::
+++  pjar  |$  [key value]  (pmap key (list value))        ::  map of lists
+++  pjug  |$  [key value]  (pmap key (pset value))         ::  map of sets
+::
+++  pmap
+  |$  [key value]                                       ::  table
+  $|  (tree (pair key value))
+  |=(a=(tree (pair)) ?:(=(~ a) & ~(apt pby a)))
+::
+++  pqeu
+  |$  [item]                                            ::  queue
+  $|  (tree item)
+  |=(a=(tree) ?:(=(~ a) & ~(apt pto a)))
+::
+++  pset
+  |$  [item]                                            ::  set
+  $|  (tree item)
+  |=(a=(tree) ?:(=(~ a) & ~(apt pin a)))
+::
+::::  2l: container from container                      ::
+  ::                                                    ::
+  ::
+++  pmalt                                                ::  map from list
+  |*  a=(list)
+  (pmolt `(list [p=_-<.a q=_->.a])`a)
+::
+++  pmolt                                                ::  map from pair list
+  |*  a=(list (pair))  ::  ^-  =,(i.-.a (pmap _p _q))
+  (~(gas pby `(tree [p=_p.i.-.a q=_q.i.-.a])`~) a)
+::
+++  psilt                                                ::  set from list
+  |*  a=(list)  ::  ^-  (pset _i.-.a)
+  =+  b=*(tree _?>(?=(^ a) i.a))
+  (~(gas pin b) a)
+::                                                      ::
+::::  2m: container from noun                           ::
+  ::                                                    ::
+  ::
+++  ly                                                  ::  list from raw noun
+  le:nl
+::
+++  my                                                  ::  map from raw noun
+  my:nl
+::
+++  sy                                                  ::  set from raw noun
+  si:nl
+::
+++  nl
+  |%
+  ::                                                    ::
+  ++  le                                                ::  construct list
+    |*  a=(list)
+    ^+  =<  $
+      |@  ++  $  ?:(*? ~ [i=(snag 0 a) t=$])
+      --
+    a
+  ::                                                    ::
+  ++  my                                                ::  construct map
+    |*  a=(list (pair))
+    =>  .(a ^+((le a) a))
+    (~(gas pby `(pmap _p.i.-.a _q.i.-.a)`~) a)
+  ::                                                    ::
+  ++  si                                                ::  construct set
+    |*  a=(list)
+    =>  .(a ^+((le a) a))
+    (~(gas pin `(pset _i.-.a)`~) a)
+  ::                                                    ::
+  ++  snag                                              ::  index
+    |*  [a=@ b=(list)]
+    ?~  b
+      ~_  leaf+"snag-fail"
+      !!
+    ?:  =(0 a)  i.b
+    $(b t.b, a (dec a))
+  ::                                                    ::
+  ++  weld                                              ::  concatenate
+    |*  [a=(list) b=(list)]
+    =>  .(a ^+((le a) a), b ^+((le b) b))
+    =+  42
+    |-
+    ?~  a  b
+    [i=i.a t=$(a t.a)]
+  --
+--
+=<
+|%
 ++  big  (bi id grain)  ::  merkle engine for granary
 ::
 ::  +husk: check provenance and fit data to mold

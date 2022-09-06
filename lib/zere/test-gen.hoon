@@ -1,33 +1,51 @@
 /-  *zere-test
 /+  *zink-zink
+/*  smart-lib-noun  %noun  /lib/zig/compiled/smart-lib/noun
+/*  zink-cax-noun   %noun  /lib/zig/compiled/hash-cache/noun
+=/  smart=vase  ;;(vase (cue q.q.smart-lib-noun))
+=/  smart-cax         ;;(cache:zink (cue q:q:;;((pair * (pair * @)) zink-cax-noun)))
 =<  =|  test-args
     =*  args  -
     |%
     ++  mk  :: if we want to preserve cache, we probably want to fire at the end, actually
       |_  cax=cache
       +*  mk-core  .
+      +$  named-test  $-((unit @t) [json _mk-core]) 
       ++  test
+        ^-  named-test
+        |=  name=(unit @t)
         ^-  [json _mk-core]
+        ~?  ?=(^ name)  `@t`(rap 3 '/' u.name ~)
         =^  json  cax  (gen-test-hints args(cax (~(uni by cax) cax.args)))
-        :_  mk-core(args *test-args) :: todo: preserve cache
+        :_  =-  -(cax cax)  mk-core(args *test-args)
         json
+      ::
+      ++  mint
+      |=  txt=@
+      test:mk-core(cax smart-cax, s q.smart, f q:(~(mint ut p.smart) %noun (ream txt)))
       ::  
       ++  tests
-        |=  tests=(list [name=@tas args=[json _mk-core]])
+        |=  tests=(list [name=@tas test=named-test])
+        ^-  named-test
+        |=  name=(unit @t)
         =|  jons=(list json)
         |-  ^-  [json _mk-core]
         ?~  tests  [%a jons]^mk-core
-        =^  hints  mk-core  args.i.tests
+        =^  hints  mk-core
+          %-  test.i.tests
+          ?~  name  `name.i.tests
+          `(rap 3 u.name '/' name.i.tests ~)
         %_    $
             tests     t.tests
-            mk-core   mk-core(args *test-args) :: todo: preserve cache
+            mk-core   =-  -(cax cax)  mk-core(args *test-args)
             jons
           [%a [s+name.i.tests hints ~]]^jons
         ==
       ::
       ++  finish
-        |=  [=json cor=_mk-core]
-        json
+        |=  test=named-test
+        ^-  json
+        -:(test ~)
       ::
       --
     ::

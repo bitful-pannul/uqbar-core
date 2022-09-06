@@ -60,7 +60,7 @@
         [%jet *]
         %-  pairs
         :~  jet+(en-jet jet.hin)
-            arg+(en-noun data.hin)
+            arg+data.hin
         ==
     ::
         [%cons *]  (pairs sf1+(en-subf sf1.hin) sf2+(en-subf sf2.hin) ~)
@@ -77,11 +77,12 @@
     ?~  -.n  $(n +.n)
     :((cury cat 3) (scot %tas -.n) ':' $(n +.n))
   ::
-  ++  en-noun
+  ++  noun
     |=  n=*
     |-  ^-  json
     ?@  n  (num n)
     a+[$(n -.n) $(n +.n) ~]
+  ::
   ++  en-11
     |=  [a=(each [tag=@ clue=subf] @) next=phash]
     ^-  json
@@ -90,7 +91,7 @@
       %&  (pairs tag+(num tag.p.a) clue+(en-subf clue.p.a) sf+(num next) ~)
       %|  (pairs tag+(num p.a) sf+(num next) ~)
     ==
-
+  ::
   ++  en-invalid
     |=  hin=(each @ [@ phash])
     ^-  json
@@ -99,6 +100,7 @@
       %&  (pairs is-atom+b+%& head+(num p.hin) ~)
       %|  (pairs is-atom+b+%| head+(num -.p.hin) tail+(num +.p.hin) ~)
     ==
+  ::
   ++  en-subf
     |=  subf
     ^-  json

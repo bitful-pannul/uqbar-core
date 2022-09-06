@@ -6585,21 +6585,21 @@
         [%$^%sew 1]  [%$^%swp 1]  [%$^%xeb 1]
         [%$^%con 1]  [%$^%dis 1]  [%$^%mix 1]
         ::  mug
-        [%$^%mug 1]  [%$^%aor 1]  [%$^%dor 1]
-        [%$^%gor 1]  [%$^%mor 1]
+        [%$^%pmug 1]  [%$^%aor 1]  [%$^%dor 1]
+        [%$^%pgor 1]  [%$^%pmor 1]
         :: math
         [%$^%pow 1]  [%$^%sqt 1]
         ::  maps
-        [%$^%all^%in 1]  [%$^%any^%in 1]  [%apt^%in 1]
-        [%$^%bif^%in 1]  [%$^%del^%in 1]  [%$^%dif^%in 1]  [%$^%gas^%in 1]
-        [%$^%has^%in 1]  [%$^%int^%in 1]  [%$^%put^%in 1]  [%$^%rep^%in 1]
-        [%$^%run^%in 1]  [%tap^%in 1]     [%$^%uni^%in 1]  [%wyt^%in 1]
+        [%$^%all^%pin 1]  [%$^%any^%pin 1]  [%apt^%pin 1]
+        [%$^%bif^%pin 1]  [%$^%del^%pin 1]  [%$^%dif^%pin 1]  [%$^%gas^%pin 1]
+        [%$^%has^%pin 1]  [%$^%int^%pin 1]  [%$^%put^%pin 1]  [%$^%rep^%pin 1]
+        [%$^%run^%pin 1]  [%tap^%pin 1]     [%$^%uni^%pin 1]  [%wyt^%pin 1]
         ::  sets
-        [%$^%all^%by 1]  [%$^%any^%by 1]  [%$^%bif^%by 1]  [%$^%del^%by 1]
-        [%$^%dif^%by 1]  [%apt^%by 1]     [%$^%gas^%by 1]  [%$^%get^%by 1]
-        [%$^%has^%by 1]  [%$^%int^%by 1]  [%$^%jab^%by 1]  [%$^%put^%by 1]
-        [%$^%rep^%by 1]  [%$^%run^%by 1]  [%tap^%by 1]     [%$^%uni^%by 1]
-        [%$^%urn^%by 1]  [%wyt^%by 1]     [%key^%by 1]
+        [%$^%all^%pby 1]  [%$^%any^%pby 1]  [%$^%bif^%pby 1]  [%$^%del^%pby 1]
+        [%$^%dif^%pby 1]  [%apt^%pby 1]     [%$^%gas^%pby 1]  [%$^%get^%pby 1]
+        [%$^%has^%pby 1]  [%$^%int^%pby 1]  [%$^%jab^%pby 1]  [%$^%put^%pby 1]
+        [%$^%rep^%pby 1]  [%$^%run^%pby 1]  [%tap^%pby 1]     [%$^%uni^%pby 1]
+        [%$^%urn^%pby 1]  [%wyt^%pby 1]     [%key^%pby 1]
         :: ???
         [%$^%cu 1]   [%$^%jam 1]
         [%$^%mat 1]  [%$^%rub 1]
@@ -6622,6 +6622,7 @@
         [%$^%ecdsa-raw-recover^%secp256k1^%secp^%crypto 10]
       ==
   +$  jet
+    $~  [%$ %add]
     $%  ::  hoon
         [%$ %add]       [%$ %dec]       [%$ %div]       [%$ %dvr]
         [%$ %gte]       [%$ %gth]       [%$ %lte]       [%$ %lth]
@@ -6639,20 +6640,20 @@
         [%$ %met]       [%$ %rap]       [%$ %rep]       [%$ %rev]
         [%$ %rip]       [%$ %rsh]       [%$ %run]       [%$ %rut]
         [%$ %sew]       [%$ %swp]       [%$ %xeb]       [%$ %con]
-        [%$ %dis]       [%$ %mix]       [%$ %mug]       [%$ %aor]
-        [%$ %dor]       [%$ %gor]       [%$ %mor]       [%$ %pow]
+        [%$ %dis]       [%$ %mix]       [%$ %pmug]      [%$ %aor]
+        [%$ %dor]       [%$ %pgor]      [%$ %pmor]     [%$ %pow]
         [%$ %sqt]
         ::  set
-        [%$ %all %in]    [%$ %any %in]    [%apt %in]    [%$ %bif %in]
-        [%$ %del %in]    [%$ %dif %in]    [%$ %gas %in]    [%$ %has %in]
-        [%$ %int %in]    [%$ %put %in]    [%$ %rep %in]    [%$ %run %in]
-        [%tap %in]    [%$ %uni %in]    [%wyt %in]
+        [%$ %all %pin]    [%$ %any %pin]    [%apt %pin]    [%$ %bif %pin]
+        [%$ %del %pin]    [%$ %dif %pin]    [%$ %gas %pin]    [%$ %has %pin]
+        [%$ %int %pin]    [%$ %put %pin]    [%$ %rep %pin]    [%$ %run %pin]
+        [%tap %pin]       [%$ %uni %pin]    [%wyt %pin]
         ::  map
-        [%$ %all %by]    [%$ %any %by]    [%$ %bif %by]    [%$ %del %by]
-        [%$ %dif %by]    [%apt %by]       [%$ %gas %by]    [%$ %get %by]
-        [%$ %has %by]    [%$ %int %by]    [%$ %jab %by]    [%$ %put %by]
-        [%$ %rep %by]    [%$ %run %by]    [%tap %by]       [%$ %uni %by]
-        [%$ %urn %by]    [%wyt %by]       [%key %by]
+        [%$ %all %pby]    [%$ %any %pby]    [%$ %bif %pby]    [%$ %del %pby]
+        [%$ %dif %pby]    [%apt %pby]       [%$ %gas %pby]    [%$ %get %pby]
+        [%$ %has %pby]    [%$ %int %pby]    [%$ %jab %pby]    [%$ %put %pby]
+        [%$ %rep %pby]    [%$ %run %pby]    [%tap %pby]       [%$ %uni %pby]
+        [%$ %urn %pby]    [%wyt %pby]       [%key %pby]
         :: ??
         [%$ %cu]         [%$ %jam]        [%$ %mat]        [%$ %rub]
         :: %lug^%fl

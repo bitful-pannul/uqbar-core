@@ -702,6 +702,32 @@
           nodes+(en-hash-tree nodes)
       ==
     ::
+        [%$ %has %pby]
+      ?~  sam=((soft ,[map=(tree) val=*]) sam)  [%|^trace ~]^app
+      =>  .(sam u.sam)
+      =^  [axis=@ leaf=(unit) path=(list phash)]  app
+        (dig-in-tree map.sam val.sam pgor test same)
+      =^  [lkey=phash lval=phash pkey=phash pval=phash]  app
+        (get-map-kvs map axis pgor)
+      =^  hmap  app  (hash map.sam)
+      =^  hval  app  (hash val.sam)
+      =^  hleaf  app  (hash (fall leaf ~))
+      =-  [%&^~^?~(leaf %| %&) hit]^app
+      ^=  hit=(hints)
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  map+(num:enjs hmap)
+          val+(num:enjs hval)
+          axis+(num:enjs axis)
+          path+a+(turn path num:enjs)
+          leaf+(num:enjs hleaf)
+          leaf-key+(num:enjs lkey)
+          leaf-val+(num:enjs lval)
+          parent-key+(num:enjs pkey)
+          parent-val+(num:enjs pval)
+      ==
+    ::
         [%$ %zock]
      ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  [%|^trace ~]^app
       =^  shash  app  (hash s.sam)
@@ -796,6 +822,21 @@
       $(a l.a, axis (peg axis 6), path hra^hna^path)
     =^  hla  app  (hash l.a)
     $(a r.a, axis (peg axis 7), path hla^hna^path)
+  ::
+  ++  get-map-kvs
+    |=  [=map =axis]
+    ^-  [[lkey=phash lval=phash pkey=phash pval=phash] appendix]
+    ?:  |(=(axis 6) =(axis 7))
+      =^  lkey  app  (hash +4.map)
+      =^  lval  app  (hash +5.map)
+      [lkey lval ~ ~]^app
+    =/  leaf-n-axis    (dec (div axis 2))
+    =/  parent-n-axis  (dec (div axis 8))
+    =^  lkey  app  (hash .*(map [0 (mul 2 leaf-n-axis)]))
+    =^  lval  app  (hash .*(map [0 (succ (mul 2 leaf-n-axis))]))
+    =^  pkey  app  (hash .*(map [0 (mul 2 parent-n-axis)]))
+    =^  pval  app  (hash .*(map [0 (succ (mul 2 parent-n-axis))]))
+    [lkey lval pkey pval]^app
   ::
   ++  put-in-tree
     |*  $:  a=(tree)  b=*

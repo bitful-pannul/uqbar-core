@@ -626,7 +626,7 @@
       ?~  sam=((soft ,[set=(tree) val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  [axis=@ leaf=(unit) path=(list phash)]  app
-        (dig-in-set set.sam val.sam pgor test same)
+        (dig-in-tree set.sam val.sam pgor test same)
       =^  hset  app  (hash set.sam)
       =^  hval  app  (hash val.sam)
       =^  hleaf  app  (hash (fall leaf ~))
@@ -706,14 +706,14 @@
       ?~  sam=((soft ,[map=(tree) val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  [axis=@ leaf=(unit) path=(list phash)]  app
-        (dig-by-map map.sam val.sam pgor test same)
+        (dig-in-tree map.sam val.sam pgor |=(^ =(+<- +<+<)) same) ::  check the key against -.n
       =^  [pkey=phash pval=phash ppkey=phash ppval=phash]  app
         (get-map-kvs map.sam axis)
       =^  hmap  app  (hash map.sam)
       =^  hval  app  (hash val.sam)
       =^  hleaf  app  (hash (fall leaf ~))
       =^  hlval  app  ?~  leaf
-        (hash 0)
+        [0 app]
       ?>  ?=(^ u.leaf)
       (hash +.u.leaf)
       =-  [%&^~^?~(leaf %| %&) hit]^app
@@ -807,7 +807,7 @@
     ?:  =(c d)  ~^app
     [`(lth c d)]^app
   ::
-  ++  dig-in-set :: basically dig, but returns axis in ~ case, and val
+  ++  dig-in-tree :: basically dig, but returns axis in ~ case, and val
     |*  [a=(tree) b=* gor=$-(^ [(unit ?) appendix]) eq=$-(^ ?) get=$-(* *)]
     ^-  [[axis=@ val=(unit _(get)) path=(list phash)] appendix]
     ?:  =(~ a)  [1 ~ ~]^app
@@ -828,32 +828,10 @@
     =^  hla  app  (hash l.a)
     $(a r.a, axis (peg axis 7), path hla^hna^path)
   ::
-  ++  dig-by-map :: basically dig, but returns axis in ~ case, and val
-    |*  [a=(tree) b=* gor=$-(^ [(unit ?) appendix]) eq=$-(^ ?) get=$-(* *)]
-    ^-  [[axis=@ val=(unit _(get)) path=(list phash)] appendix]
-    ?:  =(~ a)  [1 ~ ~]^app
-    =/  axis  1
-    =|  path=(list phash)
-    |-  ^-  _^$
-    ?~  a
-      [axis ~ path]^app
-    ?:  (eq b -.n.a)
-      =^  htala  app  (hash +.a)
-      [(peg axis 2) `(get n.a) htala^path]^app
-    =^  hna  app  (hash n.a)
-    =^  g  app  (gor b n.a)
-    ?>  ?=(^ g)
-    ?:  u.g
-      =^  hra  app  (hash r.a)
-      $(a l.a, axis (peg axis 6), path hra^hna^path)
-    =^  hla  app  (hash l.a)
-    $(a r.a, axis (peg axis 7), path hla^hna^path)
-  ::
-  ::
   ++  get-map-kvs
     |=  [map=(tree) axis=@]
     ^-  [[pkey=phash pval=phash ppkey=phash ppval=phash] appendix]
-    ?~  (mod (xeb 2) 2)
+    ?~  (mod (xeb axis) 2)
       [~ ~ ~ ~]^app
     ?:  |(=(axis 6) =(axis 7))
       =^  pkey  app  (hash +4.map)

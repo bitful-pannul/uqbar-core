@@ -706,7 +706,7 @@
       ?~  sam=((soft ,[map=(tree) val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  [axis=@ leaf=(unit) path=(list phash)]  app
-        (dig-in-tree map.sam val.sam pgor |=(^ =(+<- +<+<)) same) ::  check the key against -.n
+        (dig-in-tree map.sam val.sam pgor-map |=(^ =(+<- +<+<)) same) ::  check the key against -.n
       =^  [pkey=phash pval=phash ppkey=phash ppval=phash]  app
         (get-map-kvs map.sam axis)
       =^  hmap  app  (hash map.sam)
@@ -797,6 +797,14 @@
     ?:  =(c d)  ~^app
     [`(lth c d)]^app
   ::
+  ++  pgor-map
+    |=  [a=* b=*]
+    ^-  [(unit ?) appendix]
+    =^  c  app  (hash a)
+    =^  d  app  (hash -.b)
+    ?:  =(c d)  ~^app
+    [`(lth c d)]^app
+  ::
   ++  pmor
     |=  [a=* b=*]
     ^-  [(unit ?) appendix]
@@ -807,6 +815,7 @@
     ?:  =(c d)  ~^app
     [`(lth c d)]^app
   ::
+  :: TODO I think you can safely get rid of get here
   ++  dig-in-tree :: basically dig, but returns axis in ~ case, and val
     |*  [a=(tree) b=* gor=$-(^ [(unit ?) appendix]) eq=$-(^ ?) get=$-(* *)]
     ^-  [[axis=@ val=(unit _(get)) path=(list phash)] appendix]

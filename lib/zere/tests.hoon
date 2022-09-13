@@ -1,4 +1,4 @@
-/+  *zere-test-gen, set-tests=zere-test-set
+/+  *zere-test-gen, set-tests=zere-test-set, map-tests=zere-test-map
 ::
 |%
 ++  dec  [[6 [5 [0 6] 1 0] [0 0] 7 [[0 95] [1 0] 0 6] 6 [5 [0 7] 4 0 6] [0 6] 9 2 10 [6 4 0 6] 0 1] 0 0]
@@ -23,5 +23,6 @@
         roll+(mint:mk '(roll `(list @)`~[1 2 3] add)')
         reel+(mint:mk '(reel `(list @)`~[1 2 3] add)')
         set+set-tests
+        map+map-tests
     ==
 ==

@@ -701,6 +701,37 @@
       :~  set+(num:enjs hset)
           nodes+(en-hash-tree nodes)
       ==
+    ::  TODO : this is the exact same code as has. get rid of the duplication!
+        [%$ %get %pby]
+      ?~  sam=((soft ,[map=(tree) val=*]) sam)  [%|^trace ~]^app
+      =>  .(sam u.sam)
+      =^  [axis=@ leaf=(unit) path=(list phash)]  app
+        (dig-in-tree map.sam val.sam pgor-map |=(^ =(+<- +<+<)) same) ::  check the key against -.n
+      =^  [pkey=phash pval=phash ppkey=phash ppval=phash]  app
+        (get-map-kvs map.sam axis)
+      =^  hmap  app  (hash map.sam)
+      =^  hval  app  (hash val.sam)
+      =^  hleaf  app  (hash (fall leaf ~))
+      =^  hlval  app  ?~  leaf
+        [0 app]
+      ?>  ?=(^ u.leaf)
+      (hash +.u.leaf)
+      =-  [%&^~^?~(leaf %| %&) hit]^app
+      ^=  hit=(hints)
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  map+(num:enjs hmap)
+          val+(num:enjs hval)
+          axis+(num:enjs axis)
+          path+a+(turn path num:enjs)
+          leaf+(num:enjs hleaf)
+          leaf-val+(num:enjs hlval)
+          p-key+(num:enjs pkey)
+          p-val+(num:enjs pval)
+          pp-key+(num:enjs ppkey)
+          pp-val+(num:enjs ppval)
+      ==
     ::
         [%$ %has %pby]
       ?~  sam=((soft ,[map=(tree) val=*]) sam)  [%|^trace ~]^app

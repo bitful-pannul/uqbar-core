@@ -626,7 +626,7 @@
       ?~  sam=((soft ,[set=(tree) val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  [axis=@ leaf=(unit) path=(list phash)]  app
-        (dig-in-tree set.sam val.sam pgor test same)
+        (dig-in-tree set.sam val.sam same)
       =^  hset  app  (hash set.sam)
       =^  hval  app  (hash val.sam)
       =^  hleaf  app  (hash (fall leaf ~))
@@ -646,7 +646,7 @@
       ?~  sam=((soft ,[set=(tree) val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  res  app
-        (put-in-tree set.sam val.sam pgor pmor test same)
+        (put-in-tree set.sam val.sam same)
       =^  hset  app  (hash set.sam)
       =^  hval  app  (hash val.sam)
       ?.  ?=(%& +<.res)
@@ -706,7 +706,8 @@
       ?~  sam=((soft ,[map=(tree) val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  [axis=@ leaf=(unit) path=(list phash)]  app
-        (dig-in-tree map.sam val.sam pgor-map |=(^ =(+<- +<+<)) same) ::  check the key against -.n
+        ::  passing in val.sam as [val.sam ~] lets us use `head` everywhere - very clean!
+        (dig-in-tree map.sam [val.sam ~] head)
       =^  [pkey=phash pval=phash ppkey=phash ppval=phash]  app
         (get-map-kvs map.sam axis)
       =^  hmap  app  (hash map.sam)
@@ -714,8 +715,7 @@
       =^  hleaf  app  (hash (fall leaf ~))
       =^  hlval  app  ?~  leaf
         [0 app]
-      ?>  ?=(^ u.leaf)
-      (hash +.u.leaf)
+      (hash +.u.leaf) :: do you need a `?>  =(^ u.leaf)` here?
       =-  [%&^~^?~(leaf %| %&) hit]^app
       ^=  hit=(hints)
       :_  ~
@@ -737,7 +737,8 @@
       ?~  sam=((soft ,[map=(tree) val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  [axis=@ leaf=(unit) path=(list phash)]  app
-        (dig-in-tree map.sam val.sam pgor-map |=(^ =(+<- +<+<)) same) ::  check the key against -.n
+        ::  passing in val.sam as [val.sam ~] lets us use `head` everywhere - very clean!
+        (dig-in-tree map.sam [val.sam ~] head)
       =^  [pkey=phash pval=phash ppkey=phash ppval=phash]  app
         (get-map-kvs map.sam axis)
       =^  hmap  app  (hash map.sam)
@@ -745,8 +746,7 @@
       =^  hleaf  app  (hash (fall leaf ~))
       =^  hlval  app  ?~  leaf
         [0 app]
-      ?>  ?=(^ u.leaf)
-      (hash +.u.leaf)
+      (hash +.u.leaf) :: do you need a `?>  =(^ u.leaf)` here?
       =-  [%&^~^?~(leaf %| %&) hit]^app
       ^=  hit=(hints)
       :_  ~
@@ -762,6 +762,41 @@
           p-val+(num:enjs pval)
           pp-key+(num:enjs ppkey)
           pp-val+(num:enjs ppval)
+      ==
+    ::
+        [%$ %put %pby]
+      ?~  sam=((soft ,[map=(tree) key=* val=*]) sam)  [%|^trace ~]^app
+      =>  .(sam u.sam)
+      =^  res  app
+        (put-in-tree map.sam [key.sam val.sam] head)
+      =^  hmap  app  (hash map.sam)
+      =^  hkey  app  (hash key.sam)
+      =^  hval  app  (hash val.sam)
+      ?.  ?=(%& +<.res)
+        =-  [%&^~^a.res hit]^app
+        ^=  hit=(hints)
+        =/  [axis=@ path=(list phash)]  p.res
+        :_  ~
+        :+  %jet  jet
+        %-  pairs:enjs:format
+        :~  map+(num:enjs hmap)
+            key+(num:enjs hkey)
+            val+(num:enjs hval)
+            axis+(num:enjs axis)
+            path+a+(turn path num:enjs)
+        ==
+      =-  [%&^~^a.res hit]^app
+      ^=  hit=(hints)
+      =/  [nodes=(list phash) left=(list phash) right=(list phash)]  p.res
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  map+(num:enjs hmap)
+          key+(num:enjs hkey)
+          val+(num:enjs hval)
+          nodes+a+(turn nodes num:enjs)
+          left+a+(turn left num:enjs)
+          right+a+(turn right num:enjs)
       ==
     ::
         [%$ %zock]
@@ -828,14 +863,6 @@
     ?:  =(c d)  ~^app
     [`(lth c d)]^app
   ::
-  ++  pgor-map
-    |=  [a=* b=*]
-    ^-  [(unit ?) appendix]
-    =^  c  app  (hash a)
-    =^  d  app  (hash -.b)
-    ?:  =(c d)  ~^app
-    [`(lth c d)]^app
-  ::
   ++  pmor
     |=  [a=* b=*]
     ^-  [(unit ?) appendix]
@@ -846,9 +873,8 @@
     ?:  =(c d)  ~^app
     [`(lth c d)]^app
   ::
-  :: TODO I think you can safely get rid of get here
   ++  dig-in-tree :: basically dig, but returns axis in ~ case, and val
-    |*  [a=(tree) b=* gor=$-(^ [(unit ?) appendix]) eq=$-(^ ?) get=$-(* *)]
+    |*  [a=(tree) b=* get=$-(* *)]
     ^-  [[axis=@ val=(unit _(get)) path=(list phash)] appendix]
     ?:  =(~ a)  [1 ~ ~]^app
     =/  axis  1
@@ -856,11 +882,11 @@
     |-  ^-  _^$
     ?~  a
       [axis ~ path]^app
-    ?:  (eq b n.a)
+    ?:  =((get b) (get n.a))
       =^  htala  app  (hash +.a)
-      [(peg axis 2) `(get n.a) htala^path]^app
+      [(peg axis 2) `n.a htala^path]^app
     =^  hna  app  (hash n.a)
-    =^  g  app  (gor b n.a)
+    =^  g  app  (pgor (get b) (get n.a))
     ?>  ?=(^ g)
     ?:  u.g
       =^  hra  app  (hash r.a)
@@ -887,9 +913,6 @@
   ::
   ++  put-in-tree
     |*  $:  a=(tree)  b=*
-            gor=$-(^ [(unit ?) appendix])
-            mor=$-(^ [(unit ?) appendix])
-            eq=$-(^ ?)
             get=$-(* *)
         ==
     =|  path=(list phash)
@@ -902,19 +925,19 @@
             ==
     ?~  a
       [[b ~ ~] %& ~ ~ ~]^app
-    ?:  (eq (get b) (get n.a))
+    ?:  =((get b) (get n.a))
       =^  htala  app  (hash +.a)
       [[b l.a r.a] %| (peg axis 2) htala^path]^app
     =^  hna  app  (hash n.a)
     =^  hra  app  (hash r.a)
     =^  hla  app  (hash l.a)
-    =^  g  app  (gor b n.a)
+    =^  g  app  (pgor (get b) (get n.a))
     ?>  ?=(^ g)
     ?:  u.g
       =^  c  app  $(a l.a, path hra^hna^path, axis (peg axis 6))
       ?.  ?=(%& +<.c)  [c(a a(l a.c)) app]
       ?>  ?=(^ a.c)
-      =^  m  app  (mor n.a n.a.c)
+      =^  m  app  (pmor (get n.a) (get n.a.c))
       ?>  ?=(^ m)
       :_  app
       %_  c
@@ -926,7 +949,7 @@
     =^  c  app  $(a r.a, path hla^hna^path, axis (peg axis 7))
     ?.  ?=(%& +<.c)  [c(a a(r a.c)) app]
     ?>  ?=(^ a.c)
-    =^  m  app  (mor n.a n.a.c)
+    =^  m  app  (pmor (get n.a) (get n.a.c))
     ?>  ?=(^ m)
     :_  app
     %_  c

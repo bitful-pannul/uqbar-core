@@ -1,6 +1,6 @@
 /+  *zere-test-gen
 |%
-++  test-map  [n=[10 10] l=[n=[3 3] l=[n=[4 4] [n=[12 12] l=~ r=~] r=~] r=[n=[2 2] l=[n=[1 1] l=~ r=[n=[11 11] l=~ r=~]] r=[n=[7 7] l=~ r=~]]] r=[n=[5 5] l=[n=[6 6] l=~ r=[n=[8 8] l=~ r=~]] r=[n=[9 9] l=~ r=~]]]
+++  test-map  [n=[p=10 q=106] l=[n=[p=3 q=99] l=[n=[p=4 q=100] l=[n=[p=12 q=108] l=~ r=~] r=~] r=[n=[p=2 q=98] l=[n=[p=1 q=97] l=~ r=[n=[p=11 q=107] l=~ r=~]] r=[n=[p=7 q=103] l=~ r=~]]] r=[n=[p=5 q=101] l=[n=[p=6 q=102] l=~ r=[n=[p=8 q=104] l=~ r=~]] r=[n=[p=9 q=105] l=~ r=~]]]
 --
 %-  tests:mk
 :~  
@@ -22,5 +22,11 @@
         not-get-pby-branch-left+(mint:mk (crip "(~(get pby `(pmap)`{<test-map>}) 39)"))
         not-get-pby-head-branch-left+(mint:mk '(~(get pby `(pmap)`[[34 34] ~ ~]) 65)')
         not-get-pby-head-branch-right+(mint:mk '(~(get pby `(pmap)`[[34 34] ~ ~]) 10)')
+    ==
+    :-  'put'
+    %-  tests:mk
+    :~  put-pby+(mint:mk (crip "(~(put pby `(pmap)`{<test-map>}) 20 111)"))
+        put-pby-exists+(mint:mk (crip "(~(put pby `(pmap)`{<test-map>}) 11 108)"))
+        put-pby-exists-head+(mint:mk (crip "(~(put pby `(pmap)`{<test-map>}) 10 105)"))
     ==
 ==

@@ -24,7 +24,7 @@
         not-has-pin-head-branch-left+(mint:mk '(~(has pin `(pset)`[34 ~ ~]) 65)')
         not-has-pin-head-branch-right+(mint:mk '(~(has pin `(pset)`[34 ~ ~]) 10)')
     ==
-    :-  'pin'
+    :-  'put'
     %-  tests:mk
     :~  put-pin+(mint:mk (crip "(~(put pin `(pset)`{<test-set>}) 20)"))
         put-pin-exists+(mint:mk (crip "(~(put pin `(pset)`{<test-set>}) 11)"))

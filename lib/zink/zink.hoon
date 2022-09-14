@@ -768,14 +768,14 @@
       ?~  sam=((soft ,[map=(tree) key=* val=*]) sam)  [%|^trace ~]^app
       =>  .(sam u.sam)
       =^  res  app
-        (put-in-tree map.sam [key.sam val.sam] head)
+        (put-by-map map.sam [key.sam val.sam] head)
       =^  hmap  app  (hash map.sam)
       =^  hkey  app  (hash key.sam)
       =^  hval  app  (hash val.sam)
       ?.  ?=(%& +<.res)
         =-  [%&^~^a.res hit]^app
         ^=  hit=(hints)
-        =/  [axis=@ path=(list phash)]  p.res
+        =/  [axis=@ old-node=phash path=(list phash)]  p.res
         :_  ~
         :+  %jet  jet
         %-  pairs:enjs:format
@@ -783,18 +783,20 @@
             key+(num:enjs hkey)
             val+(num:enjs hval)
             axis+(num:enjs axis)
+            old-node+(num:enjs old-node)
             path+a+(turn path num:enjs)
         ==
       =-  [%&^~^a.res hit]^app
       ^=  hit=(hints)
-      =/  [nodes=(list phash) left=(list phash) right=(list phash)]  p.res
+      =/  [keys=(list phash) vals=(list phash) left=(list phash) right=(list phash)]  p.res
       :_  ~
       :+  %jet  jet
       %-  pairs:enjs:format
       :~  map+(num:enjs hmap)
           key+(num:enjs hkey)
           val+(num:enjs hval)
-          nodes+a+(turn nodes num:enjs)
+          keys+a+(turn keys num:enjs)
+          vals+a+(turn vals num:enjs)
           left+a+(turn left num:enjs)
           right+a+(turn right num:enjs)
       ==
@@ -954,6 +956,60 @@
     :_  app
     %_  c
       nodes.p  hna^nodes.p.c
+      left.p   hla^left.p.c
+      right.p  hra^right.p.c
+      a        ?:(u.m a(r a.c) a.c(l a(r l.a.c)))
+    ==
+  ::
+  ::  TODO this has a lot of shared logic with ++put-in-tree -> refactor later!
+  ++  put-by-map
+    |*  $:  a=(tree)  b=*
+            get=$-(* *)
+        ==
+    =|  path=(list phash)
+    =/  axis  1
+    |-  ^-  $:  $:  a=_a
+                    %+  each  [keys=(list phash) vals=(list phash) left=(list phash) right=(list phash)]
+                    [axis=@ old-node=phash path=(list phash)]
+                ==
+                appendix
+            ==
+    ?~  a
+      [[b ~ ~] %& ~ ~ ~ ~]^app
+    ?:  =((get b) (get n.a))
+      =^  htala  app  (hash +.a)
+      =^  hold  app  (hash n.a)
+      [[b l.a r.a] %| (peg axis 2) hold htala^path]^app
+    =^  hna  app  (hash n.a)
+    =^  hka  app  (hash -.n.a)
+    =^  hva  app  (hash +.n.a)
+    =^  hra  app  (hash r.a)
+    =^  hla  app  (hash l.a)
+    =^  g  app  (pgor (get b) (get n.a))
+    ?>  ?=(^ g)
+    ?:  u.g
+      =^  c  app  $(a l.a, path hra^hna^path, axis (peg axis 6))
+      ?.  ?=(%& +<.c)  [c(a a(l a.c)) app]
+      ?>  ?=(^ a.c)
+      =^  m  app  (pmor (get n.a) (get n.a.c))
+      ?>  ?=(^ m)
+      :_  app
+      %_  c
+        keys.p   hka^keys.p.c
+        vals.p   hva^vals.p.c
+        left.p   hla^left.p.c
+        right.p  hra^right.p.c
+        a      ?:(u.m a(l a.c) a.c(r a(l r.a.c)))
+      ==
+    =^  c  app  $(a r.a, path hla^hna^path, axis (peg axis 7))
+    ?.  ?=(%& +<.c)  [c(a a(r a.c)) app]
+    ?>  ?=(^ a.c)
+    =^  m  app  (pmor (get n.a) (get n.a.c))
+    ?>  ?=(^ m)
+    :_  app
+    %_  c
+      keys.p   hka^keys.p.c
+      vals.p   hva^vals.p.c
       left.p   hla^left.p.c
       right.p  hra^right.p.c
       a        ?:(u.m a(r a.c) a.c(l a(r l.a.c)))

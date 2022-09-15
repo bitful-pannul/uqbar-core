@@ -815,6 +815,20 @@
           nodes+(en-hash-tree nodes)
       ==
     ::
+        [%apt %pby]
+      ?~  map=((soft (tree)) sam)  [%|^trace ~]^app
+      =>  .(map u.map)
+      =^  hmap  app  (hash map)
+      =^  [res=? nodes=hash-map]  app  (apt-by-map map pgor pmor)
+      =-  [%&^~^res hit]^app
+      ^-  hit=hints
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  map+(num:enjs hmap)
+          nodes+(en-hash-map nodes)
+      ==
+    ::
         [%$ %zock]
      ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  [%|^trace ~]^app
       =^  shash  app  (hash s.sam)
@@ -859,6 +873,7 @@
     ==
   ::
   +$  hash-tree  (tree [n=phash l=phash r=phash])
+  +$  hash-map   (tree [n=[phash phash] l=phash r=phash]) :: TODO: is there an easy way to collapse hash-tree/map into one type? like an or?
   ++  en-hash-tree
     |=  =hash-tree
     |-  ^-  json
@@ -869,6 +884,19 @@
         hr+(num:enjs r.n.hash-tree)
         l+$(hash-tree l.hash-tree)
         r+$(hash-tree r.hash-tree)
+    ==
+  ::
+  ++  en-hash-map :: TODO : really similar to en-hash-tree. can you make them the same?
+    |=  =hash-map
+    |-  ^-  json
+    ?~  hash-map  ~
+    %-  pairs:enjs:format
+    :~  hk+(num:enjs -.n.n.hash-map)
+        hv+(num:enjs +.n.n.hash-map)
+        hl+(num:enjs l.n.hash-map)
+        hr+(num:enjs r.n.hash-map)
+        l+$(hash-map l.hash-map)
+        r+$(hash-map r.hash-map)
     ==
   ::
   ++  pgor
@@ -1075,6 +1103,42 @@
     ?>  ?=(^ m-na-nla)
     ?.  u.m-na-nla  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
     =^  m-na-nra  app  ?~(r.a [~ u=%&]^app (mor n.a n.r.a))
+    ?>  ?=(^ m-na-nra)
+    ?.  u.m-na-nra  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
+    [%& [nodes nodes.apt-la nodes.apt-ra]]^app
+  ::
+  ++  apt-by-map :: TODO: almost exactly the same as apt-in-tree, could maybe solve it with a get=$-(* *), but return types are still different. Could make nodes=phash into (each phash [phash phash]) but idk
+    |*  $:  a=(tree)
+            gor=$-(^ [(unit ?) appendix])
+            mor=$-(^ [(unit ?) appendix])
+        ==
+    ^-  [[? nodes=hash-map] appendix]
+    ?:  =(a ~)  [%& ~]^app
+    =|  [l=(unit) r=(unit)]
+    |-  ^-  $_  ^$
+    ?~  a  [& ~]^app
+    =^  hka  app  (hash -.n.a) :: TODO why won't p.n.a work? type of a basically
+    =^  hva  app  (hash +.n.a)
+    =^  hla  app  (hash l.a)
+    =^  hra  app  (hash r.a)
+    =/  nodes  [[hka hva] hla hra]
+    =^  g-na-ul   app  ?~(l [~ u=%&]^app (gor -.n.a -.u.l))
+    ?>  ?=(^ g-na-ul)
+    ?.  u.g-na-ul  [%| [nodes ~ ~]]^app
+    =^  g-ur-na   app  ?~(r [~ u=%&]^app (gor -.u.r -.n.a))
+    ?>  ?=(^ g-ur-na)
+    ?.  u.g-ur-na  [%| [nodes ~ ~]]^app
+    :: todo: prob more efficient to do mor first
+    :: but zere jet is easier if not more efficient to write
+    :: apt'ing l/r first
+    =^  apt-la  app  $(a l.a, l `n.a)
+    ?.  -.apt-la  [%| [nodes nodes.apt-la ~]]^app
+    =^  apt-ra  app  $(a r.a, r `n.a)
+    ?.  -.apt-ra  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
+    =^  m-na-nla  app  ?~(l.a [~ u=%&]^app (mor -.n.a -.n.l.a))
+    ?>  ?=(^ m-na-nla)
+    ?.  u.m-na-nla  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
+    =^  m-na-nra  app  ?~(r.a [~ u=%&]^app (mor -.n.a -.n.r.a))
     ?>  ?=(^ m-na-nra)
     ?.  u.m-na-nra  [%| [nodes nodes.apt-la nodes.apt-ra]]^app
     [%& [nodes nodes.apt-la nodes.apt-ra]]^app

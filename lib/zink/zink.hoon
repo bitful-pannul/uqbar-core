@@ -801,6 +801,20 @@
           right+a+(turn right num:enjs)
       ==
     ::
+        [%tap %pby] :: TODO this is *exactly* the same as tap:pin
+      ?~  map=((soft (tree)) sam)  [%|^trace ~]^app
+      =>  .(map u.map)
+      =^  hmap  app  (hash map)
+      =^  [res=(list) nodes=hash-tree]  app  (tap-in-tree map)
+      =-  [%&^~^res hit]^app
+      ^-  hit=hints
+      :_  ~
+      :+  %jet  jet
+      %-  pairs:enjs:format
+      :~  map+(num:enjs hmap)
+          nodes+(en-hash-tree nodes)
+      ==
+    ::
         [%$ %zock]
      ?.  ?=([bud=(unit @) [s=* f=*] scry=*] sam)  [%|^trace ~]^app
       =^  shash  app  (hash s.sam)

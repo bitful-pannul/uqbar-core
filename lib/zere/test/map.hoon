@@ -29,4 +29,13 @@
         put-pby-exists+(mint:mk (crip "(~(put pby `(pmap)`{<test-map>}) 11 108)"))
         put-pby-exists-head+(mint:mk (crip "(~(put pby `(pmap)`{<test-map>}) 10 105)"))
     ==
+    :-  'tap'
+    %-  tests:mk
+    :~  tap-pby+(mint:mk (crip "~(tap pby `(pmap)`{<test-map>})"))
+        tap-pby-empty+(mint:mk (crip "~(tap pby `(pmap)`~)"))
+        tap-pby-one+(mint:mk (crip "~(tap pby `(pmap)`[n=[10 1] ~ ~])"))
+        tap-pby-two-left+(mint:mk (crip "~(tap pby `(pmap)`[n=[10 2] l=[n=[3 4] ~ ~] ~])"))
+        tap-pby-two-right+(mint:mk (crip "~(tap pby `(pmap)`[n=[10 3] ~ r=[n=[5 7] ~ ~]])"))
+        tap-pby-three-right+(mint:mk (crip "~(tap pby `(pmap)`[n=[10 4] l=[n=[3 5] ~ ~] r=[n=[5 6] ~ ~]])"))
+    ==
 ==

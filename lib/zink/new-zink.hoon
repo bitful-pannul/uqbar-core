@@ -97,6 +97,18 @@
     ?~  p.sf2-res  [%&^~ [%6 [s f ~] sf2-hints ~]~]^app
     [[sf2-res [%6 [s f u.p.sf2-res] t-hints sf2-hints]~]]^app
   ::
+      [%7 subj=* next=*]
+    =^  [=sub=res =sub=hints]  app
+      $(f subj.f)
+    ?:  ?=(%| -.sub-res)  ~&  179  [%|^trace [%7 [s f ~] sub-hints ~] ~]^app
+    ?~  p.sub-res  [%&^~ [%7 [s f ~] sub-hints ~] ~]^app
+    =.  app  (cache-noun u.p.sub-res)
+    =^  [=nex=res =nex=hints]  app
+      $(s u.p.sub-res, f next.f)
+    ?~  p.nex-res  [nex-res [%7 [s f ~] sub-hints nex-hints]~]^app
+    ?:  =(%| -.nex-res)  [%|^trace [%7 [s f ~] sub-hints ~]~]^app
+    [nex-res [%7 [s f +>.nex-res] sub-hints nex-hints]~]^app
+  ::
   ==
   ++  cache-noun
     |=  [n=*]

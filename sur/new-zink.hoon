@@ -4,7 +4,10 @@
   (unit (unit *))
 ::
 :: +$  cache  (map * (pair phash @ud))
-+$  cache  (map * (pair * *)) :: pair is head and tail
+:: +$  cache  (map * (pair * *)) :: pair is head and tail
++$  index  @
++$  tnoun  $%([%atom @] [%cell index index])
++$  cache  (map * (pair tnoun index))  :: noun to [[ileft iright] inoun]
 
 +$  phash  @                     ::  Pedersen hash
 :: +$  hash-req

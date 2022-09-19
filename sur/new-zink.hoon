@@ -25,6 +25,7 @@
       [%3 =pred sf=hints]
       [%4 =pred sf=hints]
       :: [%5 (each [sf1=subf sf2=subf] phash)]
+      [%5 =pred sf1=hints sf2=hints]
       :: [%6 (each [sf1=subf sf2=phash sf3=phash] phash)]
       :: [%7 (each [sf1=subf sf2=phash] phash)]
       :: [%8 (each [sf1=subf sf2=phash] phash)]

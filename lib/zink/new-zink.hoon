@@ -63,6 +63,21 @@
     :-  [%& ~ p]
     [%4 [s f p] arg-hints]~
   ::
+      [%5 a=* b=*]
+    =^  [=a=res =a=hints]  app
+      $(f a.f)
+    ?:  ?=(%| -.a-res)
+      ~&  146  [%|^trace [%5 [s f ~] ~ ~]~]^app
+    ?~  p.a-res  [%&^~ [%5 [s f ~] ~ ~]~]^app
+    =^  [=b=res =b=hints]  app
+      $(f b.f)
+    ?:  ?=(%| -.b-res)
+      ~&  150  [%|^trace [%5 [s f ~] a-hints b-hints]~]^app
+    ?~  p.b-res  [%&^~ [%5 [s f ~] a-hints b-hints]~]^app
+    =/  p   =(u.p.a-res u.p.b-res)
+    =.  app  (cache-noun p)
+    [[%& ~ =(u.p.a-res u.p.b-res)] [%5 [s f p] a-hints b-hints]~]^app
+  ::
   ==
   ++  cache-noun
     |=  [n=*]

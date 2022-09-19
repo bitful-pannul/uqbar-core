@@ -78,6 +78,25 @@
     =.  app  (cache-noun p)
     [[%& ~ =(u.p.a-res u.p.b-res)] [%5 [s f p] a-hints b-hints]~]^app
   ::
+  ::  6 is special
+  ::  if [subject test] returns anything but 0 1, fail
+  ::  so we never have to hash yes/no in that case, hence 2
+      [%6 test=* yes=* no=*]
+    =^  [=t=res =t=hints]  app
+      $(f test.f)
+    ?:  ?=(%| -.t-res)
+      ~&  164  [%|^trace [%6 [s f ~] t-hints ~]~]^app
+    ?~  p.t-res  [%&^~ [%6 [s f ~] t-hints ~]~]^app
+    =^  [=sf2=res =sf2=hints]  app
+      ?+  u.p.t-res  `book`[%|^trace ~]^app
+        %&  $(f yes.f)
+        %|  $(f no.f)
+      ==
+    ?:  ?=(%| -.sf2-res)
+      ~&  164  [%|^trace [%6 [s f ~] sf2-hints ~]~]^app
+    ?~  p.sf2-res  [%&^~ [%6 [s f ~] sf2-hints ~]~]^app
+    [[sf2-res [%6 [s f u.p.sf2-res] t-hints sf2-hints]~]]^app
+  ::
   ==
   ++  cache-noun
     |=  [n=*]

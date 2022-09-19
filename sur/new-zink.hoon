@@ -26,7 +26,7 @@
       [%4 =pred sf=hints]
       :: [%5 (each [sf1=subf sf2=subf] phash)]
       [%5 =pred sf1=hints sf2=hints]
-      :: [%6 (each [sf1=subf sf2=phash sf3=phash] phash)]
+      [%6 =pred sf1=hints sf2=hints] :: not sure if this is fine? basically I got rid of the subf that doesn't get run...should be fine?
       :: [%7 (each [sf1=subf sf2=phash] phash)]
       :: [%8 (each [sf1=subf sf2=phash] phash)]
       :: [%9 (each [axis=@ sf=subf leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]

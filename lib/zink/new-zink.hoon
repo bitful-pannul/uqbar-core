@@ -32,6 +32,21 @@
     ?>  ?=(@ -.f)
     [%|^trace [%invalid ~]~]^app
   ::
+      [^ *]
+    =^  [=hed=res =hed=hints]  app
+      $(f -.f)
+    ?:  ?=(%| -.hed-res)
+      ~&  61  [%|^trace [%cons [si fi 0] hed-hints ~]~]^app
+    ?~  p.hed-res  [%&^~ [%cons [si fi 0] hed-hints ~]~]^app
+    =^  [=tal=res =tal=hints]  app
+      $(f +.f)
+    ?:  ?=(%| -.tal-res)
+      ~&  65  [%|^trace [%cons [si fi 0] hed-hints tal-hints]~]^app
+    ?~  p.tal-res  [%&^~ [%cons [si fi 0] hed-hints tal-hints]~]^app
+    =/  prod  [+>.hed-res +>.tal-res]
+    =^  pi  app  (cache-noun prod)
+    [[%& `prod] [%cons [si fi pi] hed-hints tal-hints]~]^app
+  ::
       [%1 const=*]
     =/  pi  (~(get by cax) const.f)
     [[%& `const.f] [%1 [si fi +>:pi]]~]^app

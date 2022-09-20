@@ -42,7 +42,7 @@
       :: [%11 (each [(each [tag=@ clue=subf] @) sf=phash] phash)]
       :: [%12 (each [sf1=subf sf2=subf] phash)]
       :: [%jet =jet data=json] :: not every jet will return the whole sample as a noun
-      :: [%cons sf1=subf sf2=subf]
+      [%cons =pred sf1=hints sf2=hints]
       :: [%invalid (each @ [@ phash])]
       [%invalid *]
   ==

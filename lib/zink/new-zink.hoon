@@ -36,6 +36,25 @@
     =/  pi  (~(get by cax) const.f)
     [[%& `const.f] [%1 [si fi +>:pi]]~]^app
   ::
+      [%2 sub=* for=*]
+    =^  [=sub=res =sub=hints]  app
+      $(f sub.f)
+    ?:  ?=(%| -.sub-res)
+      ~&  99  [%|^trace [%2 [si fi 0] sub-hints ~ ~]~]^app
+    ?~  p.sub-res  [%&^~ [%2 [si fi 0] sub-hints ~ ~]~]^app
+    =^  [=for=res =for=hints]  app
+      $(f for.f)
+    =/  hit=hints  [%2 [si fi 0] sub-hints for-hints ~]~
+    ?:  ?=(%| -.for-res)
+      ~&  103  [%|^trace hit]^app
+    ?~  p.for-res  [%&^~ hit]^app
+    =^  [=prod=res =prod=hints]  app
+      $(s u.p.sub-res, f u.p.for-res)
+    ?~  p.prod-res  [prod-res [%2 [si fi 0] sub-hints for-hints ~]~]^app
+    ?:  =(%| -.prod-res)  [%|^trace [%2 [si fi 0] sub-hints for-hints ~]~]^app
+    =/  pi  +>:(~(get by cax) +>.prod-res)
+    [prod-res [%2 [si fi pi] sub-hints for-hints prod-hints]~]^app
+  ::
       [%3 arg=*]
     :: TODO : out of gas errors
     ::        sf errors (sf itself errors or returns ~)

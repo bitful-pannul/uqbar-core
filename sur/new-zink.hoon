@@ -21,7 +21,7 @@
   $%
       :: [%0 (each [axis=@ leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
       [%1 =pred]
-      :: [%2 (each [sf1=subf sf2=subf] phash)]
+      [%2 =pred sf1=hints sf2=hints sf3=hints]
       [%3 =pred sf=hints]
       [%4 =pred sf=hints]
       [%5 =pred sf1=hints sf2=hints]

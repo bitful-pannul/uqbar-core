@@ -14,7 +14,7 @@
   ^-  json
   %-  pairs:enjs:format
   :~  nouns+(nouns:enjs cax)
-  :: hints+(hints:enjs h) 
+      hints+(hints:enjs h) 
   ==
 ::
 ++  zink

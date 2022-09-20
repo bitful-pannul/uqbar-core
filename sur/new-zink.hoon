@@ -5,7 +5,7 @@
 ::
 :: +$  cache  (map * (pair phash @ud))
 :: +$  cache  (map * (pair * *)) :: pair is head and tail
-+$  index  @
++$  index  @ud
 +$  tnoun  $%([%atom @] [%cell index index])
 +$  cache  (map * (pair tnoun index))  :: noun to [[ileft iright] inoun]
 
@@ -16,7 +16,7 @@
 ::   ==
 ::
 :: +$  subf  [h=phash hit=hints]
-+$  pred  [s=* f=* p=*]
++$  pred  [s=index f=index p=index]
 +$  cairo-hint
   $%
       :: [%0 (each [axis=@ leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]

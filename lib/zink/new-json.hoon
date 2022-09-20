@@ -40,13 +40,22 @@
     ?+  hin  !!
         [%1 *]  (pairs jmp-dest+(num 1) pred+(en-pred +.hin) ~)
     ::
+        [%2 * * * *]
+      %-  pairs
+      :~  jmp-dest+(num 2)
+          pred+(en-pred pred.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
+          sf3+(hints sf3.hin)
+      ==
+    ::
         [?(%5 %6 %7) * * *]
       %-  pairs
       :~  jmp-dest+(num -.hin)
           pred+(en-pred pred.hin)
           sf1+(hints sf1.hin)
           sf2+(hints sf2.hin)
-      ==   
+      ==
     ::     
         [?(%3 %4) * *] :: TODO handle a failed sf?
       %-  pairs
@@ -56,7 +65,14 @@
       ==
     ::
     ::     [?(%7 %8) %& *]  (pairs sf1+(en-subf sf1.p.hin) sf2+(num sf2.p.hin) ~)
-    :: ::
+    ::
+        [%cons *]
+      %-  pairs
+      :~  jmp-dest+(tape "cons")
+          pred+(en-pred pred.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
+      ==   
     ::     [%invalid *]  (en-invalid +.hin)
     ==
     ::

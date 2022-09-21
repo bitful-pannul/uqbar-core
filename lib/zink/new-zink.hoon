@@ -154,6 +154,19 @@
     =/  pi  +>:(~(get by cax) +>.nex-res)
     [nex-res [%7 [si fi pi] sub-hints nex-hints]~]^app
   ::
+      [%8 hed=* next=*]
+    =^  [=hed=res =hed=hints]  app
+      $(f hed.f)
+    =/  hit  [%8 [si fi 0] hed-hints ~]
+    ?:  ?=(%| -.hed-res)  ~&  198  [%|^trace hit ~]^app
+    ?~  p.hed-res  [%&^~ hit ~]^app
+    =^  [=nex=res =nex=hints]  app
+      $(s [u.p.hed-res s], f next.f)
+    ?:  ?=(%| -.nex-res)  ~&  198  [%|^trace [%8 [si fi 0] hed-hints nex-hints] ~]^app
+    ?~  p.nex-res  [%&^~ [%8 [si fi 0] hed-hints nex-hints]~]^app
+    =/  pi  +>:(~(get by cax) +>.nex-res)
+    [nex-res [%8 [si fi pi] hed-hints nex-hints]~]^app
+  ::
   ==
   ++  cache-noun
     |=  [n=*]

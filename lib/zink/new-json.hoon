@@ -49,7 +49,7 @@
           sf3+(hints sf3.hin)
       ==
     ::
-        [?(%5 %6 %7) * * *]
+        [?(%5 %6 %7 %8) * * *]
       %-  pairs
       :~  jmp-dest+(num -.hin)
           pred+(en-pred pred.hin)
@@ -63,8 +63,6 @@
           pred+(en-pred pred.hin)
           sf+(hints sf.hin)
       ==
-    ::
-    ::     [?(%7 %8) %& *]  (pairs sf1+(en-subf sf1.p.hin) sf2+(num sf2.p.hin) ~)
     ::
         [%cons *]
       %-  pairs

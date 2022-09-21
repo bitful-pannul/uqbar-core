@@ -19,7 +19,7 @@
 +$  pred  [s=index f=index p=index]
 +$  cairo-hint
   $%
-      :: [%0 (each [axis=@ leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
+      [%0 =pred path=(list (pair ?(%2 %3) index))]
       [%1 =pred]
       [%2 =pred sf1=hints sf2=hints sf3=hints]
       [%3 =pred sf=hints]

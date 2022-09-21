@@ -38,6 +38,12 @@
     ::  for some reason previous conditional doesn't assert %& case here
     ::  it should mint-vain, but doesn't
     ?+  hin  !!
+        [%0 * *]
+      %-  pairs
+      :~  jmp-dest+(num 0)
+          pred+(en-pred pred.hin)
+          path+(en-path path.hin)
+      ==
         [%1 *]  (pairs jmp-dest+(num 1) pred+(en-pred +.hin) ~)
     ::
         [%2 * * * *]
@@ -73,25 +79,16 @@
       ==   
     ::     [%invalid *]  (en-invalid +.hin)
     ==
-    ::
-
-
-  :: ++  en-invalid
-  ::   |=  hin=(each @ [@ phash])
-  ::   ^-  json
-  ::   =,  enjs:format
-  ::   ?-  -.hin
-  ::     %&  (pairs is-atom+b+%& head+(num p.hin) ~)
-  ::     %|  (pairs is-atom+b+%| head+(num -.p.hin) tail+(num +.p.hin) ~)
-  ::   ==
-  :: ++  en-hash-req
-  ::   |=  hash-req
-  ::   ^-  json
-  ::   =,  enjs:format
-  ::   ?-  +<-
-  ::     %cell  (pairs head+(num head) tail+(num tail) ~)
-  ::     %atom  (frond %atom (num val))
-  ::   ==
+  ::
+  ++  en-path
+    |=  path=(list (pair @ud index))
+    a+(turn path en-path-elem)
+  ::
+  ++  en-path-elem
+    |=  a=(pair @ud index)
+    ^-  json
+    =,  enjs:format
+    a+[(num p.a) (num q.a) ~]
   ::
   ++  en-pred
     |=  =pred

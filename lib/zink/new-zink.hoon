@@ -47,6 +47,13 @@
     =^  pi  app  (cache-noun prod)
     [[%& `prod] [%cons [si fi pi] hed-hints tal-hints]~]^app
   ::
+      [%0 axis=@]
+    ?:  =(axis 0)  [%|^trace [%0 [si fi 0] ~]~]^app
+    =/  tups  (get-path axis.f s)
+    =/  pi  +>:(~(get by cax) -.tups)
+    :_  app
+    [%& `-.tups]^[%0 [si fi pi] +.tups]~
+  ::
       [%1 const=*]
     =/  pi  (~(get by cax) const.f)
     [[%& `const.f] [%1 [si fi +>:pi]]~]^app
@@ -182,5 +189,29 @@
     =/  ni  +(cas.app)
     :-  ni
     app(cax (~(put by cax) n [cell+[hi ti] ni]), cas ni)
+  ++  get-path
+    |=  [axis=@ s=*]
+    =|  path=(list (pair ?(%2 %3) index))
+    =/  start-axis  axis
+    |^  ^-  [(pair * _path)] :: TODO crash axis?
+    ?:  =(1 axis)
+      [s path]
+    ?~  axis  !!
+    ?@  s  [%|^s^(gep-a start-axis axis) path]
+    =/  pick  (cap axis)
+    =/  child  ?-(pick %2 -.s, %3 +.s)
+    =/  pari  +>:(~(get by cax) s)
+    %=  $
+      s     child
+      axis  (mas axis)
+      path  [[pick pari] path]
+    ==
+    ::
+    ::  solve for a in c = (peg a b)
+    ++  gep-a
+      |=  [p=@ b=@]
+      =/  metb  (met 0 b)
+      (rsh [0 (dec metb)] p)
+    --
   --
 --

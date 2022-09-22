@@ -1,4 +1,5 @@
 /+  *zink-pedersen
+~%  %merk  ..part  ~
 |%
 +$  hash  @ux
 ++  merk
@@ -8,6 +9,7 @@
   ?:(=(~ a) & (apt:(bi key value) a))
 ::
 ++  shag                                                ::  256bit noun hash
+  ~%  %shag  +>  ~
   |=  yux=*  ^-  hash
   ::  TODO: make LRU-cache-optimized version for granary retrivial & modification
   ?@  yux

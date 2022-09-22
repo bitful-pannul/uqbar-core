@@ -285,6 +285,7 @@
 ::  ::
 ::  ::  two: data structures
 ::::::
+~%  %smart-two  +  ~
 |%
 +$  hash  @ux
 ::
@@ -309,6 +310,7 @@
   ?:(=(~ a) & (apt:(bi key value) a))
 ::
 ++  shag                                                ::  256bit noun hash
+  ~%  %shag  +>  ~
   |=  yux=*  ^-  hash
   ::  TODO: make LRU-cache-optimized version for granary retrivial & modification
   ?@  yux
@@ -1084,6 +1086,7 @@
 ::  ::
 ::  ::  one: crypto (from zuse + pedersen hash)
 ::::::
+~%  %smart-one  ..part  ~
 |%
 ++  pedersen
   |%

@@ -29,16 +29,7 @@
       [%7 =pred sf1=hints sf2=hints]
       [%8 =pred sf1=hints sf2=hints]
       :: [%9 (each [axis=@ sf=subf leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
-      :: $:  %10
-      ::     %+  each
-      ::       $:  axis=@
-      ::           sf1=subf
-      ::           sf2=subf
-      ::           old-leaf-or-atom=(each phash [=atom crash-axis=@])
-      ::           path=(list phash)
-      ::       ==
-      ::     phash
-      :: ==
+      [%10 =pred sf1=hints sf2=hints old-leaf=index path=(list (pair ?(%2 %3) index))]
       :: [%11 (each [(each [tag=@ clue=subf] @) sf=phash] phash)]
       :: [%12 (each [sf1=subf sf2=subf] phash)]
       :: [%jet =jet data=json] :: not every jet will return the whole sample as a noun

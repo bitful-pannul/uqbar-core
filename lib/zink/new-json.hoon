@@ -54,6 +54,13 @@
           sf2+(hints sf2.hin)
           sf3+(hints sf3.hin)
       ==
+    ::     
+        [?(%3 %4) * *] :: TODO handle a failed sf?
+      %-  pairs
+      :~  jmp-dest+(num -.hin)
+          pred+(en-pred pred.hin)
+          sf+(hints sf.hin)
+      ==
     ::
         [?(%5 %6 %7 %8) * * *]
       %-  pairs
@@ -62,12 +69,14 @@
           sf1+(hints sf1.hin)
           sf2+(hints sf2.hin)
       ==
-    ::     
-        [?(%3 %4) * *] :: TODO handle a failed sf?
+        [%10 * * * * *]
       %-  pairs
-      :~  jmp-dest+(num -.hin)
+      :~  jmp-dest+(num 10)
           pred+(en-pred pred.hin)
-          sf+(hints sf.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
+          old-leaf+(num old-leaf.hin)
+          path+(en-path path.hin)
       ==
     ::
         [%cons *]

@@ -49,7 +49,7 @@
   ::
       [%0 axis=@]
     ?:  =(axis 0)  [%|^trace [%0 [si fi 0] ~]~]^app
-    =/  tups  (get-path axis.f s)
+    =/  tups  (frag axis.f s)
     =/  pi  +>:(~(get by cax) -.tups)
     :_  app
     [%& `-.tups]^[%0 [si fi pi] +.tups]~
@@ -174,6 +174,37 @@
     =/  pi  +>:(~(get by cax) +>.nex-res)
     [nex-res [%8 [si fi pi] hed-hints nex-hints]~]^app
   ::
+      [%10 [axis=@ value=*] target=*]
+    ?:  =(0 axis.f)
+      ~&  232  [%|^trace [%10 [si fi 0] ~ ~ 0 ~]~]^app
+    =^  [=val=res =val=hints]  app
+      $(f value.f)
+    ?:  ?=(%| -.val-res)
+      ~&  239  [%|^trace [%10 [si fi 0] val-hints ~ 0 ~]~]^app
+    ?~  p.val-res
+      [%&^~ [%10 [si fi 0] val-hints ~ 0 ~]~]^app
+    =^  [=tar=res =tar=hints]  app
+      $(f target.f)
+    ?:  ?=(%| -.tar-res)
+      ~&  235
+      :_  app
+      :-  %|^trace
+      [%10 [si fi 0] val-hints tar-hints 0 ~]~
+    ?~  p.tar-res
+      :_  app
+      :-  %&^~
+      [%10 [si fi 0] val-hints tar-hints 0 ~]~
+    =^  mutant  app
+      (edit axis.f u.p.tar-res u.p.val-res)
+    =^  pi  app  (cache-noun mut.p.mutant)
+    =/  ol  +>:(~(get by cax) +.p.mutant)
+    :_  app
+    :-  %&^`p.mutant
+    :_  ~
+    :*  %10  [si fi pi]  val-hints
+        tar-hints  ol  q.mutant
+    ==
+  ::
   ==
   ++  cache-noun
     |=  [n=*]
@@ -189,11 +220,20 @@
     =/  ni  +(cas.app)
     :-  ni
     app(cax (~(put by cax) n [cell+[hi ti] ni]), cas ni)
-  ++  get-path
+  ::
+  ++  edit
+    :: TODO you need to also include the edit along the path - i.e. [?(%2 %3) oldcellindex  newcellindex]
+    |=  [axis=@ target=* value=*]
+    ^-  [(pair [mut=* old=*] (list (pair ?(%2 %3) index))) appendix]
+    ?~  axis  !!
+    =/  frg  (frag axis target)
+    =/  mutant  .*(target [10 [axis 1 value] 0 1])
+    [mutant^p.frg q.frg]^app
+  ++  frag
     |=  [axis=@ s=*]
     =|  path=(list (pair ?(%2 %3) index))
     =/  start-axis  axis
-    |^  ^-  [(pair * _path)] :: TODO crash axis?
+    |^  ^-  (pair * _path) :: TODO add crash axis?
     ?:  =(1 axis)
       [s path]
     ?~  axis  !!

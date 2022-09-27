@@ -3,11 +3,9 @@
   $-  ^
   (unit (unit *))
 ::
-:: +$  cache  (map * (pair phash @ud))
-:: +$  cache  (map * (pair * *)) :: pair is head and tail
 +$  index  @ud
 +$  tnoun  $%([%atom @] [%cell index index])
-+$  cache  (map * (pair tnoun index))  :: noun to [[ileft iright] inoun]
++$  cache  (map * (pair tnoun index))  :: noun to [[ihead itail] inoun]
 
 +$  phash  @                     ::  Pedersen hash
 :: +$  hash-req
@@ -15,7 +13,6 @@
 ::       [%atom val=@]
 ::   ==
 ::
-:: +$  subf  [h=phash hit=hints]
 +$  pred  [s=index f=index p=index]
 +$  cairo-hint
   $%
@@ -36,9 +33,5 @@
       [%cons =pred sf1=hints sf2=hints]
       [%invalid *] :: TODO: didn't want to deal with this [%invalid (each @ [@ phash])]
   ==
-:: subject -> formula -> hint
-::+$  hints  (mip phash phash cairo-hint)
 +$  hints  $@(~ [i=cairo-hint t=(list cairo-hint)]) :: TODO not sure if this needs to be a list
-::  map of a noun's merkle children. root -> [left right]
-+$  merk-tree  (map phash [phash phash])
---
+::  map of a noun's merkle children. root -> [left right]--

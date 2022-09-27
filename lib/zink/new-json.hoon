@@ -55,7 +55,7 @@
           sf3+(hints sf3.hin)
       ==
     ::     
-        [?(%3 %4) * *] :: TODO handle a failed sf?
+        [?(%3 %4) * *]
       %-  pairs
       :~  jmp-dest+(num -.hin)
           pred+(en-pred pred.hin)
@@ -94,6 +94,14 @@
       :~  pred+(en-pred pred.hin)
           sf+(hints sf.hin)
           tag+(num +>+>:hin)
+      ==
+    ::
+        [%11 * * %& *]
+      %-  pairs
+      :~  pred+(en-pred pred.hin)
+          sf+(hints sf.hin)
+          tag+(num +>+>-:hin)
+          clue+(hints +>+>+:hin)
       ==
     ::
         [%cons *]

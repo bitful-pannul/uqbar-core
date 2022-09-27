@@ -232,9 +232,32 @@
     :_  app
     [%&^`p [%11 [si fi pi] next-hints %|^tag.f]~]
   ::
-  ::  TODO: [%11 [tag=@ clue=*] next=*]
+      [%11 [tag=@ clue=*] next=*]
+    =^  [=clue=res =clue=hints]  app
+      $(f clue.f)
+    ?:  ?=(%| -.clue-res)
+      ~&  269
+      [%|^trace [%11 [si fi 0] ~ %&^[tag.f clue-hints]]~]^app
+    ?~  p.clue-res  [%&^~ ~]^app
+    ::  if jet exists for this tag, and sample is good,
+    ::  replace execution with jet
+    =^  [=next=res =next=hints]  app
+      :: TODO %zfast jetting here
+      $(f next.f)
+    ?:  ?=(%| -.next-res)
+      ~&  190
+      [%|^trace [%11 [si fi 0] next-hints %&^[tag.f clue-hints]]~]^app
+    ?~  p.next-res  [%&^~ [%11 [si fi 0] next-hints %&^[tag.f clue-hints]]~]^app
+    =/  pi  +>:(~(get by cax) +>.next-res)
+    :_  app
+    :_  [%11 [si fi pi] next-hints %&^[tag.f clue-hints]]~
+    ?:  =(%fast tag.f)  %&^p.next-res
+    :+  %&  ~
+    .*  s
+    [11 [tag.f 1 u.p.clue-res] 1 u.p.next-res]
   ::
   ==
+  ::
   ++  cache-noun
     |=  [n=*]
     ^-  [index appendix]

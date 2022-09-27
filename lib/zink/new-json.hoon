@@ -69,6 +69,16 @@
           sf1+(hints sf1.hin)
           sf2+(hints sf2.hin)
       ==
+    ::
+        [%9 * * * *]
+      %-  pairs
+      :~  jmp-dest+(num 9)
+          pred+(en-pred pred.hin)
+          sf+(hints sf.hin)
+          leaf+(num leaf.hin)
+          path+(en-path path.hin)
+      ==
+    ::
         [%10 * * * * *]
       %-  pairs
       :~  jmp-dest+(num 10)

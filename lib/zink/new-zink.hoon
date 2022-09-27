@@ -174,6 +174,23 @@
     =/  pi  +>:(~(get by cax) +>.nex-res)
     [nex-res [%8 [si fi pi] hed-hints nex-hints]~]^app
   ::
+      [%9 axis=@ core=*]
+    ?:  =(axis 0)
+      ~&  256  [%|^trace [%9 [si fi 0] ~ 0 ~]~]^app
+    =^  [=core=res =core=hints]  app
+      $(f core.f)
+    ?:  ?=(%| -.core-res)
+      ~&  211  [%|^trace [%9 [si fi 0] core-hints 0 ~]~]^app
+    ?~  p.core-res  [%|^trace [%9 [si fi 0] core-hints 0 ~]~]^app
+    =/  arm  (frag axis.f u.p.core-res)
+    ?:  ?=(%| -.p.arm)
+      ~&  269+[s axis.f]
+      :_  app
+      [%|^trace [%9 [si fi 0] core-hints `@ud`axis.f q.arm]~]
+    =^  [=res =hints]  app  $(s u.p.core-res, f p.arm)
+    =/  pi  +>:(~(get by cax) +>.res)
+    [res [%9 [si fi pi] core-hints `@ud`axis.f q.arm]~]^app
+  ::
       [%10 [axis=@ value=*] target=*]
     ?:  =(0 axis.f)
       ~&  232  [%|^trace [%10 [si fi 0] ~ ~ 0 ~]~]^app

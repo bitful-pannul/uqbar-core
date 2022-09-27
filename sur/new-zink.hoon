@@ -25,10 +25,10 @@
       [%3 =pred sf=hints]
       [%4 =pred sf=hints]
       [%5 =pred sf1=hints sf2=hints]
-      [%6 =pred sf1=hints sf2=hints] :: not sure if this is fine? basically I got rid of the subf that doesn't get run...should be fine?
+      [%6 =pred sf1=hints sf2=hints] :: got rid of the subf that doesn't get run...should be fine?
       [%7 =pred sf1=hints sf2=hints]
       [%8 =pred sf1=hints sf2=hints]
-      :: [%9 (each [axis=@ sf=subf leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
+      [%9 =pred sf=hints leaf=index path=(list (pair ?(%2 %3) index))]
       [%10 =pred sf1=hints sf2=hints old-leaf=index path=(list (pair ?(%2 %3) index))]
       :: [%11 (each [(each [tag=@ clue=subf] @) sf=phash] phash)]
       :: [%12 (each [sf1=subf sf2=subf] phash)]

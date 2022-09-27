@@ -89,6 +89,13 @@
           path+(en-path path.hin)
       ==
     ::
+        [%11 * * %| @]
+      %-  pairs
+      :~  pred+(en-pred pred.hin)
+          sf+(hints sf.hin)
+          tag+(num +>+>:hin)
+      ==
+    ::
         [%cons *]
       %-  pairs
       :~  jmp-dest+(tape "cons")

@@ -222,6 +222,18 @@
         tar-hints  ol  q.mutant
     ==
   ::
+      [%11 tag=@ next=*]
+    =^  [=next=res =next=hints]  app
+      $(f next.f)
+    ?:  ?=(%| -.next-res)  ~&  260  [%|^trace [%11 [si fi 0] next-hints %|^tag.f]~]^app
+    ?~  p.next-res  [%&^~ [%11 [si fi 0] next-hints %|^tag.f]~]^app
+    =/  p  .*(s [11 tag.f 1 u.p.next-res])
+    =/  pi  +>:(~(get by cax) p)
+    :_  app
+    [%&^`p [%11 [si fi pi] next-hints %|^tag.f]~]
+  ::
+  ::  TODO: [%11 [tag=@ clue=*] next=*]
+  ::
   ==
   ++  cache-noun
     |=  [n=*]

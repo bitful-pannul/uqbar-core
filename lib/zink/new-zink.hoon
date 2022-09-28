@@ -9,6 +9,15 @@
     +$  book      (pair body appendix)
     --
 |%
+::
+++  zebra                                                 ::  bounded zk +mule
+  |=  [bud=(unit @ud) cax=cache cas=@ scry=(unit granary-scry) [s=* f=*]]
+  ^-  book
+  %.  [s f]
+  %*  .  zink
+    app  [cax cas bud ?~(scry ~ [`*`u.scry ~])]
+  ==
+::
 ++  create-hints
   |=  [h=hints cax=cache]
   ^-  json

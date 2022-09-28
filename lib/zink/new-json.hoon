@@ -91,7 +91,8 @@
     ::
         [%11 * * %| @]
       %-  pairs
-      :~  pred+(en-pred pred.hin)
+      :~  jmp-dest+(num 11)
+          pred+(en-pred pred.hin)
           sf+(hints sf.hin)
           tag+(num +>+>:hin)
       ==

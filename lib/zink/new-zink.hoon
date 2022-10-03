@@ -5,24 +5,24 @@
     +$  fail      (list [@ta *])
     +$  res       (each good fail)
     +$  body      [p=res q=hints]
-    +$  appendix  [cax=cache cas=@ bud=(unit @ud) scrys=(list *)]
+    +$  appendix  [cax=cache =arena ai=@ bud=(unit @ud) scrys=(list *)]
     +$  book      (pair body appendix)
     --
 |%
 ::
 ++  zebra                                                 ::  bounded zk +mule
-  |=  [bud=(unit @ud) cax=cache cas=@ scry=(unit granary-scry) [s=* f=*]]
+  |=  [bud=(unit @ud) cax=cache scry=(unit granary-scry) [s=* f=*] test-mode=?]
   ^-  book
-  %.  [s f]
+  %.  [s f test-mode]
   %*  .  zink
-    app  [cax cas bud ?~(scry ~ [`*`u.scry ~])]
+    app  [cax ~ 0 bud ?~(scry ~ [`*`u.scry ~])]
   ==
 ::
 ++  create-hints
-  |=  [h=hints cax=cache]
+  |=  [h=hints a=arena]
   ^-  json
   %-  pairs:enjs:format
-  :~  nouns+(nouns:enjs cax)
+  :~  nouns+(nouns:enjs a)
       hints+(hints:enjs h) 
   ==
 ::
@@ -30,12 +30,12 @@
   =|  appendix
   =*  app  -
   =|  trace=fail
-  |=  [s=* f=*]
+  |=  [s=* f=* test-mode=?]
   ^-  book
   =-  -(q.p q.p.-)
   |^  ^-  book
-  =^  si  app  (cache-noun s)
-  =^  fi  app  (cache-noun f)
+  =^  si  app  (index s)
+  =^  fi  app  (index f)
   ?+    f
     ?@  f  [%|^trace [%invalid %&^f]~]^app
     ?>  ?=(@ -.f)
@@ -52,20 +52,20 @@
     ?:  ?=(%| -.tal-res)
       ~&  65  [%|^trace [%cons [si fi 0] hed-hints tal-hints]~]^app
     ?~  p.tal-res  [%&^~ [%cons [si fi 0] hed-hints tal-hints]~]^app
-    =/  prod  [+>.hed-res +>.tal-res]
-    =^  pi  app  (cache-noun prod)
+    =/  prod  [u.p.hed-res u.p.tal-res]
+    =^  pi  app  (index prod)
     [[%& `prod] [%cons [si fi pi] hed-hints tal-hints]~]^app
   ::
       [%0 axis=@]
     ?:  =(axis 0)  [%|^trace [%0 [si fi 0] ~]~]^app
     =/  tups  (frag axis.f s)
-    =/  pi  +>:(~(get by cax) -.tups)
+    =^  pi  app  (index -.tups)
     :_  app
     [%& `-.tups]^[%0 [si fi pi] +.tups]~
   ::
       [%1 const=*]
-    =/  pi  (~(get by cax) const.f)
-    [[%& `const.f] [%1 [si fi +>:pi]]~]^app
+    =^  pi  app  (index const.f)
+    [[%& `const.f] [%1 [si fi pi]]~]^app
   ::
       [%2 sub=* for=*]
     =^  [=sub=res =sub=hints]  app
@@ -81,9 +81,9 @@
     ?~  p.for-res  [%&^~ hit]^app
     =^  [=prod=res =prod=hints]  app
       $(s u.p.sub-res, f u.p.for-res)
+    ?:  ?=(%| -.prod-res)  [%|^trace [%2 [si fi 0] sub-hints for-hints ~]~]^app
     ?~  p.prod-res  [prod-res [%2 [si fi 0] sub-hints for-hints ~]~]^app
-    ?:  =(%| -.prod-res)  [%|^trace [%2 [si fi 0] sub-hints for-hints ~]~]^app
-    =/  pi  +>:(~(get by cax) +>.prod-res)
+    =^  pi  app  (index u.p.prod-res)
     [prod-res [%2 [si fi pi] sub-hints for-hints prod-hints]~]^app
   ::
       [%3 arg=*]
@@ -95,11 +95,11 @@
       ~&  114  [%|^trace [%3 [si fi 0] ~]~]^app
     ?~  p.arg-res  [%&^~ [%3 [si fi 0] ~]~]^app
     ?@  u.p.arg-res
-      =^  pi  app  (cache-noun %.n)
+      =^  pi  app  (index %.n)
       :_  app
       :-  [%& ~ %.n]
       [%3 [si fi pi] arg-hints]~
-    =^  pi  app  (cache-noun %.y)
+    =^  pi  app  (index %.y)
     :_  app
     :-  [%& ~ %.y]
     [%3 [si fi pi] arg-hints]~
@@ -117,7 +117,7 @@
     ?^  u.p.arg-res
       ~&  135  [%|^trace [%4 [si fi 0] ~]~]^app
     =/  p  .+(u.p.arg-res)
-    =^  pi  app  (cache-noun p)
+    =^  pi  app  (index p)
     :_  app
     :-  [%& ~ p]
     [%4 [si fi pi] arg-hints]~
@@ -134,7 +134,7 @@
       ~&  150  [%|^trace [%5 [si fi 0] a-hints b-hints]~]^app
     ?~  p.b-res  [%&^~ [%5 [si fi 0] a-hints b-hints]~]^app
     =/  p   =(u.p.a-res u.p.b-res)
-    =^  pi  app  (cache-noun p)
+    =^  pi  app  (index p)
     [[%& ~ =(u.p.a-res u.p.b-res)] [%5 [si fi pi] a-hints b-hints]~]^app
   ::
   ::  6 is special
@@ -154,7 +154,7 @@
     ?:  ?=(%| -.sf2-res)
       ~&  164  [%|^trace [%6 [si fi 0] sf2-hints ~]~]^app
     ?~  p.sf2-res  [%&^~ [%6 [si fi 0] sf2-hints ~]~]^app
-    =/  pi  (~(get by cax) u.p.sf2-res)
+    =^  pi  app  (index u.p.sf2-res)
     [[sf2-res [%6 [si fi +>:pi] t-hints sf2-hints]~]]^app
   ::
       [%7 subj=* next=*]
@@ -162,12 +162,12 @@
       $(f subj.f)
     ?:  ?=(%| -.sub-res)  ~&  179  [%|^trace [%7 [si fi 0] sub-hints ~] ~]^app
     ?~  p.sub-res  [%&^~ [%7 [si fi 0] sub-hints ~] ~]^app
-    =^  subi  app  (cache-noun u.p.sub-res)
+    =^  subi  app  (index u.p.sub-res)
     =^  [=nex=res =nex=hints]  app
       $(s u.p.sub-res, f next.f)
     ?~  p.nex-res  [nex-res [%7 [si fi 0] sub-hints nex-hints]~]^app
     ?:  =(%| -.nex-res)  [%|^trace [%7 [si fi 0] sub-hints ~]~]^app
-    =/  pi  +>:(~(get by cax) +>.nex-res)
+    =^  pi  app  (index +>.nex-res)
     [nex-res [%7 [si fi pi] sub-hints nex-hints]~]^app
   ::
       [%8 hed=* next=*]
@@ -180,7 +180,7 @@
       $(s [u.p.hed-res s], f next.f)
     ?:  ?=(%| -.nex-res)  ~&  198  [%|^trace [%8 [si fi 0] hed-hints nex-hints] ~]^app
     ?~  p.nex-res  [%&^~ [%8 [si fi 0] hed-hints nex-hints]~]^app
-    =/  pi  +>:(~(get by cax) +>.nex-res)
+    =^  pi  app  (index u.p.nex-res)
     [nex-res [%8 [si fi pi] hed-hints nex-hints]~]^app
   ::
       [%9 axis=@ core=*]
@@ -197,7 +197,9 @@
       :_  app
       [%|^trace [%9 [si fi 0] core-hints `@ud`axis.f q.arm]~]
     =^  [=res =hints]  app  $(s u.p.core-res, f p.arm)
-    =/  pi  +>:(~(get by cax) +>.res)
+    ?:  ?=(%| -.res)  [%|^trace [%9 [si fi 0] core-hints 0 ~]~]^app
+    ?~  p.res  [%&^~ [%9 [si fi 0] core-hints 0 ~]~]^app
+    =^  pi  app  (index u.p.res)
     [res [%9 [si fi pi] core-hints `@ud`axis.f q.arm]~]^app
   ::
       [%10 [axis=@ value=*] target=*]
@@ -222,8 +224,8 @@
       [%10 [si fi 0] val-hints tar-hints 0 ~]~
     =^  mutant  app
       (edit axis.f u.p.tar-res u.p.val-res)
-    =^  pi  app  (cache-noun mut.p.mutant)
-    =/  ol  +>:(~(get by cax) +.p.mutant)
+    =^  pi  app  (index mut.p.mutant)
+    =^  ol  app  (index old.p.mutant)
     :_  app
     :-  %&^`p.mutant
     :_  ~
@@ -237,7 +239,7 @@
     ?:  ?=(%| -.next-res)  ~&  260  [%|^trace [%11 [si fi 0] next-hints %|^tag.f]~]^app
     ?~  p.next-res  [%&^~ [%11 [si fi 0] next-hints %|^tag.f]~]^app
     =/  p  .*(s [11 tag.f 1 u.p.next-res])
-    =/  pi  +>:(~(get by cax) p)
+    =^  pi  app  (index p)
     :_  app
     [%&^`p [%11 [si fi pi] next-hints %|^tag.f]~]
   ::
@@ -257,7 +259,7 @@
       ~&  190
       [%|^trace [%11 [si fi 0] next-hints %&^[tag.f clue-hints]]~]^app
     ?~  p.next-res  [%&^~ [%11 [si fi 0] next-hints %&^[tag.f clue-hints]]~]^app
-    =/  pi  +>:(~(get by cax) +>.next-res)
+    =^  pi  app  (index u.p.next-res)
     :_  app
     :_  [%11 [si fi pi] next-hints %&^[tag.f clue-hints]]~
     ?:  =(%fast tag.f)  %&^p.next-res
@@ -267,32 +269,54 @@
   ::
   ==
   ::
-  ++  cache-noun
+  ++  index
     |=  [n=*]
-    ^-  [index appendix]
-    =/  hit  (~(get by cax) n)
+    ^-  [^index appendix]
+    =/  hit  (~(get by arena) n)
     ?^  hit  [q.u.hit app]
     ?@  n
-      =/  ni  +(cas.app)
+      =/  ni  +(ai.app)
       :-  ni
-      app(cax (~(put by cax) n [atom+n ni]), cas ni)
+      app(arena (~(put by arena) n [atom+n ni]), ai ni)
     =^  hi  app  $(n -.n)
     =^  ti  app  $(n +.n)
-    =/  ni  +(cas.app)
+    =/  ni  +(ai.app)
     :-  ni
-    app(cax (~(put by cax) n [cell+[hi ti] ni]), cas ni)
+    app(arena (~(put by arena) n [cell+[hi ti] ni]), ai ni)
   ::
   ++  edit
     :: TODO you need to also include the edit along the path - i.e. [?(%2 %3) oldcellindex  newcellindex]
     |=  [axis=@ target=* value=*]
-    ^-  [(pair [mut=* old=*] (list (pair ?(%2 %3) index))) appendix]
+    ^-  [(pair [mut=* old=*] (list (pair ?(%2 %3) ^index))) appendix]
     ?~  axis  !!
     =/  frg  (frag axis target)
     =/  mutant  .*(target [10 [axis 1 value] 0 1])
     [mutant^p.frg q.frg]^app
+  ::
+  ++  hash
+    |=  [n=*]
+    |-  ^-  [phash appendix]
+    ::  test mode disables hashing, so it won't generate valid hints.
+    ::  however, computation is *much* faster since hashing is the
+    ::  most expensive aspect of the process.
+    ?:  test-mode  [0x1 app]
+    |-  ^-  [phash appendix]
+    =/  mh  (~(get by cax) n)
+    ?^  mh
+      [u.mh app]
+    ?@  n
+      =/  h  (hash:pedersen n 0)
+      :-  h
+      app(cax (~(put by cax) n h))
+    =^  hh  app  $(n -.n)
+    =^  ht  app  $(n +.n)
+    =/  h  (hash:pedersen hh ht)
+    :-  h
+    app(cax (~(put by cax) n h))
+  ::
   ++  frag
     |=  [axis=@ s=*]
-    =|  path=(list (pair ?(%2 %3) index))
+    =|  path=(list (pair ?(%2 %3) ^index))
     =/  start-axis  axis
     |^  ^-  (pair * _path) :: TODO add crash axis?
     ?:  =(1 axis)
@@ -301,7 +325,7 @@
     ?@  s  [%|^s^(gep-a start-axis axis) path]
     =/  pick  (cap axis)
     =/  child  ?-(pick %2 -.s, %3 +.s)
-    =/  pari  +>:(~(get by cax) s)
+    =^  pari  app  (index s)
     %=  $
       s     child
       axis  (mas axis)

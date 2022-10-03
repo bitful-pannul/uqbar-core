@@ -4,9 +4,9 @@
   (unit (unit *))
 ::
 +$  index  @ud
-+$  tnoun  $%([%atom @] [%cell index index])
-+$  cache  (map * (pair tnoun index))  :: noun to [[ihead itail] inoun]
-
++$  tnoun  $%([%atom p=@] [%cell (pair index index)])
++$  arena  (map * (pair tnoun index))  :: noun to [[ihead itail] inoun]
++$  cache  (map * phash)
 +$  phash  @                     ::  Pedersen hash
 :: +$  hash-req
 ::   $%  [%cell head=phash tail=phash]

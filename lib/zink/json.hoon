@@ -2,69 +2,122 @@
 |%
 ++  enjs
   |%
+  ++  nouns
+    |=  c=arena
+    ^-  json
+    :-  %a
+    %+  turn
+    %+  sort  (turn ~(tap by c) tail)
+    |=  [a=(pair tnoun index) b=(pair tnoun index)]
+    (lth q.a q.b)
+    en-noun
+  ::
+  ++  en-noun
+    |=  n=(pair tnoun index)
+    ^-  json
+    =,  enjs:format
+    ?-  -.p.n
+        %atom
+      (pairs atom+(num p.p.n) i+(num q.n) ~)
+        %cell
+      %-  pairs 
+      :~  cell+a+~[(num p.p.n) (num q.p.n)]
+          :: i+(num q.n)
+      ==
+    ==
+  ::
   ++  hints
     |=  h=^hints
     ^-  json
-    a+(turn h en-hint)
+    :: TODO: no list of hints
+    ?>  ?=([* ~] h)
+    (en-hint i.h)
   ::
   ++  en-hint
     |=  hin=cairo-hint
     ^-  json
     =,  enjs:format
-    :-  %a
-    ^-  (list json)
-    :-  ?:(?=(?(%cons %invalid %jet) -.hin) [%s -.hin] (num -.hin))
-    :_  ~
-    ?:  &(?=(_-:*$<(?(%1 %cons %invalid %jet) cairo-hint) -.hin) ?=(%| +<.hin))
-        (frond %broke (num p.hin))
+    :: ?:  &(?=(_-:*$<(?(%1 %cons %invalid %jet) cairo-hint) -.hin) ?=(%| +<.hin))
+    ::    (frond %broke (num p.hin))
     ::  for some reason previous conditional doesn't assert %& case here
     ::  it should mint-vain, but doesn't
     ?+  hin  !!
-        [%0 %& *]
+        [%0 * *]
       %-  pairs
-      :~  axis+(num axis.p.hin)
-          leaf-or-atom+(en-leaf-or-atom leaf-or-atom.p.hin)
-          path+(en-path path.p.hin)
+      :~  'jmp_dest'^(num 0)
+          pred+(en-pred pred.hin)
+          path+(en-path path.hin)
+      ==
+        [%1 *]  (pairs 'jmp_dest'^(num 1) pred+(en-pred +.hin) ~)
+    ::
+        [%2 * * * *]
+      %-  pairs
+      :~  'jmp_dest'^(num 2)
+          pred+(en-pred pred.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
+          sf3+(hints sf3.hin)
+      ==
+    ::     
+        [?(%3 %4) * *]
+      %-  pairs
+      :~  'jmp_dest'^(num -.hin)
+          pred+(en-pred pred.hin)
+          sf+(hints sf.hin)
       ==
     ::
-        [%1 *]  (num +.hin)
-        [?(%2 %5 %12) %& *]   (pairs sf1+(en-subf sf1.p.hin) sf2+(en-subf sf2.p.hin) ~)
-        [?(%3 %4) %& *]
-      ?~  sf-res.p.hin  (frond %sf (en-subf sf.p.hin))
+        [?(%5 %6 %7 %8) * * *]
       %-  pairs
-      :~  sf+(en-subf sf.p.hin)
-          sf-res+(en-hash-req u.sf-res.p.hin)
+      :~  'jmp_dest'^(num -.hin)
+          pred+(en-pred pred.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
       ==
     ::
-        [%6 %& *]  (pairs sf1+(en-subf sf1.p.hin) sf2+(num sf2.p.hin) sf3+(num sf3.p.hin) ~)
-        [?(%7 %8) %& *]  (pairs sf1+(en-subf sf1.p.hin) sf2+(num sf2.p.hin) ~)
-        [%9 %& *]
+        [%9 * * * *]
       %-  pairs
-      :~  axis+(num axis.p.hin)
-          sf+(en-subf sf.p.hin)
-          leaf-or-atom+(en-leaf-or-atom leaf-or-atom.p.hin)
-          path+(en-path path.p.hin)
+      :~  'jmp_dest'^(num 9)
+          pred+(en-pred pred.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
+          leaf+(num leaf.hin)
+          path+(en-path path.hin)
       ==
     ::
-        [%10 %& *]
+        [%10 * * * * *]
       %-  pairs
-      :~  axis+(num axis.p.hin)
-          sf1+(en-subf sf1.p.hin)
-          sf2+(en-subf sf2.p.hin)
-          old-leaf-or-atom+(en-leaf-or-atom old-leaf-or-atom.p.hin)
-          path+(en-path path.p.hin)
+      :~  'jmp_dest'^(num 10)
+          pred+(en-pred pred.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
+          oldleaf+(num old-leaf.hin)
+          path+(en-path-10 path.hin)
       ==
     ::
-        [%11 %& *]  (en-11 p.hin)
+        [%11 * * %| @]
+      %-  pairs
+      :~  'jmp_dest'^(num 11)
+          pred+(en-pred pred.hin)
+          sf+(hints sf.hin)
+          tag+(num +>+>:hin)
+      ==
     ::
-        [%jet *]
-        %-  pairs
-        :~  jet+(en-jet jet.hin)
-            arg+data.hin
-        ==
+        [%11 * * %& *]
+      %-  pairs
+      :~  pred+(en-pred pred.hin)
+          sf+(hints sf.hin)
+          tag+(num +>+>-:hin)
+          clue+(hints +>+>+:hin)
+      ==
     ::
-        [%cons *]  (pairs sf1+(en-subf sf1.hin) sf2+(en-subf sf2.hin) ~)
-        [%invalid *]  (en-invalid +.hin)
+        [%cons *]
+      %-  pairs
+      :~  'jmp_dest'^s+%cons
+          pred+(en-pred pred.hin)
+          sf1+(hints sf1.hin)
+          sf2+(hints sf2.hin)
+      ==   
+ 
     ==
     ::
   ++  en-jet
@@ -84,12 +137,12 @@
     a+[$(n -.n) $(n +.n) ~]
   ::
   ++  en-11
-    |=  [a=(each [tag=@ clue=subf] @) next=phash]
+    |=  [=pred sf=^hints a=(each [tag=@ clue=^hints] @)]
     ^-  json
     =,  enjs:format
     ?-  -.a
-      %&  (pairs tag+(num tag.p.a) clue+(en-subf clue.p.a) sf+(num next) ~)
-      %|  (pairs tag+(num p.a) sf+(num next) ~)
+      %&  (pairs pred+(en-pred pred) tag+(num tag.p.a) clue+(hints clue.p.a) sf+(hints sf) ~)
+      %|  (pairs pred+(en-pred pred) tag+(num p.a) sf+(hints sf) ~)
     ==
   ::
   ++  en-invalid
@@ -101,20 +154,20 @@
       %|  (pairs is-atom+b+%| head+(num -.p.hin) tail+(num +.p.hin) ~)
     ==
   ::
-  ++  en-subf
-    |=  subf
-    ^-  json
-    =,  enjs:format
-    (pairs hash+(num h) hints+(hints hit) ~)
+  :: ++  en-subf
+  ::   |=  subf
+  ::   ^-  json
+  ::   =,  enjs:format
+  ::   (pairs hash+(num h) hints+(hints hit) ~)
   ::
-  ++  en-hash-req
-    |=  hash-req
-    ^-  json
-    =,  enjs:format
-    ?-  +<-
-      %cell  (pairs head+(num head) tail+(num tail) ~)
-      %atom  (frond %atom (num val))
-    ==
+  :: ++  en-hash-req
+  ::   |=  hash-req
+  ::   ^-  json
+  ::   =,  enjs:format
+  ::   ?-  +<-
+  ::     %cell  (pairs head+(num head) tail+(num tail) ~)
+  ::     %atom  (frond %atom (num val))
+  ::   ==
   ::
   ++  en-leaf-or-atom
     |=  hin=(each phash [=atom crash-axis=@])
@@ -127,8 +180,31 @@
     ==
   ::
   ++  en-path
-    |=  path=(list phash)
-    a+(turn path num)
+    |=  path=(list (pair ?(%2 %3) index))
+    a+(turn path en-path-elem)
+  ::
+  ++  en-path-elem
+    |=  a=(pair @ud index)
+    ^-  json
+    =,  enjs:format
+    a+[(num p.a) (num q.a) ~]
+  ::
+  ::  todo: less dumb
+  ++  en-path-10
+    |=  path=(list (trel ?(%2 %3) index index))
+    a+(turn path en-path-elem-10)
+  ::
+  ++  en-path-elem-10
+    |=  a=(trel ?(%2 %3) index index)
+    ^-  json
+    =,  enjs:format
+    a+[(num p.a) (num q.a) (num r.a) ~]
+ 
+  ::
+  ++  en-pred
+    |=  =pred
+    ^-  json
+    a+[(num s.pred) (num f.pred) (num p.pred) ~]
   ::
   ++  num
     |=  n=@ud

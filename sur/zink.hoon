@@ -3,52 +3,40 @@
   $-  ^
   (unit (unit *))
 ::
-+$  cache  (map * (pair phash @ud))
-+$  child  *
-+$  parent  *
++$  index  @ud
++$  tnoun  $%([%atom p=@] [%cell (pair index index)])
++$  arena  (map * (pair tnoun index))  :: noun to [[ihead itail] inoun]
++$  cache  (map * phash)
 +$  phash  @                     ::  Pedersen hash
-+$  hash-req
-  $%  [%cell head=phash tail=phash]
-      [%atom val=@]
-  ==
+:: +$  hash-req
+::   $%  [%cell head=phash tail=phash]
+::       [%atom val=@]
+::   ==
 ::
-+$  subf  [h=phash hit=hints]
++$  pred  [s=index f=index p=index]
 +$  cairo-hint
   $%
-      [%0 (each [axis=@ leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
-      [%1 phash]
-      [%2 (each [sf1=subf sf2=subf] phash)]
-      [%3 (each [sf=subf sf-res=(unit hash-req)] phash)]
-      [%4 (each [sf=subf sf-res=(unit hash-req)] phash)]
-      [%5 (each [sf1=subf sf2=subf] phash)]
-      [%6 (each [sf1=subf sf2=phash sf3=phash] phash)]
-      [%7 (each [sf1=subf sf2=phash] phash)]
-      [%8 (each [sf1=subf sf2=phash] phash)]
-      [%9 (each [axis=@ sf=subf leaf-or-atom=(each phash [=atom crash-axis=@]) path=(list phash)] phash)]
-      $:  %10
-          %+  each
-            $:  axis=@
-                sf1=subf
-                sf2=subf
-                old-leaf-or-atom=(each phash [=atom crash-axis=@])
-                path=(list phash)
-            ==
-          phash
-      ==
-      [%11 (each [(each [tag=@ clue=subf] @) sf=phash] phash)]
-      [%12 (each [sf1=subf sf2=subf] phash)]
+      [%0 =pred path=(list (pair ?(%2 %3) index))]
+      [%1 =pred]
+      [%2 =pred sf1=hints sf2=hints sf3=hints]
+      [%3 =pred sf=hints]
+      [%4 =pred sf=hints]
+      [%5 =pred sf1=hints sf2=hints]
+      [%6 =pred sf1=hints sf2=hints] :: got rid of the subf that doesn't get run...should be fine?
+      [%7 =pred sf1=hints sf2=hints]
+      [%8 =pred sf1=hints sf2=hints]
+      [%9 =pred sf1=hints sf2=hints leaf=index path=(list (pair ?(%2 %3) index))]
+      [%10 =pred sf1=hints sf2=hints old-leaf=index path=(list (trel ?(%2 %3) index index))]
+      [%11 =pred sf=hints (each [tag=index clue=hints] @)]
+      :: [%12 (each [sf1=subf sf2=subf] phash)]
       [%jet =jet data=json] :: not every jet will return the whole sample as a noun
-      [%cons sf1=subf sf2=subf]
-      [%invalid (each @ [@ phash])]
+      [%cons =pred sf1=hints sf2=hints]
+      [%invalid *] :: TODO: didn't want to deal with this [%invalid (each @ [@ phash])]
   ==
-:: subject -> formula -> hint
-::+$  hints  (mip phash phash cairo-hint)
-+$  hints  $@(~ [i=cairo-hint t=(list cairo-hint)])
-::  map of a noun's merkle children. root -> [left right]
-+$  merk-tree  (map phash [phash phash])
-::  map from jet tag to gas cost
++$  hints  $@(~ [i=cairo-hint t=(list cairo-hint)]) :: TODO not sure if this needs to be a list
+::  map of a noun's merkle children. root -> [left right]--
 +$  jetmap  (map jet @ud)
-::  Axis map of jets in stdlib
+::  Cost map of jets in stdlib
 ++  jets
   ^-  jetmap
   ::  TODO: determine *real* costs
@@ -113,10 +101,11 @@
       [%$^%mink 1]  [%$^%mole 1]  [%$^%mule 1]  [%$^%mure 1]
       [%$^%mute 1]  [%$^%slum 1]  [%$^%zock 1]  [%$^%zole 1]
       [%$^%zule 1]  [%$^%zure 1]  [%$^%zute 1]  [%$^%zlum 1]
-    :: ::  smart-lib
+      ::  smart-lib
       [%$^%pedersen-hash 10]  [%$^%keccak256^%keccak^%crypto 10]
       [%$^%ecdsa-raw-recover^%secp256k1^%secp^%crypto 10]
     ==
+::
 +$  jet
   $~  [%$ %add]
   $%  ::  hoon
@@ -212,4 +201,5 @@
       :: %$^%ecdsa-raw-sign^%secp256k1^%secp^%crypto
       [%$ %ecdsa-raw-recover %secp256k1 %secp %crypto]
   ==
+::
 --

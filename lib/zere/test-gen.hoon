@@ -3,7 +3,7 @@
 /*  smart-lib-noun  %noun  /lib/zig/compiled/smart-lib/noun
 /*  zink-cax-noun   %noun  /lib/zig/compiled/hash-cache/noun
 =/  smart=vase  ;;(vase (cue q.q.smart-lib-noun))
-=/  smart-cax         ;;(cache:zink (cue q:q:;;((pair * (pair * @)) zink-cax-noun)))
+=/  smart-cax=cache:zink  ~  ::  ;;(cache:zink (cue q:q:;;((pair * (pair * @)) zink-cax-noun)))
 =<  =|  test-args
     =*  args  -
     |%
@@ -60,19 +60,17 @@
       cax.q.-
   %.  [s f |]
   %*  .  zink
-      app  [cax bud scrys]
+      app  [cax ~ 0 bud scrys]
   ==
   ::
   ++  en-hints
     |=  =book
     ^-  json
-    =/  hs  (hash s cax.q.book)
-    =/  hf  (hash f cax.q.book)
     %-  pairs:enjs:format
     :~  hints+(hints:enjs q.p.book)
-        subject+(num:enjs hs)
-        formula+(num:enjs hf)
-        scrys+a+(turn scrys |=(s=* (num:enjs (hash scrys cax.q.book))))
+        nouns+(nouns:enjs arena.q.book) 
+    ::    scrys+a+(turn scrys |=(s=* (num:enjs (hash scrys cax.q.book))))
+        scrys+a+~ :: TODO
         bud+?~(bud ~ (num:enjs u.bud))
         result+(en-result book)
     ==
@@ -81,15 +79,13 @@
     |=  =book
     ^-  json
     =/  res
-    ?:  ?=(%| -.p.p.book)  %crash
-    ?:  ?=([%& ~] p.p.book)  %out-of-gas
-    %success^p.p.p.book
-    =/  hp=json  ?:(?=(^ res) (num:enjs (hash u.+.res cax.q.book)) ~)
+      ?:  ?=(%| -.p.p.book)  %crash
+      ?:  ?=([%& ~] p.p.book)  %out-of-gas
+      %success^p.p.p.book
     =/  status=json  ?:(?=(^ res) s+-.res s+res)
     =/  bud=json  ?~(bud.q.book ~ (num:enjs u.bud.q.book))
     %-  pairs:enjs:format
-    :~  product+hp
-        status+status
+    :~  status+status
         bud+bud
     ==
   --

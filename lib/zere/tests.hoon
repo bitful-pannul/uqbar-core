@@ -20,17 +20,7 @@
         '3-cons'^test:mk(s [4 2 3], f [[3 0 2] 3 0 3])
         '0-1-2-4'^test:mk(s [14 4 0 1], f [2 [0 2] 0 3])
     ==
-    :-  'basic-nock-1'
-    %-  tests:mk
-    :~  '7'^test:mk(s 4, f [7 [1 3] 0 1])
-        '8'^test:mk(s 4, f [8 [1 3] 0 1])
-        '6-cons'^test:mk(s 8, f [[6 [1 0] [1 2] 1 3] 6 [1 1] [1 2] 1 3])
-        '10'^test:mk(s [7 8 9], f [10 [6 1 4] 0 1])
-        '5-cons'^test:mk(s [[2 3] 4 4], f [[5 [0 4] 0 5] 5 [0 6] 0 7])
-        '3-cons'^test:mk(s [4 2 3], f [[3 0 2] 3 0 3])
-        '0-1-2-4'^test:mk(s [14 4 0 1], f [2 [0 2] 0 3])
-    ==
-    :-  'dec-gates-0'
+    :-  'dec-gates'
     %-  tests:mk
     :~  dec2+test:mk(s dec, f [9 2 10 [6 1 2] 0 1])
         dec3+test:mk(s dec, f [9 2 10 [6 1 3] 0 1])

@@ -8,22 +8,24 @@
     :-  %a
     %+  turn
     %+  sort  (turn ~(tap by c) tail)
-    |=  [a=(pair tnoun index) b=(pair tnoun index)]
-    (lth q.a q.b)
+    |=  [a=[n=tnoun xi=index hash=phash] b=[n=tnoun xi=index hash=phash]]
+    (lth xi.a xi.b)
     en-noun
   ::
   ++  en-noun
-    |=  n=(pair tnoun index)
+    |=  n=[n=tnoun xi=index hash=phash]
     ^-  json
     =,  enjs:format
-    ?-  -.p.n
-        %atom
-      (pairs atom+(num p.p.n) i+(num q.n) ~)
-        %cell
-      %-  pairs 
-      :~  cell+a+~[(num p.p.n) (num q.p.n)]
+    ?-  -.n.n
+        %cat
+      (pairs atom+(num p.n.n) i+(num xi.n) ~)
+        %pom
+      %-  pairs
+      :~  cell+a+~[(num head.n.n) (num tail.n.n)]
           :: i+(num q.n)
       ==
+        %bun
+      (pairs bun+(num hash.n) i+(num xi.n) ~)
     ==
   ::
   ++  hints

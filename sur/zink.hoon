@@ -3,17 +3,23 @@
   $-  ^
   (unit (unit *))
 ::
-+$  index  @ud
-+$  tnoun  $%([%atom p=@] [%cell (pair index index)])
-+$  arena  (map * (pair tnoun index))  :: noun to [[ihead itail] inoun]
-+$  cache  (map * phash)
 +$  phash  @                     ::  Pedersen hash
++$  index  @ud
++$  tnoun
+  $%  [%cat p=@]
+      [%pom head=index tail=index]
+     :: %bun
+      [%bun h=phash]
+  ==
++$  arena  (map * [n=tnoun xi=index hash=phash])  :: noun to [[ihead itail] inoun]^
++$  cache  (map * phash)
 :: +$  hash-req
 ::   $%  [%cell head=phash tail=phash]
 ::       [%atom val=@]
 ::   ==
 ::
 +$  pred  [s=index f=index p=index]
+::+$  path  (list (pair ?(%2 %3) index))
 +$  cairo-hint
   $%
       [%0 =pred path=(list (pair ?(%2 %3) index))]

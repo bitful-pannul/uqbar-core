@@ -34,8 +34,8 @@
   ^-  book
   =-  -(q.p q.p.-)
   |^  ^-  book
-  =^  si  app  (index s)
-  =^  fi  app  (index f)
+  =^  si  app  (index-bun s)
+  =^  fi  app  (index-bun f)
   ?+    f
     ?@  f  [%|^trace [%invalid %&^f]~]^app
     ?>  ?=(@ -.f)
@@ -53,18 +53,18 @@
       ~&  65  [%|^trace [%cons [si fi 0] hed-hints tal-hints]~]^app
     ?~  p.tal-res  [%&^~ [%cons [si fi 0] hed-hints tal-hints]~]^app
     =/  prod  [u.p.hed-res u.p.tal-res]
-    =^  pi  app  (index prod)
+    =^  pi  app  (index-bun prod)
     [[%& `prod] [%cons [si fi pi] hed-hints tal-hints]~]^app
   ::
       [%0 axis=@]
     ?:  =(axis 0)  [%|^trace [%0 [si fi 0] ~]~]^app
-    =/  tups  (frag axis.f s)
-    =^  pi  app  (index -.tups)
+    =^  tups  app  (frag axis.f s)
+    =^  pi  app  (index-bun -.tups)
     :_  app
     [%& `p.tups]^[%0 [si fi pi] q.tups]~
   ::
       [%1 const=*]
-    =^  pi  app  (index const.f)
+    =^  pi  app  (index-bun const.f)
     [[%& `const.f] [%1 [si fi pi]]~]^app
   ::
       [%2 sub=* for=*]
@@ -83,7 +83,9 @@
       $(s u.p.sub-res, f u.p.for-res)
     ?:  ?=(%| -.prod-res)  [%|^trace [%2 [si fi 0] sub-hints for-hints ~]~]^app
     ?~  p.prod-res  [prod-res [%2 [si fi 0] sub-hints for-hints ~]~]^app
-    =^  pi  app  (index u.p.prod-res)
+    =^  pi  app  (index-bun u.p.prod-res)
+    =^  [ci=index subi=index fori=index]  app  (index-cell [sub.f for.f])
+    =^  two  app  (index-atom 2)
     [prod-res [%2 [si fi pi] sub-hints for-hints prod-hints]~]^app
   ::
       [%3 arg=*]
@@ -94,12 +96,15 @@
     ?:  ?=(%| -.arg-res)
       ~&  114  [%|^trace [%3 [si fi 0] ~]~]^app
     ?~  p.arg-res  [%&^~ [%3 [si fi 0] ~]~]^app
+    =^  three  app  (index-atom 3)
     ?@  u.p.arg-res
-      =^  pi  app  (index %.n)
+      =^  pi  app  (index-atom %.n)
+      =^  argh  app  (index-atom arg-res)
       :_  app
       :-  [%& ~ %.n]
       [%3 [si fi pi] arg-hints]~
-    =^  pi  app  (index %.y)
+    =^  pi  app  (index-atom %.y)
+    =^  argi  app  (index-cell arg-res)
     :_  app
     :-  [%& ~ %.y]
     [%3 [si fi pi] arg-hints]~
@@ -117,7 +122,7 @@
     ?^  u.p.arg-res
       ~&  135  [%|^trace [%4 [si fi 0] ~]~]^app
     =/  p  .+(u.p.arg-res)
-    =^  pi  app  (index p)
+    =^  pi  app  (index-atom p)
     :_  app
     :-  [%& ~ p]
     [%4 [si fi pi] arg-hints]~
@@ -134,7 +139,9 @@
       ~&  150  [%|^trace [%5 [si fi 0] a-hints b-hints]~]^app
     ?~  p.b-res  [%&^~ [%5 [si fi 0] a-hints b-hints]~]^app
     =/  p   =(u.p.a-res u.p.b-res)
-    =^  pi  app  (index p)
+    =^  ai  app  (index-bun a-res)
+    =^  bi  app  (index-bun b-res)
+    =^  pi  app  (index-bun p)
     [[%& ~ =(u.p.a-res u.p.b-res)] [%5 [si fi pi] a-hints b-hints]~]^app
   ::
   ::  6 is special
@@ -154,7 +161,8 @@
     ?:  ?=(%| -.sf2-res)
       ~&  164  [%|^trace [%6 [si fi 0] sf2-hints ~]~]^app
     ?~  p.sf2-res  [%&^~ [%6 [si fi 0] sf2-hints ~]~]^app
-    =^  pi  app  (index u.p.sf2-res)
+    =^  ti  app  (index-bun test.f)
+    =^  pi  app  (index-bun u.p.sf2-res)
     [[sf2-res [%6 [si fi pi] t-hints sf2-hints]~]]^app
   ::
       [%7 subj=* next=*]
@@ -162,12 +170,14 @@
       $(f subj.f)
     ?:  ?=(%| -.sub-res)  ~&  179  [%|^trace [%7 [si fi 0] sub-hints ~] ~]^app
     ?~  p.sub-res  [%&^~ [%7 [si fi 0] sub-hints ~] ~]^app
-    =^  subi  app  (index u.p.sub-res)
+    =^  subi  app  (index-bun u.p.sub-res)
     =^  [=nex=res =nex=hints]  app
       $(s u.p.sub-res, f next.f)
     ?~  p.nex-res  [nex-res [%7 [si fi 0] sub-hints nex-hints]~]^app
     ?:  =(%| -.nex-res)  [%|^trace [%7 [si fi 0] sub-hints ~]~]^app
-    =^  pi  app  (index +>.nex-res)
+    =^  subi  app  (index-bun subj.f)
+    =^  nexti  app  (index-bun next.f)
+    =^  pi  app  (index-bun +>.nex-res)
     [nex-res [%7 [si fi pi] sub-hints nex-hints]~]^app
   ::
       [%8 hed=* next=*]
@@ -180,7 +190,9 @@
       $(s [u.p.hed-res s], f next.f)
     ?:  ?=(%| -.nex-res)  ~&  198  [%|^trace [%8 [si fi 0] hed-hints nex-hints] ~]^app
     ?~  p.nex-res  [%&^~ [%8 [si fi 0] hed-hints nex-hints]~]^app
-    =^  pi  app  (index u.p.nex-res)
+    =^  hedi  app  (index-bun hed.f)
+    =^  nexti  app  (index-bun next.f)
+    =^  pi  app  (index-bun u.p.nex-res)
     [nex-res [%8 [si fi pi] hed-hints nex-hints]~]^app
   ::
       [%9 axis=@ core=*]
@@ -191,7 +203,7 @@
     ?:  ?=(%| -.core-res)
       ~&  211  [%|^trace [%9 [si fi 0] core-hints ~ 0 ~]~]^app
     ?~  p.core-res  [%|^trace [%9 [si fi 0] core-hints ~ 0 ~]~]^app
-    =/  arm  (frag axis.f u.p.core-res)
+    =^  arm  app  (frag axis.f u.p.core-res)
     ?:  ?=(%| -.p.arm)
       ~&  269+[s axis.f]
       :_  app
@@ -199,7 +211,9 @@
     =^  [=res =res=hints]  app  $(s u.p.core-res, f p.arm)
     ?:  ?=(%| -.res)  [%|^trace [%9 [si fi 0] core-hints res-hints 0 ~]~]^app
     ?~  p.res  [%&^~ [%9 [si fi 0] core-hints res-hints 0 ~]~]^app
-    =^  pi  app  (index u.p.res)
+    =^  axisi  app  (index-atom axis)
+    =^  corei  app  (index-bun u.p.core-res)
+    =^  pi  app  (index-bun u.p.res)
     [res [%9 [si fi pi] core-hints res-hints `@ud`axis.f q.arm]~]^app
   ::
       [%10 [axis=@ value=*] target=*]
@@ -224,8 +238,8 @@
       [%10 [si fi 0] val-hints tar-hints 0 ~]~
     =^  mutant  app
       (edit axis.f u.p.tar-res u.p.val-res)
-    =^  pi  app  (index mut.p.mutant)
-    =^  ol  app  (index old.p.mutant)
+    =^  pi  app  (index-bun mut.p.mutant)
+    =^  ol  app  (index-bun old.p.mutant)
     :_  app
     :-  %&^`mut.p.mutant
     :_  ~
@@ -234,13 +248,13 @@
     ==
   ::
       [%11 tag=@ next=*]
-    =^  itag  app  (index tag.f) 
+    =^  itag  app  (index-bun tag.f)
     =^  [=next=res =next=hints]  app
       $(f next.f)
     ?:  ?=(%| -.next-res)  ~&  260  [%|^trace [%11 [si fi 0] next-hints %|^itag]~]^app
     ?~  p.next-res  [%&^~ [%11 [si fi 0] next-hints %|^itag]~]^app
     =/  p  .*(s [11 tag.f 1 u.p.next-res])
-    =^  pi  app  (index p)
+    =^  pi  app  (index-bun p)
     :_  app
     [%&^`p [%11 [si fi pi] next-hints %|^itag]~]
   ::
@@ -251,7 +265,7 @@
       ?>  ?=([[%1 jet] *] clue.f) :: todo: shouldn't crash here
       =-  "jet: {(sa:dejs:format -)}"
       (en-jet:enjs ->.clue.f)
-    =^  itag  app  (index tag.f)
+    =^  itag  app  (index-bun tag.f)
     :: we can go straight to jetting in zere with this
     =^  [=clue=res =clue=hints]  app
       $(f clue.f)
@@ -284,29 +298,49 @@
   ::
   ==
   ::
-  ++  index
+  ++  index-atom
     |=  [n=*]
     ^-  [^index appendix]
     =/  hit  (~(get by arena) n)
-    ?^  hit  [q.u.hit app]
-    ?@  n
-      =/  ni  ai.app
-      :-  ni
-      app(arena (~(put by arena) n [atom+n ni]), ai +(ni))
-    =^  hi  app  $(n -.n)
-    =^  ti  app  $(n +.n)
+    ::?:  &(?=(^ hit) !?=(%bun -.n.u.hit))
+    ::  [xi.u.hit app]
+    =^  h  app  (hash n)
     =/  ni  ai.app
     :-  ni
-    app(arena (~(put by arena) n [cell+[hi ti] ni]), ai +(ni))
+    app(ai +(ni))
+    ::app(arena (~(put by arena) n [cat+n ni h]), ai +(ni))
+  ::
+  ++  index-cell
+    |=  [n=*]
+    ^-  [[^index ^index ^index] appendix]
+    =/  hit  (~(get by arena) n)
+    ?:  &(?=(^ hit) ?=(%pom -.n.u.hit))
+      [xi.u.hit head.n.u.hit tail.n.u.hit]^app
+    =^  h  app  (hash n)
+    =^  hi  app  (index-bun -.n)
+    =^  ti  app  (index-bun +.n)
+    =/  ni  ai.app
+    :-  [ni hi ti]
+    app(arena (~(put by arena) n [pom+[hi ti] ni h]), ai +(ni))
+  ::
+  ++  index-bun
+    |=  [n=*]
+    ^-  [^index appendix]
+    =/  hit  (~(get by arena) n)
+    ?^  hit  [xi.u.hit app]
+    =^  h  app  (hash n)
+    =/  ni  ai.app
+    :-  ni
+    app(arena (~(put by arena) n [bun+h ni h]), ai +(ni))
   ::
   ++  edit
     :: TODO you need to also include the edit along the path - i.e. [?(%2 %3) oldcellindex  newcellindex]
     |=  [axis=@ target=* value=*]
     ^-  [(pair [mut=* old=*] (list (trel ?(%2 %3) ^index ^index))) appendix]
     ?~  axis  !!
-    =/  frg  (frag axis target)
+    =^  frg  app  (frag axis target)
     =/  mutant  .*(target [10 [axis 1 value] 0 1])
-    =/  frgmut  (frag axis mutant)
+    =^  frgmut  app  (frag axis mutant)
     =/  efrg
       %+  turn  (zip q.frg q.frgmut)
       |=  [a=(pair ?(%2 %3) ^index) b=(pair ?(%2 %3) ^index)]
@@ -346,16 +380,17 @@
   ::
   ++  frag
     |=  [axis=@ s=*]
+    ::^-  [[* path] appendix]
     =|  path=(list (pair ?(%2 %3) ^index))
     =/  start-axis  axis
-    |^  ^-  (pair * _path) :: TODO add crash axis?
+    |^  ^-  [(pair * _path) appendix] :: TODO add crash axis?
     ?:  =(1 axis)
-      [s path]
+      [s path]^app
     ?~  axis  !!
-    ?@  s  [%|^s^(gep-a start-axis axis) path]
+    ?@  s  [%|^s^(gep-a start-axis axis) path]^app
     =/  pick  (cap axis)
     =/  child  ?-(pick %2 -.s, %3 +.s)
-    =^  pari  app  (index s)
+    =^  pari  app  (index-bun s)
     %=  $
       s     child
       axis  (mas axis)

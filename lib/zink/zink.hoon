@@ -302,6 +302,7 @@
   ++  index-atom
     |=  [n=*]
     ^-  [^index appendix]
+    ?^  n  !!  :: TODO don't crash
     =/  hit  (~(get by arena) n)
     ?:  &(?=(^ hit) ?=(%cat -.n.u.hit))
       [xi.u.hit app]
@@ -309,14 +310,13 @@
       ?^  hit  [xi.u.hit ai.app]
        [ai.app +(ai.app)]  :: reuse index from bun
     =^  h  app  (hash n)
-    =/  ni  ai.app
     :-  ni
-    app(ai +(ni))
-    ::app(arena (~(put by arena) n [cat+n ni h]), ai +(ni))
+    app(arena (~(put by arena) n [cat+n ni h]), ai nni)
   ::
   ++  index-cell
     |=  [n=*]
     ^-  [[^index ^index ^index] appendix]
+    ?@  n  !!  :: TODO don't crash
     =/  hit  (~(get by arena) n)
     ?:  &(?=(^ hit) ?=([%pom hi=index ti=index] n.u.hit))
       [xi.u.hit +<.n.u.hit +>.n.u.hit]^app

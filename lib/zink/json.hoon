@@ -16,10 +16,10 @@
     |=  n=[n=tnoun xi=index hash=phash]
     ^-  json
     =,  enjs:format
-    ?-  -.n.n
-        %cat
+    ?-  n.n
+        [%cat *]
       (pairs atom+(num p.n.n) i+(num xi.n) ~)
-        %pom
+        [%pom *]
       %-  pairs
       :~  cell+a+~[(num head.n.n) (num tail.n.n)]
           :: i+(num q.n)

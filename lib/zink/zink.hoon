@@ -64,6 +64,7 @@
     [%& `p.tups]^[%0 [si fi pi] q.tups]~
   ::
       [%1 const=*]
+    =^  [ci=index hi=index ti=index]  app  (index-cell [1 const.f])
     =^  pi  app  (index-bun const.f)
     [[%& `const.f] [%1 [si fi pi]]~]^app
   ::
@@ -302,8 +303,11 @@
     |=  [n=*]
     ^-  [^index appendix]
     =/  hit  (~(get by arena) n)
-    ::?:  &(?=(^ hit) !?=(%bun -.n.u.hit))
-    ::  [xi.u.hit app]
+    ?:  &(?=(^ hit) ?=(%cat -.n.u.hit))
+      [xi.u.hit app]
+    =/  [ni=index nni=index]
+      ?^  hit  [xi.u.hit ai.app]
+       [ai.app +(ai.app)]  :: reuse index from bun
     =^  h  app  (hash n)
     =/  ni  ai.app
     :-  ni
@@ -314,14 +318,17 @@
     |=  [n=*]
     ^-  [[^index ^index ^index] appendix]
     =/  hit  (~(get by arena) n)
-    ?:  &(?=(^ hit) ?=(%pom -.n.u.hit))
-      [xi.u.hit head.n.u.hit tail.n.u.hit]^app
+    ?:  &(?=(^ hit) ?=([%pom hi=index ti=index] n.u.hit))
+      [xi.u.hit +<.n.u.hit +>.n.u.hit]^app
+    =/  [ni=index nni=index]
+      ?^  hit  [xi.u.hit ai.app]
+        [ai.app +(ai.app)]  :: reuse index from bun
     =^  h  app  (hash n)
     =^  hi  app  (index-bun -.n)
     =^  ti  app  (index-bun +.n)
-    =/  ni  ai.app
+    ::=/  ni  ai.app
     :-  [ni hi ti]
-    app(arena (~(put by arena) n [pom+[hi ti] ni h]), ai +(ni))
+    app(arena (~(put by arena) n [pom+[hi ti] ni h]), ai nni)
   ::
   ++  index-bun
     |=  [n=*]
@@ -331,7 +338,7 @@
     =^  h  app  (hash n)
     =/  ni  ai.app
     :-  ni
-    app(arena (~(put by arena) n [bun+h ni h]), ai +(ni))
+    app(arena (~(put by arena) n [%bun ni h]), ai +(ni))
   ::
   ++  edit
     :: TODO you need to also include the edit along the path - i.e. [?(%2 %3) oldcellindex  newcellindex]

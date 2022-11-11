@@ -8,8 +8,7 @@
 +$  tnoun
   $%  [%cat p=@]
       [%pom head=index tail=index]
-     :: %bun
-      [%bun h=phash]
+      %bun
   ==
 +$  arena  (map * [n=tnoun xi=index hash=phash])  :: noun to [[ihead itail] inoun]^
 +$  cache  (map * phash)

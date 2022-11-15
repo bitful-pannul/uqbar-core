@@ -1,4 +1,5 @@
-/+  *zere-test-gen, set-tests=zere-test-set, map-tests=zere-test-map
+/+  mk=zere-test-gen
+::/+  mk=zere-test-gen, set-tests=zere-test-set, map-tests=zere-test-map
 ::
 |%
 ++  dec  [[6 [5 [0 6] 1 0] [0 0] 7 [[0 95] [1 0] 0 6] 6 [5 [0 7] 4 0 6] [0 6] 9 2 10 [6 4 0 6] 0 1] 0 0]
@@ -8,7 +9,7 @@
 --
 ^-  json
 :: ~&  (crip "(~(has pin {<test-set>}) 5)")  ~
-%-  finish:mk
+%-  run:mk
 %-  tests:mk
 :~  :-  'basic-nock'
     %-  tests:mk

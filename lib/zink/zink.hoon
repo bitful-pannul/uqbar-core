@@ -35,9 +35,11 @@
   =-  -(q.p q.p.-)
   |^  ^-  book
   =^  si  app  (index-bun s)
-  =^  fi  app  (index-bun f)
+  ?@  f
+    =^  *  app  (index-atom f)
+    [%|^trace [%invalid %&^f]~]^app
+  =^  [fi=@ud hfi=@ud tfi=@ud]  app  (index-cell f)
   ?+    f
-    ?@  f  [%|^trace [%invalid %&^f]~]^app
     ?>  ?=(@ -.f)
     [%|^trace [%invalid ~]~]^app
   ::
@@ -53,20 +55,18 @@
       ~&  65  [%|^trace [%cons [si fi 0] hed-hints tal-hints]~]^app
     ?~  p.tal-res  [%&^~ [%cons [si fi 0] hed-hints tal-hints]~]^app
     =/  prod  [u.p.hed-res u.p.tal-res]
-    =^  pi  app  (index-bun prod)
+    =^  [pi=index ^]  app  (index-cell prod)
     [[%& `prod] [%cons [si fi pi] hed-hints tal-hints]~]^app
   ::
       [%0 axis=@]
     ?:  =(axis 0)  [%|^trace [%0 [si fi 0] ~]~]^app
     =^  tups  app  (frag axis.f s)
-    =^  pi  app  (index-bun -.tups)
+    =^  *  app  (index-atom axis.f)
     :_  app
-    [%& `p.tups]^[%0 [si fi pi] q.tups]~
+    [%& `p.tups]^[%0 [si fi pi.tups] path.tups]~
   ::
       [%1 const=*]
-    =^  [ci=index hi=index ti=index]  app  (index-cell [1 const.f])
-    =^  pi  app  (index-bun const.f)
-    [[%& `const.f] [%1 [si fi pi]]~]^app
+    [[%& `const.f] [%1 [si fi hfi]]~]^app
   ::
       [%2 sub=* for=*]
     =^  [=sub=res =sub=hints]  app
@@ -84,9 +84,8 @@
       $(s u.p.sub-res, f u.p.for-res)
     ?:  ?=(%| -.prod-res)  [%|^trace [%2 [si fi 0] sub-hints for-hints ~]~]^app
     ?~  p.prod-res  [prod-res [%2 [si fi 0] sub-hints for-hints ~]~]^app
+    =^  *  app  (index-cell +.f)
     =^  pi  app  (index-bun u.p.prod-res)
-    =^  [ci=index subi=index fori=index]  app  (index-cell [sub.f for.f])
-    =^  two  app  (index-atom 2)
     [prod-res [%2 [si fi pi] sub-hints for-hints prod-hints]~]^app
   ::
       [%3 arg=*]
@@ -97,17 +96,11 @@
     ?:  ?=(%| -.arg-res)
       ~&  114  [%|^trace [%3 [si fi 0] ~]~]^app
     ?~  p.arg-res  [%&^~ [%3 [si fi 0] ~]~]^app
-    =^  three  app  (index-atom 3)
-    ?@  u.p.arg-res
-      =^  pi  app  (index-atom %.n)
-      =^  argh  app  (index-atom arg-res)
-      :_  app
-      :-  [%& ~ %.n]
-      [%3 [si fi pi] arg-hints]~
-    =^  pi  app  (index-atom %.y)
-    =^  argi  app  (index-cell arg-res)
+    =/  p  ?^(u.p.arg-res & |)
+    =^  pi  app  (index-atom p)
+    =^  *  app  (index-cell arg-res)
     :_  app
-    :-  [%& ~ %.y]
+    :-  [%& ~ p]
     [%3 [si fi pi] arg-hints]~
   ::
       [%4 arg=*]
@@ -121,6 +114,7 @@
       ~&  131  [%|^trace [%4 [si fi 0] ~]~]^app
     ?~  p.arg-res  [%&^~ [%4 [si fi 0] arg-hints]~]^app
     ?^  u.p.arg-res
+      =^  *  app  (index-cell u.p.arg-res)
       ~&  135  [%|^trace [%4 [si fi 0] ~]~]^app
     =/  p  .+(u.p.arg-res)
     =^  pi  app  (index-atom p)
@@ -140,10 +134,9 @@
       ~&  150  [%|^trace [%5 [si fi 0] a-hints b-hints]~]^app
     ?~  p.b-res  [%&^~ [%5 [si fi 0] a-hints b-hints]~]^app
     =/  p   =(u.p.a-res u.p.b-res)
-    =^  ai  app  (index-bun a-res)
-    =^  bi  app  (index-bun b-res)
-    =^  pi  app  (index-bun p)
-    [[%& ~ =(u.p.a-res u.p.b-res)] [%5 [si fi pi] a-hints b-hints]~]^app
+    =^  *  app  (index-cell +.f)
+    =^  pi  app  (index-atom p)
+    [[%& ~ p] [%5 [si fi pi] a-hints b-hints]~]^app
   ::
   ::  6 is special
   ::  if [subject test] returns anything but 0 1, fail
@@ -162,7 +155,9 @@
     ?:  ?=(%| -.sf2-res)
       ~&  164  [%|^trace [%6 [si fi 0] sf2-hints ~]~]^app
     ?~  p.sf2-res  [%&^~ [%6 [si fi 0] sf2-hints ~]~]^app
-    =^  ti  app  (index-bun test.f)
+    =^  *  app  (index-cell +>.f) :: [yes no]
+    =^  *  app  (index-bun yes.f) :: yes
+    =^  *  app  (index-cell +.f)  :: [test yes no]
     =^  pi  app  (index-bun u.p.sf2-res)
     [[sf2-res [%6 [si fi pi] t-hints sf2-hints]~]]^app
   ::
@@ -174,11 +169,10 @@
     =^  subi  app  (index-bun u.p.sub-res)
     =^  [=nex=res =nex=hints]  app
       $(s u.p.sub-res, f next.f)
+    ?:  ?=(%| -.nex-res)  [%|^trace [%7 [si fi 0] sub-hints ~]~]^app
     ?~  p.nex-res  [nex-res [%7 [si fi 0] sub-hints nex-hints]~]^app
-    ?:  =(%| -.nex-res)  [%|^trace [%7 [si fi 0] sub-hints ~]~]^app
-    =^  subi  app  (index-bun subj.f)
-    =^  nexti  app  (index-bun next.f)
-    =^  pi  app  (index-bun +>.nex-res)
+    =^  *  app  (index-cell +.f)
+    =^  pi  app  (index-bun u.p.nex-res)
     [nex-res [%7 [si fi pi] sub-hints nex-hints]~]^app
   ::
       [%8 hed=* next=*]
@@ -191,8 +185,7 @@
       $(s [u.p.hed-res s], f next.f)
     ?:  ?=(%| -.nex-res)  ~&  198  [%|^trace [%8 [si fi 0] hed-hints nex-hints] ~]^app
     ?~  p.nex-res  [%&^~ [%8 [si fi 0] hed-hints nex-hints]~]^app
-    =^  hedi  app  (index-bun hed.f)
-    =^  nexti  app  (index-bun next.f)
+    =^  *  app  (index-cell +.f)
     =^  pi  app  (index-bun u.p.nex-res)
     [nex-res [%8 [si fi pi] hed-hints nex-hints]~]^app
   ::
@@ -208,14 +201,15 @@
     ?:  ?=(%| -.p.arm)
       ~&  269+[s axis.f]
       :_  app
-      [%|^trace [%9 [si fi 0] core-hints ~ `@ud`axis.f q.arm]~]
+      [%|^trace [%9 [si fi 0] core-hints ~ `@ud`axis.f path.arm]~]
     =^  [=res =res=hints]  app  $(s u.p.core-res, f p.arm)
     ?:  ?=(%| -.res)  [%|^trace [%9 [si fi 0] core-hints res-hints 0 ~]~]^app
     ?~  p.res  [%&^~ [%9 [si fi 0] core-hints res-hints 0 ~]~]^app
-    =^  axisi  app  (index-atom axis)
-    =^  corei  app  (index-bun u.p.core-res)
+    =^  *  app  (index-atom axis.f)
+    =^  *  app  (index-cell +.f)
+    =^  *  app  (index-bun u.p.core-res)
     =^  pi  app  (index-bun u.p.res)
-    [res [%9 [si fi pi] core-hints res-hints `@ud`axis.f q.arm]~]^app
+    [res [%9 [si fi pi] core-hints res-hints `@ud`axis.f path.arm]~]^app
   ::
       [%10 [axis=@ value=*] target=*]
     ?:  =(0 axis.f)
@@ -237,15 +231,16 @@
       :_  app
       :-  %&^~
       [%10 [si fi 0] val-hints tar-hints 0 ~]~
-    =^  mutant  app
+    =^  ed  app
       (edit axis.f u.p.tar-res u.p.val-res)
-    =^  pi  app  (index-bun mut.p.mutant)
-    =^  ol  app  (index-bun old.p.mutant)
+    =^  *  app  (index-cell +.f)
+    =^  *  app  (index-atom axis.f)
+    =^  *  app  (index-cell +<.f) :: [axis value]
     :_  app
-    :-  %&^`mut.p.mutant
+    :-  %&^`p.mut.ed
     :_  ~
-    :*  %10  [si fi pi]  val-hints
-        tar-hints  ol  q.mutant
+    :*  %10  [si fi i.mut.ed]  val-hints
+        tar-hints  oldi.ed  path.ed
     ==
   ::
       [%11 tag=@ next=*]
@@ -255,6 +250,7 @@
     ?:  ?=(%| -.next-res)  ~&  260  [%|^trace [%11 [si fi 0] next-hints %|^itag]~]^app
     ?~  p.next-res  [%&^~ [%11 [si fi 0] next-hints %|^itag]~]^app
     =/  p  .*(s [11 tag.f 1 u.p.next-res])
+    =^  *  app  (index-cell +.f)
     =^  pi  app  (index-bun p)
     :_  app
     [%&^`p [%11 [si fi pi] next-hints %|^itag]~]
@@ -285,13 +281,16 @@
       =?    trace
           ?=(?(%hunk %hand %lose %mean %spot) tag.f)
         [[tag.f u.p.clue-res] trace]
-      $(f next.f) 
+      $(f next.f)
     ?:  ?=(%| -.next-res)
       ~&  190
       [%|^trace [%11 [si fi 0] ~ %&^[itag clue-hints]]~]^app
     ?~  p.next-res  [%&^~ [%11 [si fi 0] ~ %&^[itag clue-hints]]~]^app
+    =^  *  app  (index-cell +<.f)
+    =^  *  app  (index-cell +.f)
+    =^  pi  app  (index-bun u.p.next-res)
     :_  app
-    :_  [%11 [si fi 0] next-hints %&^[itag clue-hints]]~
+    :_  [%11 [si fi pi] next-hints %&^[itag clue-hints]]~
     ?:  =(%fast tag.f)  %&^p.next-res
     :+  %&  ~
     .*  s
@@ -300,61 +299,58 @@
   ==
   ::
   ++  index-atom
-    |=  [n=*]
-    ^-  [^index appendix]
-    ?^  n  !!  :: TODO don't crash
+    |=  [n=@]
+    ^-  [index appendix]
     =/  hit  (~(get by arena) n)
-    ?:  &(?=(^ hit) ?=(%cat -.n.u.hit))
-      [xi.u.hit app]
-    =/  [ni=index nni=index]
-      ?^  hit  [xi.u.hit ai.app]
+    ?:  ?=([~ [%cat *] *] hit)
+      [ni.u.hit app]
+    =^  ni=index  ai
+      ?^  hit  [ni.u.hit ai.app]
        [ai.app +(ai.app)]  :: reuse index from bun
-    =^  h  app  (hash n)
+    =^  h  app  ?.(test-mode (hash n) ni^app)
     :-  ni
-    app(arena (~(put by arena) n [cat+n ni h]), ai nni)
+    app(arena (~(put by arena) n [cat+n ni h]))
   ::
   ++  index-cell
-    |=  [n=*]
-    ^-  [[^index ^index ^index] appendix]
-    ?@  n  !!  :: TODO don't crash
+    |=  [n=^]
+    ^-  [[ni=index hi=index ti=index] appendix]
     =/  hit  (~(get by arena) n)
-    ?:  &(?=(^ hit) ?=([%pom hi=index ti=index] n.u.hit))
-      [xi.u.hit +<.n.u.hit +>.n.u.hit]^app
-    =/  [ni=index nni=index]
-      ?^  hit  [xi.u.hit ai.app]
+    ?:  ?=([~ [%pom *] *] hit)
+      [ni.u.hit hi.n.u.hit ti.n.u.hit]^app
+    =^  ni=index  ai
+      ?^  hit  [ni.u.hit ai.app]
         [ai.app +(ai.app)]  :: reuse index from bun
-    =^  h  app  (hash n)
+    =^  h  app  ?.(test-mode (hash n) ni^app)
     =^  hi  app  (index-bun -.n)
     =^  ti  app  (index-bun +.n)
-    ::=/  ni  ai.app
     :-  [ni hi ti]
-    app(arena (~(put by arena) n [pom+[hi ti] ni h]), ai nni)
+    app(arena (~(put by arena) n [pom+[hi ti] ni h]))
   ::
   ++  index-bun
     |=  [n=*]
-    ^-  [^index appendix]
+    ^-  [index appendix]
     =/  hit  (~(get by arena) n)
-    ?^  hit  [xi.u.hit app]
-    =^  h  app  (hash n)
+    ?^  hit  [ni.u.hit app]
     =/  ni  ai.app
+    =^  h  app  ?.(test-mode (hash n) ni^app)
     :-  ni
     app(arena (~(put by arena) n [%bun ni h]), ai +(ni))
   ::
   ++  edit
-    :: TODO you need to also include the edit along the path - i.e. [?(%2 %3) oldcellindex  newcellindex]
     |=  [axis=@ target=* value=*]
-    ^-  [(pair [mut=* old=*] (list (trel ?(%2 %3) ^index ^index))) appendix]
+    ^-  [[mut=[p=* i=@ud] oldi=@ud path=(list (trel ?(%2 %3) @ud @ud))] appendix]
     ?~  axis  !!
     =^  frg  app  (frag axis target)
-    =/  mutant  .*(target [10 [axis 1 value] 0 1])
-    =^  frgmut  app  (frag axis mutant)
+    =/  mut  .*(target [10 [axis 1 value] 0 1])
+    =^  frgmut  app  (frag axis mut)
     =/  efrg
-      %+  turn  (zip q.frg q.frgmut)
-      |=  [a=(pair ?(%2 %3) ^index) b=(pair ?(%2 %3) ^index)]
-      ^-  (trel ?(%2 %3) ^index ^index)
+      %+  turn  (zip path.frg path.frgmut)
+      |=  [a=(pair ?(%2 %3) index) b=(pair ?(%2 %3) index)]
+      ^-  (trel ?(%2 %3) index index)
       ?>  =(p.a p.b)
       [p.a q.a q.b]
-    [mutant^p.frg efrg]^app
+    =^  muti  app  (index-bun mut)
+    [mut^muti pi.frg efrg]^app
   ::
   ++  zip
     |*  [a=(list) b=(list)]
@@ -370,38 +366,47 @@
     ::  test mode disables hashing, so it won't generate valid hints.
     ::  however, computation is *much* faster since hashing is the
     ::  most expensive aspect of the process.
-    ?:  test-mode  [0x1 app]
-    |-  ^-  [phash appendix]
-    =/  mh  (~(get by cax) n)
-    ?^  mh
-      [u.mh app]
+    ::  zere needs hashes, s, and d regardless, but has a test mode
+    ::  where hashes are unique, but fake. before merging into main, we
+    ::  should add two test modes, one for uqbar one for zere
+    =-  [h ->]
+    |-  ^-  [[h=phash d=@ud s=@ud] appendix]
+    =/  mv  (~(get by cax) n)
+    ?^  mv
+      [u.mv app]
     ?@  n
-      =/  h  (hash:pedersen n 0)
-      :-  h
-      app(cax (~(put by cax) n h))
-    =^  hh  app  $(n -.n)
-    =^  ht  app  $(n +.n)
-    =/  h  (hash:pedersen hh ht)
-    :-  h
-    app(cax (~(put by cax) n h))
+      =/  h  ?.(test-mode (hash:pedersen n 0) 0x1)
+      =/  v  [h 1 1]
+      :-  v
+      app(cax (~(put by cax) n v))
+    =^  vh  app  $(n -.n)
+    =^  vt  app  $(n +.n)
+    =/  h  ?.(test-mode (hash:pedersen h.vh h.vt) 0x1)
+    =/  v  h^+((add s.vh s.vt))^+((max d.vh d.vt))
+    :-  v
+    app(cax (~(put by cax) n v))
   ::
   ++  frag
     |=  [axis=@ s=*]
     ::^-  [[* path] appendix]
-    =|  path=(list (pair ?(%2 %3) ^index))
+    =|  path=(list (pair ?(%2 %3) index))
     =/  start-axis  axis
-    |^  ^-  [(pair * _path) appendix] :: TODO add crash axis?
+    =^  *  app  (index-bun s)
+    =^  si  app  (index-bun s)
+    |^  ^-  [[p=* pi=@ud path=_path] appendix] :: TODO add crash axis?
     ?:  =(1 axis)
-      [s path]^app
+      [s si path]^app
     ?~  axis  !!
-    ?@  s  [%|^s^(gep-a start-axis axis) path]^app
+    ::?@  s  [%|^s^(gep-a start-axis axis) path]^app
+    ?>  ?=(^ s)
     =/  pick  (cap axis)
-    =/  child  ?-(pick %2 -.s, %3 +.s)
-    =^  pari  app  (index-bun s)
-    %=  $
-      s     child
+    =^  pom  app  (index-cell s)
+    =/  [c=* ci=@ud]  ?-(pick %2 -.s^hi.pom, %3 +.s^ti.pom)
+    %_  $
+      s     c
+      si    ci
       axis  (mas axis)
-      path  [[pick pari] path]
+      path  [[pick si] path]
     ==
     ::
     ::  solve for a in c = (peg a b)

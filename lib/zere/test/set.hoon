@@ -1,4 +1,4 @@
-/+  *zere-test-gen
+/+  mk=zere-test-gen
 |%
 ++  test-set  [n=10 l=[n=3 l=[n=4 [n=12 l=~ r=~] r=~] r=[n=2 l=[n=1 l=~ r=[n=11 l=~ r=~]] r=[n=7 l=~ r=~]]] r=[n=5 l=[n=6 l=~ r=[n=8 l=~ r=~]] r=[n=9 l=~ r=~]]]
 ++  balanced-a  [2 [1 ~ ~] [3 ~ ~]]

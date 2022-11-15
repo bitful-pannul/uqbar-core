@@ -6,12 +6,13 @@
 +$  phash  @                     ::  Pedersen hash
 +$  index  @ud
 +$  tnoun
-  $%  [%cat p=@]
-      [%pom head=index tail=index]
-      %bun
+  $@  %bun
+  $%  [%cat a=@]
+      [%pom hi=index ti=index]
   ==
-+$  arena  (map * [n=tnoun xi=index hash=phash])  :: noun to [[ihead itail] inoun]^
-+$  cache  (map * phash)
+::
++$  arena  (map * [n=tnoun ni=index hash=phash])  :: noun to [[ihead itail] inoun]^
++$  cache  (map * [h=phash s=@ud d=@ud]) :: s=s(-)+s(+)+1, d=max(d(-),d(+))+1 
 :: +$  hash-req
 ::   $%  [%cell head=phash tail=phash]
 ::       [%atom val=@]

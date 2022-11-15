@@ -6,26 +6,22 @@
     |=  c=arena
     ^-  json
     :-  %a
-    %+  turn
+    =-  (turn - en-noun)
     %+  sort  (turn ~(tap by c) tail)
-    |=  [a=[n=tnoun xi=index hash=phash] b=[n=tnoun xi=index hash=phash]]
-    (lth xi.a xi.b)
-    en-noun
+    |=  [a=[n=tnoun ni=index hash=phash] b=[n=tnoun ni=index hash=phash]]
+    (lth ni.a ni.b)
   ::
   ++  en-noun
-    |=  n=[n=tnoun xi=index hash=phash]
+    |=  n=[n=tnoun ni=index hash=phash]
     ^-  json
     =,  enjs:format
     ?-  n.n
         [%cat *]
-      (pairs atom+(num p.n.n) i+(num xi.n) ~)
+      (pairs cat+(num a.n.n) i+(num ni.n) ~)
         [%pom *]
-      %-  pairs
-      :~  cell+a+~[(num head.n.n) (num tail.n.n)]
-          :: i+(num q.n)
-      ==
+      (pairs pom+a+~[(num hi.n.n) (num ti.n.n)] ~)
         %bun
-      (pairs bun+(num hash.n) i+(num xi.n) ~)
+      (pairs bun+(num hash.n) i+(num ni.n) ~)
     ==
   ::
   ++  hints

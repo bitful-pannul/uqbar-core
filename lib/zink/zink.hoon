@@ -6,7 +6,7 @@
   ^-  book
   %.  [s f test-mode]
   %*  .  zink
-    app  [cax ~ bud ?~(scry ~ [`*`u.scry ~])]
+    app  [~ cax ~ bud ?~(scry ~ [`*`u.scry ~])]
   ==
 ::
 ++  zink
@@ -25,9 +25,18 @@
   ++  $  :: but i want to keep it as short and sweet as possible
   =+  args
   ^-  [body _this]
+  =<  =^  [=p=res =p=zint]  this  +
+      =?  preds  ?=([%& ~ *] p-res)
+        (~(put by preds) s^f u.p.p-res)
+      [p-res p-zint]^this
+  :-  .
+  ^-  [body _this]
   =^  si  this  (index-bun s)
+  ?^  u=(~(get by preds) s f)
+    =^  fi  this  (index-bun f)
+    =^  pi  this  (index-bun u.u)
+    [%&^~^u.u [%memo si fi pi]]^this
   ?@  f
-    ~!  f
     =^  fi  this  (index-atom f)
     [%|^trace [%invalid ~]]^this
   =^  [fi=@ud hfi=@ud tfi=@ud]  this  (index-cell f)

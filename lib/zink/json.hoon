@@ -138,8 +138,12 @@
           pred+(en-pred pred.hin)
           sf1+(uzint sf1.hin)
           sf2+(uzint sf2.hin)
-      ==   
- 
+      ==
+        [%memo *]
+      %-  pairs
+      :~  'jmp_dest'^s+%memo
+          pred+(en-pred pred.hin)
+      ==
     ==
     ::
   ++  en-jet

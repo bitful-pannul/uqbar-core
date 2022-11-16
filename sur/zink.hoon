@@ -37,6 +37,7 @@
       :: [%12 (each [sf1=subf sf2=subf] phash)]
       [%jet jet=(list @tas) data=json] :: not every jet will return the whole sample as a noun
       [%cons =pred sf1=uzint sf2=uzint]
+      [%memo =pred]
       [%invalid *] :: TODO: didn't want to deal with this [%invalid (each @ [@ phash])]
   ==
 ::
@@ -44,7 +45,10 @@
 +$  fail      (list [@ta *])
 +$  res       (each good fail)
 +$  body      (pair res zint)
-+$  appendix  [cax=cache =arena bud=(unit @ud) scrys=(list *)]
++$  appendix  $:  preds=(map [s=* f=*] *)
+                  cax=cache  =arena
+                  bud=(unit @ud)  scrys=(list *)
+              ==
 +$  book      (pair body appendix)
 ::  map of a noun's merkle children. root -> [left right]--
 +$  jetmap  (map jet @ud)

@@ -26,7 +26,7 @@
     ::
     ++  sorted
       ^-  (list [n=* t=^tnoun])
-      ~+  %+  sort  ~(tap by ar)
+      %+  sort  ~(tap by ar)
       |=  [[a=* *] [b=* *]]
       =/  va  (~(got by cax) a)
       =/  vb  (~(got by cax) b)

@@ -63,7 +63,7 @@
       out
   %.  [s f |]
   %*  .  zink
-      app  [cax ~ 0 bud scrys]
+      app  [cax ~ bud scrys]
   ==
   ::
   ++  crash-scry
@@ -86,9 +86,7 @@
     |=  =book
     ^-  json
     %-  pairs:enjs:format
-    :~  hints+(hints:enjs q.p.book)
-        nouns+(nouns:enjs arena.q.book) 
-    ::    scrys+a+(turn scrys |=(s=* (num:enjs (hash scrys cax.q.book))))
+    :~  book+(book:enjs book)
         scrys+a+~ :: TODO
         bud+?~(bud ~ (num:enjs u.bud))
         result+(en-result book)

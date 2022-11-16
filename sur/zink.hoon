@@ -4,42 +4,48 @@
   (unit (unit *))
 ::
 +$  phash  @                     ::  Pedersen hash
-+$  index  @ud
 +$  tnoun
   $@  %bun
   $%  [%cat a=@]
-      [%pom hi=index ti=index]
+      [%pom hh=phash ht=phash]
   ==
 ::
-+$  arena  (map * [n=tnoun ni=index hash=phash])  :: noun to [[ihead itail] inoun]^
++$  arena  (map * tnoun)  :: noun to [[ihead itail] inoun]^
 +$  cache  (map * [h=phash s=@ud d=@ud]) :: s=s(-)+s(+)+1, d=max(d(-),d(+))+1 
 :: +$  hash-req
 ::   $%  [%cell head=phash tail=phash]
 ::       [%atom val=@]
 ::   ==
 ::
-+$  pred  [s=index f=index p=index]
-::+$  path  (list (pair ?(%2 %3) index))
-+$  cairo-hint
++$  pred  [s=phash f=phash p=phash]
+::+$  path  (list (pair ?(%2 %3) phash))
++$  uzint  $@(~ [~ u=zint])
++$  zint
   $%
-      [%0 =pred path=(list (pair ?(%2 %3) index))]
+      [%0 =pred path=(list (pair ?(%2 %3) phash))]
       [%1 =pred]
-      [%2 =pred sf1=hints sf2=hints sf3=hints]
-      [%3 =pred sf=hints]
-      [%4 =pred sf=hints]
-      [%5 =pred sf1=hints sf2=hints]
-      [%6 =pred sf1=hints sf2=hints] :: got rid of the subf that doesn't get run...should be fine?
-      [%7 =pred sf1=hints sf2=hints]
-      [%8 =pred sf1=hints sf2=hints]
-      [%9 =pred sf1=hints sf2=hints leaf=index path=(list (pair ?(%2 %3) index))]
-      [%10 =pred sf1=hints sf2=hints old-leaf=index path=(list (trel ?(%2 %3) index index))]
-      [%11 =pred sf=hints (each [tag=index clue=hints] @)]
+      [%2 =pred sf1=uzint sf2=uzint sf3=uzint]
+      [%3 =pred sf=uzint]
+      [%4 =pred sf=uzint]
+      [%5 =pred sf1=uzint sf2=uzint]
+      [%6 =pred sf1=uzint sf2=uzint] :: got rid of the subf that doesn't get run...should be fine?
+      [%7 =pred sf1=uzint sf2=uzint]
+      [%8 =pred sf1=uzint sf2=uzint]
+      [%9 =pred sf1=uzint sf2=uzint leaf=phash path=(list (pair ?(%2 %3) phash))]
+      [%10 =pred sf1=uzint sf2=uzint old-leaf=phash path=(list (trel ?(%2 %3) phash phash))]
+      [%11 =pred sf=uzint (each [tag=phash clue=uzint] @)]
       :: [%12 (each [sf1=subf sf2=subf] phash)]
-      [%jet =jet data=json] :: not every jet will return the whole sample as a noun
-      [%cons =pred sf1=hints sf2=hints]
+      [%jet jet=(list @tas) data=json] :: not every jet will return the whole sample as a noun
+      [%cons =pred sf1=uzint sf2=uzint]
       [%invalid *] :: TODO: didn't want to deal with this [%invalid (each @ [@ phash])]
   ==
-+$  hints  $@(~ [i=cairo-hint t=(list cairo-hint)]) :: TODO not sure if this needs to be a list
+::
++$  good      (unit *)
++$  fail      (list [@ta *])
++$  res       (each good fail)
++$  body      (pair res zint)
++$  appendix  [cax=cache =arena bud=(unit @ud) scrys=(list *)]
++$  book      (pair body appendix)
 ::  map of a noun's merkle children. root -> [left right]--
 +$  jetmap  (map jet @ud)
 ::  Cost map of jets in stdlib

@@ -38,21 +38,21 @@
   ++  run
     |=  test=named-test
     ^-  json
-    =/  =app  [~(wyt by smart-cax) ~ ~ smart-cax]
+    =/  =app  [~ ~ smart-cax ~]
     =^  tests=json  app  (test app ~)
     =+  (arena:enjs ar.app cax.app)
     %-  pairs:enjs:format
     :~  nindex+nindex
         arena+arena
         tests+tests
+        zints+a+(flop hit.app)
     ==
   ::
   --
 |%
-+$  app  [ci=@ud preds=(map [s=* f=*] *) ar=arena cax=cache]
-+$  test-hints  $~([%& *json] (each json (list json)))
++$  app  [preds=(map [s=* f=*] *) ar=arena cax=cache hit=(list json)]
 +$  named-test  $-([app (unit @t)] [json app])
-+$  test-args  [bud=(unit @ud) scrys=(list *) s=* f=*]
++$  test-args  [bud=(unit @ud) scrys=(list *) s=* f=* test-mode=_&]
 ++  gen-test-hints
   =/  scry-type  -:!>(*granary-scry)
   |=  [=app test-args]
@@ -64,25 +64,25 @@
             preds  preds.q.book
             cax  cax.q.book
             ar   arena.q.book
-            ci   +(~(wyt by cax.q.book))
+            hit  (zint:enjs q.p.book)^hit.app
           ==
       =/  res  p.p.book
       =>  ?.(=(scrys scrys.q.book) ~|(%scrys-mismatch !!) .)
       =/  out  (en-hints book)^app
-      ?:  &(?=(%& -.res) ?=(~ p.res))  out
-      =/  mres  (rock [s f] scrys)
-      ~|  %real-result-mismatch
-      ~|  s=s
-      ~|  f=f
-      ~|  p=res
-      ~|  r=mres
-      ?>  ?|  &(?=([%& ~ *] res) =([%0 u.p.res] mres))
-              &(?=(%| -.res) |(=(%1 mres) =(%2 mres)))
-          ==
+      :: todo: add back when jets are on good nock
+      ::?:  &(?=(%& -.res) ?=(~ p.res))  out
+      :: =/  mres  (rock [s f] scrys)
+      :: ~|  %real-result-mismatch
+      :: ~|  s=s
+      :: ~|  f=f
+      :: ~|  p=res
+      :: ~|  r=mres
+      :: ?>  ?|  &(?=([%& ~ *] res) =([%0 u.p.res] mres))
+      ::         &(?=(%| -.res) |(=(%1 mres) =(%2 mres)))
+      ::     ==
       out
   %.  [s f |]
   %*  .  zink
-      ci  ci.app
       app  [preds.app cax.app ar.app bud scrys]
   ==
   ::
@@ -106,12 +106,19 @@
     |=  =book
     ^-  json
     %-  pairs:enjs:format
-    :~  ::book+(book:enjs book)
-        zint+(zint:enjs q.p.book)
+    :~  pred+(pred-from-book book)
         scrys+a+~ :: TODO
         bud+?~(bud ~ (num:enjs u.bud))
         result+(en-result book)
     ==
+  ++  pred-from-book
+    |=  =book
+    ^-  json
+    %-  en-pred:enjs
+    ?:  ?=(?(%1 %memo) -.q.p.book)  pred.q.p.book
+    ?<  ?=(?(%jet %invalid) -.q.p.book)
+    pred.q.p.book
+ 
   ::
   ++  en-result
     |=  =book

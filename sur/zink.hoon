@@ -12,13 +12,7 @@
 ::
 +$  arena  (map * tnoun)  :: noun to [[ihead itail] inoun]^
 +$  cache  (map * [h=phash s=@ud d=@ud]) :: s=s(-)+s(+)+1, d=max(d(-),d(+))+1 
-:: +$  hash-req
-::   $%  [%cell head=phash tail=phash]
-::       [%atom val=@]
-::   ==
-::
 +$  pred  [s=phash f=phash p=phash]
-::+$  path  (list (pair ?(%2 %3) phash))
 +$  uzint  $@(~ [~ u=zint])
 +$  zint
   $%
@@ -33,9 +27,9 @@
       [%8 =pred sf1=uzint sf2=uzint]
       [%9 =pred sf1=uzint sf2=uzint leaf=phash path=(list (pair ?(%2 %3) phash))]
       [%10 =pred sf1=uzint sf2=uzint old-leaf=phash path=(list (trel ?(%2 %3) phash phash))]
-      [%11 =pred sf=uzint (each [tag=phash clue=uzint] @)]
+      [%11 =pred sf=uzint c=(each [tag=phash clue=uzint] @)]
       :: [%12 (each [sf1=subf sf2=subf] phash)]
-      [%jet jet=(list @tas) data=json] :: not every jet will return the whole sample as a noun
+      [%jet =pred jet=(list @tas) data=json] :: not every jet will return the whole sample as a noun
       [%cons =pred sf1=uzint sf2=uzint]
       [%memo =pred]
       [%invalid *] :: TODO: didn't want to deal with this [%invalid (each @ [@ phash])]

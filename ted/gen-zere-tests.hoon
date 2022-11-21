@@ -1,4 +1,4 @@
-/-  spider, test=zere-test
+/-  spider
 /+  zere-tests, strandio
 ::
 =*  strand     strand:spider

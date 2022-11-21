@@ -15,34 +15,45 @@
   ++  arena
     |=  [ar=^arena cax=cache]
     |^  ^-  [nindex=json arena=json]
-    =<  [a+nin o+ar]
+    =-  [a+nin o+ar]
     %+  roll  sorted
-    |=  [[n=* t=^tnoun] nin=(list json) ar=(map @t json)]
+    |=  [[n=* t=^tnoun] i=@ud nin=(list json) ar=(map @t json)]
     =/  v  (~(got by cax) n)
     =/  jv  (num h.v)
-    :*  [jv^nin]
-        (~(put by ar) p.jv (tnoun t))
+    =/  jd  (num d.v)
+    =/  ji  (num i)
+    =/  tnoun  (tnoun t)
+    :*  +(i)
+        [jv^nin]
+        (~(put by ar) p.jv tnoun(p (~(gas by p.tnoun) h+jv d+jd i+ji ~)))
     ==
     ::
+    ::  sort backwards, so we don't need to flop nin above
     ++  sorted
       ^-  (list [n=* t=^tnoun])
       %+  sort  ~(tap by ar)
-      |=  [[a=* *] [b=* *]]
-      =/  va  (~(got by cax) a)
-      =/  vb  (~(got by cax) b)
-      (lth d.va d.vb)
+      |=  [a=[n=* t=^tnoun] b=[n=* t=^tnoun]]
+      :: ?:  ?=(%bun t.a)  !?=(?([%pom *] [%cat *]) t.b)
+      :: ?:  ?=(%bun t.b)  &
+      :: ?:  ?=(%cat -.t.a)  !?=(%pom -.t.b)
+      :: ?:  ?=(%cat -.t.b)  &
+      =/  va  (~(got by cax) n.a)
+      =/  vb  (~(got by cax) n.b)
+     (lth d.vb d.va)
    ::
    --
+  ::
   ++  tnoun
     |=  ^tnoun
-    ^-  json
+    ^-  [%o p=(map @t json)]
+    =<  ?>(?=(%o -) .)
     ?-  +<
         [%cat *]
       (pairs cat+(num a) ~)
         [%pom *]
       (pairs pom+a+~[(num hh) (num ht)] ~)
         %bun
-      ~
+      (frond 'bun' ~)
     ==
   ::
   ++  uzint
@@ -143,6 +154,12 @@
       %-  pairs
       :~  'jmp_dest'^s+%memo
           pred+(en-pred pred.hin)
+      ==
+        [%jet *]
+      %-  pairs
+      :~  'jmp_dest'^(en-jet jet.hin)
+          pred+(en-pred pred.hin)
+          data+data.hin
       ==
     ==
     ::

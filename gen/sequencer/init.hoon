@@ -76,6 +76,8 @@
 ::  zigs.hoon contract
 =/  zigs-pact
   ^-  pact:smart
+  ~&  >>  "zigs"
+  ~&  >>  `@ux`(sham zigs-mar)
   :*  zigs-contract-id:smart  ::  id
       zigs-contract-id:smart  ::  source
       zigs-contract-id:smart  ::  holder
@@ -86,6 +88,8 @@
 ::  publish.hoon contract
 =/  publish-pact
   ^-  pact:smart
+  ~&  >>  "publish"
+  ~&  >>  `@ux`(sham publish-mar)
   :*  0x1111.1111  ::  id
       0x0          ::  source
       0x0          ::  holder
@@ -179,6 +183,8 @@
 =/  fungible-pact
   ^-  pact:smart
   =/  code  (cue fungible-contract)
+  ~&  >>  "fungible"
+  ~&  >>  `@ux`(sham fungible-mar)
   :*  (hash-pact:engine 0x0 0x0 town-id code)
       0x0          ::  source
       0x0          ::  holder

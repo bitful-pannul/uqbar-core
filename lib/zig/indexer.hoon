@@ -1,9 +1,43 @@
-/-  eng=zig-engine,
-    seq=zig-sequencer,
+/-  seq=zig-sequencer,
     ui=zig-indexer
-/+  smart=zig-sys-smart
+/+  smart=zig-sys-smart, eng=zig-sys-engine
+::  temporary manual import, TODO standardize a poke/storage for these
+/=  fungible-mar  /con/mar/fungible
+/=  publish-mar   /con/mar/publish
+/=  zigs-mar      /con/mar/zigs
 ::
 |_  =bowl:gall
+++  known-interface-hashes
+  ^-  (map pith:smart vase)
+  %-  ~(gas by *(map pith:smart vase))
+  :~  ~[%ux^0x2735.ab89.2392.eccd.9e97.8a95.a1e4.dba3]^!>(zigs-mar)
+      ~[%ux^0xa3ce.5451.d561.32be.1e3f.9536.98d8.bf37]^!>(publish-mar)
+      ~[%ux^0x8fa2.dd42.92b3.252f.1604.fb3b.f7a4.db58]^!>(fungible-mar)
+  ==
+::
+++  get-interface-pith
+  |=  contract-id=id:smart
+  ^-  pith:smart
+  ?:  =(now.bowl *@da)  ~
+  =/  =update:ui
+    .^  update:ui  %gx
+      /(scot %p our.bowl)/indexer/(scot %da now.bowl)/newest/item/(scot %ux contract-id)/noun
+    ==
+  ?~  update  ~
+  ?>  ?=(%newest-item -.update)
+  ?>  ?=(%| -.item.update)
+  interface.p.item.update
+::
+++  parse-noun-with-mar
+  |=  [interface=pith:smart label=@tas n=*]
+  ^-  json
+  ~&  >>  interface
+  ~&  >>  label
+  ~&  >>  n
+  ?~  has=(~(get by known-interface-hashes) interface)
+    s+(crip (noah !>(n)))
+  !<(json (shut:eng u.has %data !>([label n]) !>(~) %json))
+::
 ++  enjs
   =,  enjs:format
   |%
@@ -302,6 +336,7 @@
   ++  item
     |=  =item:smart
     ^-  json
+    ~&  >  "yeah"
     %-  pairs
     %+  welp
       ?:  ?=(%& -.item)
@@ -309,7 +344,8 @@
         :~  [%is-data %b %&]
             [%salt [%s (scot %ud salt.p.item)]]
             [%label %s `@ta`label.p.item]
-            [%noun %s (crip (noah !>(noun.p.item)))]
+            =+  (get-interface-pith source.p.item)
+            [%noun (parse-noun-with-mar - [label noun]:p.item)]
         ==
       ::  wheat
       :~  [%is-data %b %|]
@@ -342,7 +378,7 @@
     ^-  json
     %-  pairs
     %+  turn  ~(tap by state)
-    ::  TODO: either print Pedersen hash or don't store it
+    ::  TODO: either print Merkle hash or don't store it
     |=  [=id:smart pedersen=@ux i=item:smart]
     [(scot %ux id) (item i)]
   ::
@@ -351,7 +387,7 @@
     ^-  json
     %-  pairs
     %+  turn  ~(tap by nonces)
-    ::  TODO: either print Pedersen hash or don't store it
+    ::  TODO: either print Merkle hash or don't store it
     |=  [=id:smart pedersen=@ux nonce=@ud]
     [(scot %ux id) [%s (scot %ud nonce)]]
   ::

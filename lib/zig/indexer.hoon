@@ -8,35 +8,35 @@
 ::
 |_  =bowl:gall
 ++  known-interface-hashes
-  ^-  (map pith:smart vase)
-  %-  ~(gas by *(map pith:smart vase))
-  :~  ~[%ux^0x2735.ab89.2392.eccd.9e97.8a95.a1e4.dba3]^!>(zigs-mar)
-      ~[%ux^0xa3ce.5451.d561.32be.1e3f.9536.98d8.bf37]^!>(publish-mar)
-      ~[%ux^0x8fa2.dd42.92b3.252f.1604.fb3b.f7a4.db58]^!>(fungible-mar)
+  %-  ~(gas by *(map pith:smart @tas))
+  :~  ~[%ux^0x2735.ab89.2392.eccd.9e97.8a95.a1e4.dba3]^%zigs
+      ~[%ux^0xa3ce.5451.d561.32be.1e3f.9536.98d8.bf37]^%publish
+      ~[%ux^0x8fa2.dd42.92b3.252f.1604.fb3b.f7a4.db58]^%fungible
   ==
 ::
 ++  get-interface-pith
   |=  contract-id=id:smart
   ^-  pith:smart
+  ~&  >>  [now our]:bowl
   ?:  =(now.bowl *@da)  ~
   =/  =update:ui
     .^  update:ui  %gx
       /(scot %p our.bowl)/indexer/(scot %da now.bowl)/newest/item/(scot %ux contract-id)/noun
     ==
-  ?~  update  ~
-  ?>  ?=(%newest-item -.update)
-  ?>  ?=(%| -.item.update)
+  ?~  update                     ~
+  ?.  ?=(%newest-item -.update)  ~
+  ?.  ?=(%| -.item.update)       ~
   interface.p.item.update
 ::
 ++  parse-noun-with-mar
   |=  [interface=pith:smart label=@tas n=*]
   ^-  json
-  ~&  >>  interface
-  ~&  >>  label
-  ~&  >>  n
   ?~  has=(~(get by known-interface-hashes) interface)
     s+(crip (noah !>(n)))
-  !<(json (shut:eng u.has %data !>([label n]) !>(~) %json))
+  ?+  u.has  s+(crip (noah !>(n)))
+    %zigs      json:~(data zigs-mar [label n])
+    %fungible  json:~(data fungible-mar [label n])
+  ==
 ::
 ++  enjs
   =,  enjs:format

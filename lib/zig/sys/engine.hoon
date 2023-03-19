@@ -278,6 +278,7 @@
           ::  /contract/[contract-id]/pith/in/contract
           =/  contract-id=id:smart  +.-.+.+.+.pit
           ::  pith includes fee, as it must match fee in contract
+          ::  TODO: PAY READ FEE!
           =/  read-pith=pith:smart  ;;(pith:smart +.+.+.+.pit)
           ::  ~&  >>  "looking for pact: {<contract-id>}"
           ?~  item=(get:big p.chain contract-id)
